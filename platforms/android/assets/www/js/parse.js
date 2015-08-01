@@ -210,7 +210,7 @@ var loginToParse = function (facebookAuthData)
     Parse.FacebookUtils.logIn(facebookAuthData, {
 
         success: function(_user) {
-            console.log(_user);
+            setUserDetailsInParse(_user);
             console.log("User is logged into Parse");
         },
 
@@ -222,3 +222,16 @@ var loginToParse = function (facebookAuthData)
     });
 };
 
+var setUserDetailsInParse = function (FBuser)
+{
+    facebookConnectPlugin.api("me?fields=id,name,email", [],
+        function (resultSuccess) {
+            FBuser.set("fullName", resultSuccess.name);
+            FBuser.set("email", resultSuccess.email);
+            FBuser.save();
+            console.log(FBuser);
+        },
+        function (resultError) {
+            console.log(resultError);
+        });
+};
