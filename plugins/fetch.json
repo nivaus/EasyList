@@ -15,15 +15,6 @@
         "is_top_level": true,
         "variables": {}
     },
-    "com.phonegap.parsepushplugin": {
-        "source": {
-            "type": "git",
-            "url": "https://github.com/mtafinal/parse-push-plugin",
-            "subdir": "."
-        },
-        "is_top_level": true,
-        "variables": {}
-    },
     "com.phonegap.plugins.facebookconnect": {
         "source": {
             "type": "git",
@@ -35,5 +26,14 @@
             "APP_ID": "1060741983939011",
             "APP_NAME": "Easy List"
         }
+    },
+    "com.phonegap.parsepushplugin": {
+        "source": {
+            "type": "git",
+            "url": "https://github.com/mtafinal/parse-push-plugin",
+            "subdir": "."
+        },
+        "is_top_level": true,
+        "variables": {}
     }
 }

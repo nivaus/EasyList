@@ -9,10 +9,6 @@
                 "parents": {
                     "/*": [
                         {
-                            "xml": "<feature name=\"ParsePushPlugin\"><param name=\"android-package\" value=\"com.phonegap.parsepushplugin.ParsePushPlugin\" /></feature>",
-                            "count": 1
-                        },
-                        {
                             "xml": "<feature name=\"Camera\"><param name=\"android-package\" value=\"org.apache.cordova.camera.CameraLauncher\" /></feature>",
                             "count": 1
                         },
@@ -42,6 +38,10 @@
                         },
                         {
                             "xml": "<access origin=\"https://*.akamaihd.net\" />",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"ParsePushPlugin\"><param name=\"android-package\" value=\"com.phonegap.parsepushplugin.ParsePushPlugin\" /></feature>",
                             "count": 1
                         }
                     ]
@@ -132,9 +132,6 @@
         }
     },
     "installed_plugins": {
-        "com.phonegap.parsepushplugin": {
-            "PACKAGE_NAME": "io.EasyList"
-        },
         "cordova-plugin-camera": {
             "PACKAGE_NAME": "io.EasyList"
         },
@@ -144,6 +141,9 @@
         "com.phonegap.plugins.facebookconnect": {
             "APP_ID": "1060741983939011",
             "APP_NAME": "Easy List",
+            "PACKAGE_NAME": "io.EasyList"
+        },
+        "com.phonegap.parsepushplugin": {
             "PACKAGE_NAME": "io.EasyList"
         }
     },
