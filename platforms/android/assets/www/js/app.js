@@ -7,7 +7,7 @@
 $.mobile.buttonMarkup.hoverDelay = 0;
 
 var listContent = new Object();
-var DEFAULT_PRODUCT_IMAGE = "http://files.parsetfss.com/64d6988d-576e-4edc-b686-e7a05d6ed73b/tfss-0e47eb91-7cd8-4206-b72f-010c63878c91-Product_basket.png";
+var DEFAULT_PRODUCT_IMAGE = "http://files.parsetfss.com/64d6988d-576e-4edc-b686-e7a05d6ed73b/tfss-c2486cd8-6833-4ef0-b569-7d1445ebee99-shopping-cart.png";
 var PHOTO_LIBRARY = 0;
 var PHOTO_CAMERA = 1;
 
@@ -172,7 +172,7 @@ app.controller('ShoppingListController', function ($scope) {
             window.navigator.camera.getPicture(function (imageURI) {
                 changeProductPhotoInParse($scope, product, imageURI);
             }, function (err) {
-                console.log("Camera Error");
+                console.log(err);
             }, cameraOptions);
         };
 
@@ -214,20 +214,20 @@ app.controller('ShoppingListController', function ($scope) {
         this.login = function ()
         {
             facebookLogin();
-        }
+        };
 
 
         this.register = function()
         {
             ParsePushPlugin.register({
                     //appId:"McfhScnqoqzGb3sEYIuqvzdhD7orBXtaNEtijvQN", clientKey:"MXvPYbYZgZtwgcbI6728THXbji4AfNlzCoT9NpGz", eventKey:"myEventKey"}, //Easy List 1
-                    appId:"YNiKFOkpulbY1j19E2gcdSREgTKd0AiZZKtzJaeg", clientKey:"wV1lOSJJWBlvQhvQYISlKyGlFiolEaXMsbOaMD7I", eventKey:"myEventKey"}, //will trigger receivePN[pnObj.myEventKey]
+                    appId:"YNiKFOkpulbY1j19E2gcdSREgTKd0AiZZKtzJaeg", clientKey:"wV1lOSJJWBlvQhvQYISlKyGlFiolEaXMsbOaMD7I", eventKey:"myEventKey"}, //Easy List 2
                 function() {
                     alert('successfully registered device!');
                 }, function(e) {
                     alert('error registering device: ' + e);
                 });
-        }
+        };
 
     }
 );

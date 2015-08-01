@@ -2,10 +2,10 @@
  * Created by oslander on 05/07/2015.
  */
 
-var PARSE_APP = "d4eaDwYlkds7SajkbBzoedmbOnCS5SzY8ioZ8FQV";
-//var PARSE_APP = "YNiKFOkpulbY1j19E2gcdSREgTKd0AiZZKtzJaeg"; //EasyList2
-var PARSE_JS = "YZnk7gzaQfcAlzLrc4UmTJHEyGXsbEq0wXi984DC";
-//var PARSE_JS = "Ht7VpNFFhB6KKod4L8gvWlyzjwWt0PEPXjEHVD1H"; //EasyList2
+//var PARSE_APP = "d4eaDwYlkds7SajkbBzoedmbOnCS5SzY8ioZ8FQV";
+var PARSE_APP = "YNiKFOkpulbY1j19E2gcdSREgTKd0AiZZKtzJaeg"; //EasyList2
+//var PARSE_JS = "YZnk7gzaQfcAlzLrc4UmTJHEyGXsbEq0wXi984DC";
+var PARSE_JS = "Ht7VpNFFhB6KKod4L8gvWlyzjwWt0PEPXjEHVD1H"; //EasyList2
 
 function Product(objectId, categoryName, productName, productQuantity, productImage, productChecked) {
     this.objectId = objectId;
@@ -50,7 +50,7 @@ var getList = function ($scope) {
 
         }
     );
-}
+};
 
 var addNewProductToParse = function ($scope, newProduct) {
     Parse.initialize(PARSE_APP, PARSE_JS);
@@ -75,7 +75,7 @@ var addNewProductToParse = function ($scope, newProduct) {
             console.log('Failed to create new object, with error code: ' + error.message);
         }
     });
-}
+};
 
 var toggleProductCheckedInParse = function ($scope, productToUpdate) {
     Parse.initialize(PARSE_APP, PARSE_JS);
@@ -100,7 +100,7 @@ var toggleProductCheckedInParse = function ($scope, productToUpdate) {
             console.log('Failed to update object, with error code: ' + error.message);
         }
     });
-}
+};
 
 var updateProductQuantityInParse = function ($scope, productToUpdate, newProductQuantity) {
     Parse.initialize(PARSE_APP, PARSE_JS);
@@ -123,7 +123,7 @@ var updateProductQuantityInParse = function ($scope, productToUpdate, newProduct
             console.log('Failed to update object, with error code: ' + error.message);
         }
     });
-}
+};
 
 var deleteProductFromParse = function ($scope, productToDelete) {
     Parse.initialize(PARSE_APP, PARSE_JS);
@@ -144,7 +144,7 @@ var deleteProductFromParse = function ($scope, productToDelete) {
             console.log('Failed to delete object, with error code: ' + error.message);
         }
     });
-}
+};
 
 var changeProductPhotoInParse = function($scope, productToUpdate, imageURI)
 {
@@ -164,9 +164,9 @@ var changeProductPhotoInParse = function($scope, productToUpdate, imageURI)
         })
     }, function(error) {
         // The file either could not be read, or could not be saved to Parse.
-        console.log("Error saving photo");
+        console.log(error);
     });
-}
+};
 
 var getProductFromParse = function (productToQuery, callBack)
 {
@@ -182,7 +182,8 @@ var getProductFromParse = function (productToQuery, callBack)
             console.log('Failed to update object, with error code: ' + error.message);
         }
     });
-}
+};
+
 var facebookLogin = function ()
 {
     facebookConnectPlugin.login(["user_about_me","email"],
@@ -193,7 +194,7 @@ var facebookLogin = function ()
                 "id": result.authResponse["userID"],
                 "access_token": result.authResponse["accessToken"],
                 "expiration_date": expirationDate
-            }
+            };
             console.log(facebookAuthData);
             loginToParse(facebookAuthData);
         },
@@ -201,7 +202,7 @@ var facebookLogin = function ()
             alert ("error");
         }
     );
-}
+};
 
 var loginToParse = function (facebookAuthData)
 {
@@ -219,5 +220,5 @@ var loginToParse = function (facebookAuthData)
             console.log("  ERROR2 = "+JSON.stringify(error2));
         }
     });
-}
+};
 
