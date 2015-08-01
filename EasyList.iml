@@ -4,7 +4,6 @@
     <exclude-output />
     <content url="file://$MODULE_DIR$">
       <excludeFolder url="file://$MODULE_DIR$/platforms" />
-      <excludeFolder url="file://$MODULE_DIR$/plugins/com.phonegap.plugins.facebookconnect/platforms" />
     </content>
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
