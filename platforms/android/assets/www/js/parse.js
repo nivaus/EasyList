@@ -211,7 +211,7 @@ var loginToParse = function (facebookAuthData)
 
         success: function(_user) {
             setUserDetailsInParse(_user);
-            console.log("User is logged into Parse");
+            console.log("Function loginToParse : User is logged into Parse");
         },
 
         error: function(error1, error2){
@@ -229,7 +229,7 @@ var setUserDetailsInParse = function (FBuser)
             FBuser.set("fullName", resultSuccess.name);
             FBuser.set("email", resultSuccess.email);
             FBuser.save();
-            console.log(FBuser);
+            console.log("Function setUserDetailsInParse: " + FBuser);
         },
         function (resultError) {
             console.log(resultError);
