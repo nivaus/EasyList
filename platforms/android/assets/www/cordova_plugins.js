@@ -46,6 +46,13 @@ module.exports = [
         "clobbers": [
             "ParsePushPlugin"
         ]
+    },
+    {
+        "file": "plugins/cordova-plugin-splashscreen/www/splashscreen.js",
+        "id": "cordova-plugin-splashscreen.SplashScreen",
+        "clobbers": [
+            "navigator.splashscreen"
+        ]
     }
 ];
 module.exports.metadata = 
@@ -54,7 +61,8 @@ module.exports.metadata =
     "cordova-plugin-camera": "1.2.0",
     "cordova-plugin-whitelist": "1.0.0",
     "com.phonegap.plugins.facebookconnect": "0.11.0",
-    "com.phonegap.parsepushplugin": "0.5.0"
+    "com.phonegap.parsepushplugin": "0.5.0",
+    "cordova-plugin-splashscreen": "2.1.0"
 }
 // BOTTOM OF METADATA
 });

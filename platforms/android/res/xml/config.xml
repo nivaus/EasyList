@@ -19,6 +19,10 @@
     <feature name="ParsePushPlugin">
         <param name="android-package" value="com.phonegap.parsepushplugin.ParsePushPlugin" />
     </feature>
+    <feature name="SplashScreen">
+        <param name="android-package" value="org.apache.cordova.splashscreen.SplashScreen" />
+        <param name="onload" value="true" />
+    </feature>
     <icon src="www/img/logo.png" />
     <allow-intent href="market:*" />
     <name>EasyList</name>

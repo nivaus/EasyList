@@ -43,6 +43,10 @@
                         {
                             "xml": "<feature name=\"ParsePushPlugin\"><param name=\"android-package\" value=\"com.phonegap.parsepushplugin.ParsePushPlugin\" /></feature>",
                             "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"SplashScreen\"><param name=\"android-package\" value=\"org.apache.cordova.splashscreen.SplashScreen\" /><param name=\"onload\" value=\"true\" /></feature>",
+                            "count": 1
                         }
                     ]
                 }
@@ -144,6 +148,9 @@
             "PACKAGE_NAME": "io.EasyList"
         },
         "com.phonegap.parsepushplugin": {
+            "PACKAGE_NAME": "io.EasyList"
+        },
+        "cordova-plugin-splashscreen": {
             "PACKAGE_NAME": "io.EasyList"
         }
     },
