@@ -135,7 +135,7 @@ app.controller('ShoppingListController', function ($scope) {
                         var elementId = "quantity" + products[productIndex].objectId;
                         var productQuantity = products[productIndex].productQuantity;
                         dpUI.numberPicker("#" + elementId, {
-                            min: 0,
+                            min: 1,
                             max: 100,
                             step: 1,
                             format: "",
