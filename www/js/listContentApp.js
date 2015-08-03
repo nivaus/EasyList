@@ -12,9 +12,9 @@ var DEFAULT_PRODUCT_IMAGE = "http://files.parsetfss.com/64d6988d-576e-4edc-b686-
 var PHOTO_LIBRARY = 0;
 var PHOTO_CAMERA = 1;
 
-var app = angular.module('SmartShoppingList', []);
+var listContentApp = angular.module('SmartShoppingList', []);
 
-app.controller('ShoppingListController', function ($scope) {
+listContentApp.controller('ShoppingListController', function ($scope) {
         this.listContent = listContent;
         this.selectedProduct;
         this.inEditMode = false;

@@ -31,7 +31,7 @@ var init = {
     // deviceready Event Handler
     //
     // The scope of 'this' is the event. In order to call the 'receivedEvent'
-    // function, we must explicitly call 'app.receivedEvent(...);'
+    // function, we must explicitly call 'listContentApp.receivedEvent(...);'
     onDeviceReady: function() {
         init.receivedEvent('deviceready');
     },
