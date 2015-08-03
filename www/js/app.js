@@ -15,7 +15,6 @@ var PHOTO_CAMERA = 1;
 var app = angular.module('SmartShoppingList', []);
 
 app.controller('ShoppingListController', function ($scope) {
-        kaki = $scope;
         this.listContent = listContent;
         this.selectedProduct;
         this.inEditMode = false;
@@ -115,7 +114,7 @@ app.controller('ShoppingListController', function ($scope) {
                 var products = listContent[categoryName].products;
                 for (var productIndex in products) {
                     var product = products[productIndex];
-                    var newProductQuantity = parseInt($("#quantity" + product.productName + " input").val());
+                    var newProductQuantity = parseInt($("#quantity" + product.objectId + " input").val());
                     if (product.productChecked === false) {
                         updateProductQuantityInParse($scope, product, newProductQuantity);
                     }
@@ -125,7 +124,7 @@ app.controller('ShoppingListController', function ($scope) {
 
         this.updateProductQuantity = function (productToUpdate) {
             var productName = productToUpdate.productName;
-            productToUpdate.productQuantity = $("#quantity" + productName + " input").val();
+            productToUpdate.productQuantity = $("#quantity" + objectId + " input").val();
         };
 
         this.addQuantityEditing = function () {
@@ -133,7 +132,7 @@ app.controller('ShoppingListController', function ($scope) {
                 var products = listContent[categoryName].products;
                 for (var productIndex in products) {
                     if (products[productIndex].productChecked === false) {
-                        var elementId = "quantity" + products[productIndex].productName;
+                        var elementId = "quantity" + products[productIndex].objectId;
                         var productQuantity = products[productIndex].productQuantity;
                         dpUI.numberPicker("#" + elementId, {
                             min: 0,
