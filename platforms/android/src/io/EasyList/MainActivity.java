@@ -21,6 +21,13 @@ package io.EasyList;
 
 import android.os.Bundle;
 import org.apache.cordova.*;
+import com.parse.Parse;
+import com.parse.ParseAnalytics;
+import com.parse.ParseInstallation;
+import com.parse.PushService;
+import com.parse.ParsePush;
+import com.parse.ParseCrashReporting;
+
 
 public class MainActivity extends CordovaActivity
 {
@@ -28,6 +35,9 @@ public class MainActivity extends CordovaActivity
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+        super.init();
+        // Track app opens.
+        ParseAnalytics.trackAppOpened(getIntent());  //add this line
         // Set by <content src="index.html" /> in config.xml
         loadUrl(launchUrl);
     }
