@@ -3,7 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
+var CLIENT_KEY="wV1lOSJJWBlvQhvQYISlKyGlFiolEaXMsbOaMD7I";
+var APP_ID="YNiKFOkpulbY1j19E2gcdSREgTKd0AiZZKtzJaeg";
 $.mobile.buttonMarkup.hoverDelay = 0;
 
 var listContent = new Object();
@@ -220,13 +221,25 @@ app.controller('ShoppingListController', function ($scope) {
         this.register = function()
         {
             ParsePushPlugin.register({
-                    //appId:"McfhScnqoqzGb3sEYIuqvzdhD7orBXtaNEtijvQN", clientKey:"MXvPYbYZgZtwgcbI6728THXbji4AfNlzCoT9NpGz", eventKey:"myEventKey"}, //Easy List 1
-                    appId:"YNiKFOkpulbY1j19E2gcdSREgTKd0AiZZKtzJaeg", clientKey:"wV1lOSJJWBlvQhvQYISlKyGlFiolEaXMsbOaMD7I", eventKey:"myEventKey"}, //Easy List 2
+                    appId:APP_ID, clientKey:CLIENT_KEY, eventKey:"myEventKey"}, //will trigger receivePN[pnObj.myEventKey]
                 function() {
-                    alert('successfully registered device!');
+                    console.log('successfully registered device!');
                 }, function(e) {
-                    alert('error registering device: ' + e);
+                    console.log('error registering device: ' + e);
                 });
+
+            ParsePushPlugin.on('receivePN', function(pn){
+                alert('yo i got this push notification:' + JSON.stringify(pn));
+            });
+
+            //ParsePushPlugin.register({
+            //        //appId:"McfhScnqoqzGb3sEYIuqvzdhD7orBXtaNEtijvQN", clientKey:"MXvPYbYZgZtwgcbI6728THXbji4AfNlzCoT9NpGz", eventKey:"myEventKey"}, //Easy List 1
+            //        appId:"YNiKFOkpulbY1j19E2gcdSREgTKd0AiZZKtzJaeg", clientKey:"wV1lOSJJWBlvQhvQYISlKyGlFiolEaXMsbOaMD7I", eventKey:"myEventKey"}, //Easy List 2
+            //    function() {
+            //        alert('successfully registered device!');
+            //    }, function(e) {
+            //        alert('error registering device: ' + e);
+            //    });
         };
 
     }

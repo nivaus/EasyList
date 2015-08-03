@@ -3,7 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
+var CLIENT_KEY="wV1lOSJJWBlvQhvQYISlKyGlFiolEaXMsbOaMD7I";
+var APP_ID="YNiKFOkpulbY1j19E2gcdSREgTKd0AiZZKtzJaeg";
 $.mobile.buttonMarkup.hoverDelay = 0;
 
 var listContent = new Object();
@@ -14,7 +15,6 @@ var PHOTO_CAMERA = 1;
 var app = angular.module('SmartShoppingList', []);
 
 app.controller('ShoppingListController', function ($scope) {
-        kaki = $scope;
         this.listContent = listContent;
         this.selectedProduct;
         this.inEditMode = false;
@@ -114,7 +114,7 @@ app.controller('ShoppingListController', function ($scope) {
                 var products = listContent[categoryName].products;
                 for (var productIndex in products) {
                     var product = products[productIndex];
-                    var newProductQuantity = parseInt($("#quantity" + product.productName + " input").val());
+                    var newProductQuantity = parseInt($("#quantity" + product.objectId + " input").val());
                     if (product.productChecked === false) {
                         updateProductQuantityInParse($scope, product, newProductQuantity);
                     }
@@ -124,7 +124,7 @@ app.controller('ShoppingListController', function ($scope) {
 
         this.updateProductQuantity = function (productToUpdate) {
             var productName = productToUpdate.productName;
-            productToUpdate.productQuantity = $("#quantity" + productName + " input").val();
+            productToUpdate.productQuantity = $("#quantity" + objectId + " input").val();
         };
 
         this.addQuantityEditing = function () {
@@ -132,7 +132,7 @@ app.controller('ShoppingListController', function ($scope) {
                 var products = listContent[categoryName].products;
                 for (var productIndex in products) {
                     if (products[productIndex].productChecked === false) {
-                        var elementId = "quantity" + products[productIndex].productName;
+                        var elementId = "quantity" + products[productIndex].objectId;
                         var productQuantity = products[productIndex].productQuantity;
                         dpUI.numberPicker("#" + elementId, {
                             min: 0,
@@ -220,13 +220,25 @@ app.controller('ShoppingListController', function ($scope) {
         this.register = function()
         {
             ParsePushPlugin.register({
-                    //appId:"McfhScnqoqzGb3sEYIuqvzdhD7orBXtaNEtijvQN", clientKey:"MXvPYbYZgZtwgcbI6728THXbji4AfNlzCoT9NpGz", eventKey:"myEventKey"}, //Easy List 1
-                    appId:"YNiKFOkpulbY1j19E2gcdSREgTKd0AiZZKtzJaeg", clientKey:"wV1lOSJJWBlvQhvQYISlKyGlFiolEaXMsbOaMD7I", eventKey:"myEventKey"}, //Easy List 2
+                    appId:APP_ID, clientKey:CLIENT_KEY, eventKey:"myEventKey"}, //will trigger receivePN[pnObj.myEventKey]
                 function() {
-                    alert('successfully registered device!');
+                    console.log('successfully registered device!');
                 }, function(e) {
-                    alert('error registering device: ' + e);
+                    console.log('error registering device: ' + e);
                 });
+
+            ParsePushPlugin.on('receivePN', function(pn){
+                alert('yo i got this push notification:' + JSON.stringify(pn));
+            });
+
+            //ParsePushPlugin.register({
+            //        //appId:"McfhScnqoqzGb3sEYIuqvzdhD7orBXtaNEtijvQN", clientKey:"MXvPYbYZgZtwgcbI6728THXbji4AfNlzCoT9NpGz", eventKey:"myEventKey"}, //Easy List 1
+            //        appId:"YNiKFOkpulbY1j19E2gcdSREgTKd0AiZZKtzJaeg", clientKey:"wV1lOSJJWBlvQhvQYISlKyGlFiolEaXMsbOaMD7I", eventKey:"myEventKey"}, //Easy List 2
+            //    function() {
+            //        alert('successfully registered device!');
+            //    }, function(e) {
+            //        alert('error registering device: ' + e);
+            //    });
         };
 
     }
