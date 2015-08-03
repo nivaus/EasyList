@@ -32,15 +32,9 @@ var init = {
     //
     // The scope of 'this' is the event. In order to call the 'receivedEvent'
     // function, we must explicitly call 'app.receivedEvent(...);'
-    onDeviceReady: function() {
-        ParsePushPlugin.register({
-                appId:"d4eaDwYlkds7SajkbBzoedmbOnCS5SzY8ioZ8FQV", clientKey:"EgTpZJmHrKShmsrLkqzn7orAQP4oH9QgBlnTMqwK", eventKey:"myEventKey"}, //will trigger receivePN[pnObj.myEventKey]
-            function() {
-                alert('successfully registered device!');
-            }, function(e) {
-                alert('error registering device: ' + e);
-            });
-    },
-};
+    onDeviceReady:
+    {
+    }
+}
 
 init.initialize();
