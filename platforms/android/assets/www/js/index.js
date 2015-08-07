@@ -16,6 +16,13 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
+//var PARSE_APP = "d4eaDwYlkds7SajkbBzoedmbOnCS5SzY8ioZ8FQV";
+var PARSE_APP = "YNiKFOkpulbY1j19E2gcdSREgTKd0AiZZKtzJaeg"; //EasyList2
+//var PARSE_JS = "YZnk7gzaQfcAlzLrc4UmTJHEyGXsbEq0wXi984DC";
+var PARSE_JS = "Ht7VpNFFhB6KKod4L8gvWlyzjwWt0PEPXjEHVD1H"; //EasyList2
+
+
 var init = {
     // Application Constructor
     initialize: function() {
@@ -38,6 +45,11 @@ var init = {
     // Update DOM on a Received Event
     receivedEvent: function(id) {
         console.log('Received Event: ' + id);
+        Parse.initialize(PARSE_APP, PARSE_JS);
+        if (Parse.User.current() !== null)
+        {
+            window.location = "userLists.html";
+        }
     }
 };
 
