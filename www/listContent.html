@@ -1,188 +1,68 @@
 <!DOCTYPE html>
-<html ng-app="SmartShoppingList">
+<html ng-app="UserListsApp">
 <head>
     <title>Easy List</title>
     <meta http-equiv="Content-Security-Policy">
+    <!--<script src="cordova.js"></script>-->
+    <!--<script src='./js/index.js' type='text/javascript'></script>-->
+
+    <!--
+    Scripts
+    -->
+
+    <script src="./JQuery/jquery-2.1.4.min.js"></script>
+    <script src="./JQuery/jquery.mobile-1.4.5.min.js"></script>
+    <script src="./angular/angular.min.js"></script>
+    <script src="./js/energize-min.js"></script>
+    <script src="./Parse/parse-1.4.2.min.js"></script>
+    <script src="./js/userListsParse.js"></script>
 
     <!--
     CSS
     -->
     <link rel="stylesheet" href="./JQuery/jquery.mobile-1.4.5.min.css"/>
     <link rel="stylesheet" href="./JQuery/jquery.mobile.theme-1.4.5.min.css"/>
-    <link rel="stylesheet" href="./css/shoppingliststyling.css"/>
-    <link rel="stylesheet" href="./css/dpNumberPicker-2.x-skin.grey.css"/>
 
-
-
-    <!--
-    Scripts
-    -->
-    <!--<script src="cordova.js"></script>-->
-    <script src='./js/index.js' type='text/javascript'></script>
-    <script src="./JQuery/jquery-2.1.4.min.js"></script>
-    <script src="./JQuery/jquery.mobile-1.4.5.min.js"></script>
-    <script src="./angular/angular.min.js"></script>
-    <script src="./js/energize-min.js"></script>
-    <script src="./js/dpNumberPicker-2.x.js"></script>
-    <script src="./Parse/parse-1.4.2.min.js"></script>
-    <script src="js/listContentParse.js"></script>
-    <script src="js/listContentApp.js"></script>
+    <script src="js/userListsApp.js"></script>
 
 </head>
-<body ng-controller="ShoppingListController as list">
-
+<body ng-controller="UserListsAppController as userLists">
 <div data-role="page" data-theme="c" data-content-theme="c">
-    <!--
-     Header
-    -->
-    <div data-role="header" data-theme="a">
-        <a id="{{list.inEditMode ? 'saveListButton' : 'editListButton'}}"
-           data-icon="{{list.inEditMode ? 'check' : 'edit'}}"
-           ng-click="list.executeEditOrSaveFunction()">
-            {{list.inEditMode ? 'Save List' : 'Edit List'}}
-        </a>
-        <h1>Easy List</h1>
-        <a href="#addProductPopup" data-icon="plus" data-rel="popup" data-position-to="window" data-transition="pop">Add Product</a>
-    </div>
+    <!-- Divider -->
 
-    <!--
-     Shopping List
-    -->
-    <div data-role="main" id="categories">
-        <ul id="{{category.categoryName}}" data-role="listview" data-inset="true" ng-repeat="category in list.listContent">
-            <li data-role="list-divider" data-theme="b">
-                {{category.categoryName}}
-                <span class="ui-li-count">{{category.products.length}}</span>
-            </li>
-            <li>
-                <ul data-role="listview" data-split-theme="b" data-inset="true"
-                    ng-repeat="product in category.products">
-                    <li class='{{product.productName}} done-{{product.productChecked}}' data-icon="{{list.getIcon(product)}}">
-                        <a ng-click="list.itemClicked(product)">
-                            <img class="productImage" src="{{product.productImage}}" alt="{{product.productName}}">
+    <ul data-role="listview" data-inset="true" ng-repeat="date in userLists.userLists">
+        <li data-role="list-divider" data-theme="b">
+            Created At: {{date.createdDate}}
+            <span class="ui-li-count">{{date.lists.length}}</span>
+        </li>
+        <!-- List -->
+        <li ng-repeat="list in date.lists">
+            <a ng-click="userLists.listContent()">
+                <img src="http://files.parsetfss.com/78e798b2-27ce-4608-a903-5f5baf8a0899/tfss-02790cd8-92cb-4d01-ab48-e0372541c24a-checklist.png">
+                <h2>{{list.listName}}</h2>
+                <p>Shared users: {{list.sharedUsers.length}}</p></a>
 
-                            <!-- If not in edit mode-->
-                            <div ng-show=!list.inEditMode>
-                                <h2 >
-                                    {{product.productName}}
-                                </h2>
-                                <p>Quantity: {{product.productQuantity}}</p>
-                            </div>
-                            <!-- On Edit Mode-->
-                            <div ng-show=list.inEditMode>
-                                <h2>
-                                    {{product.productName}}
-                                    <p ng-show = product.productChecked>Quantity : {{product.productQuantity}}</p>
-                                    <div ng-show = !product.productChecked class="quantity">
-                                        <label for="quantity{{product.objectId}}">Quantity:</label>
-                                        <div id="quantity{{product.objectId}}"></div>
-                                    </div>
-                                </h2>
-                            </div>
+        </li>
+        <!--<li data-role="list-divider" data-theme="b">-->
+        <!--01/08/2015-->
+        <!--<span class="ui-li-count">3</span>-->
+        <!--</li>-->
 
-                        </a>
-                        <a class="productOptionsPopup"
-                           href="{{ list.inEditMode ? '#confirmProductDeletePopUp' : '#productOptionsPopup' }}"
-                           data-rel="{{list.inEditMode ? 'popup' : (product.productChecked ?  '' : 'popup')}}"
-                           data-position-to="window" data-transition="pop" data-theme="{{list.getTheme(product)}}"
-                           ng-click="list.updateSelectedProduct(product)">
-                        </a>
-                    </li>
-                </ul>
-            </li>
-        </ul>
-    </div>
+        <!--<li><a href="#">-->
+        <!--<img src="http://files.parsetfss.com/78e798b2-27ce-4608-a903-5f5baf8a0899/tfss-02790cd8-92cb-4d01-ab48-e0372541c24a-checklist.png">-->
 
-    <!--TODO : Clean the content after closing or opening new popup-->
-    <!--
-    Add Product Popup
-    -->
-    <div data-role="popup" id="addProductPopup" data-theme="b" data-overlay-theme="b" class="ui-content"
-         style="max-width:340px; padding-bottom:2em;">
-        <h3>Add Product</h3>
-        <form ng-submit="list.addProduct(productCategory, productName, productQuantity)">
-            <a href="index.html" data-rel="back"
-               class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close
-            </a>
+        <!--<h2>Warning</h2>-->
 
-            <label for="productName">Product Name:</label>
-            <input type="text" name="productName" id="productName" data-clear-btn="true" placeholder="Product Name..." required="true" ng-model="productName">
+        <!--<p>Hot Chip</p></a>-->
+        <!--</li>-->
+        <!--<li><a href="#">-->
+        <!--<img src="http://files.parsetfss.com/78e798b2-27ce-4608-a903-5f5baf8a0899/tfss-02790cd8-92cb-4d01-ab48-e0372541c24a-checklist.png">-->
 
-            <label for="productCategory">Product Category:</label>
-            <input type="text" name="productCategory" id="productCategory" data-clear-btn="true" placeholder="Product Category..." required ng-model="productCategory">
+        <!--<h2>Wolfgang Amadeus Phoenix</h2>-->
 
-            <label for="productQuantity">Product Quantity:</label>
-            <input type="number" name="productQuantity" pattern="[0-9]*" id="productQuantity" data-clear-btn="true" value="1" required ng-model="productQuantity">
-
-            <button type="submit">Add Product</button>
-        </form>
-    </div>
-
-
-    <!--
-    Option Popup
-    -->
-    <div data-role="popup" id="productOptionsPopup" data-theme="b" data-overlay-theme="b" class="ui-content"
-         style="max-width:340px; padding-bottom:2em;">
-
-        <a href="index.html" data-rel="back"
-           class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>
-        <h3>{{list.selectedProduct.productName}}</h3>
-        <p>Change/Add product photo.</p>
-        <a href="index.html" id="choosePhoto" data-rel="back"
-           class="ui-shadow ui-btn ui-corner-all ui-btn-b ui-icon-check ui-btn-icon-left ui-btn-inline ui-mini"
-           ng-click="list.changePhoto(list.selectedProduct, 0)">Choose a photo from library
-        </a>
-        <a href="index.html" id="takePhoto" data-rel="back"
-           class="ui-shadow ui-btn ui-corner-all ui-btn-b ui-icon-camera ui-btn-icon-left ui-btn-inline ui-mini"
-           ng-click="list.changePhoto(list.selectedProduct, 1)">Take a photo
-        </a>
-    </div>
-
-    <!--
-    Image Popup
-    -->
-    <div data-role="popup" id="productImagePopUp" data-overlay-theme="b" data-theme="b" data-corners="false">
-        <a href="index.html" data-rel="back"
-           class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>
-        <img class="popphoto" src="" style="max-height:512px;" alt="">
-    </div>
-
-    <!--
-    Confirm Product Delete
-    -->
-    <div data-role="popup" id="confirmProductDeletePopUp" data-overlay-theme="b" data-theme="b" data-corners="false">
-        <a href="index.html" data-rel="back"
-           class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>
-
-        <h3>Are you sure you want to delete the product {{list.selectedProduct.productName}} ?</h3>
-        <a href="index.html" data-rel="back"
-           class="ui-shadow ui-btn ui-corner-all ui-btn-b ui-icon-check ui-btn-icon-left ui-btn-inline ui-mini"
-           ng-click="list.removeSelectedProduct()">
-            Yes
-        </a>
-        <a href="index.html" data-rel="back"
-           class="ui-shadow ui-btn ui-corner-all ui-btn-b ui-icon-check ui-btn-icon-left ui-btn-inline ui-mini">
-            No
-        </a>
-    </div>
-
-
-
-    <!--
-     Footer
-    -->
-    <div data-role="footer" data-position="fixed" data-theme="a">
-        <div data-role="navbar">
-            <ul>
-                <li><a data-icon="home" ng-click="list.login()"> Home </a></li>
-                <li><a data-icon="plus" ng-click="list.register()"> Sign Up </a></li>
-            </ul>
-        </div>
-    </div>
+        <!--<p>Phoenix</p></a>-->
+        <!--</li>-->
+    </ul>
 </div>
-<script src='cordova.js' type='text/javascript'></script>
-
 </body>
-
 </html>

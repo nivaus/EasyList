@@ -4,7 +4,7 @@
     <title>Easy List</title>
     <meta http-equiv="Content-Security-Policy">
     <!--<script src="cordova.js"></script>-->
-    <script src='./js/index.js' type='text/javascript'></script>
+    <!--<script src='./js/index.js' type='text/javascript'></script>-->
 
     <!--
     Scripts
@@ -37,7 +37,7 @@
         </li>
         <!-- List -->
         <li ng-repeat="list in date.lists">
-            <a href="#">
+            <a href="./listContent.html">
                 <img src="http://files.parsetfss.com/78e798b2-27ce-4608-a903-5f5baf8a0899/tfss-02790cd8-92cb-4d01-ab48-e0372541c24a-checklist.png">
                 <h2>{{list.listName}}</h2>
                 <p>Shared users: {{list.sharedUsers.length}}</p></a>
