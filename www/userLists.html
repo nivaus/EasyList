@@ -24,9 +24,9 @@
 
 
 </head>
-<body ng-controller="UserListsAppController as userLists">
+<body ng-controller="UserListsAppController">
 <div data-role="page" data-theme="c" data-content-theme="c">
-    <ul data-role="listview" data-inset="true" ng-repeat="date in userLists.userLists">
+    <ul data-role="listview" data-inset="true" ng-repeat="date in userLists">
         <!-- Divider -->
         <li data-role="list-divider" data-theme="b">
             Created At: {{date.createdDate}}
@@ -34,8 +34,8 @@
         </li>
         <!-- List -->
         <li ng-repeat="list in date.lists">
-            <a ng-click="userLists.listContent()">
-                <img src="http://files.parsetfss.com/78e798b2-27ce-4608-a903-5f5baf8a0899/tfss-02790cd8-92cb-4d01-ab48-e0372541c24a-checklist.png">
+            <a ng-click="listContent()">
+                <img src="{{list.listImage}}">
                 <h2>{{list.listName}}</h2>
                 <p>Shared users: {{list.sharedUsers.length}}</p></a>
 

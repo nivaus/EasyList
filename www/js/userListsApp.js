@@ -10,9 +10,9 @@ var userLists = new Object();
 var userListsApp = angular.module('UserListsApp', []);
 
 userListsApp.controller('UserListsAppController', function ($scope) {
-        this.userLists = userLists;
+        $scope.userLists = userLists;
         getUserLists(userName,$scope);
-        this.listContent = function()
+        $scope.listContent = function()
         {
             window.location = "./listContent.html";
             //$scope.apply();
