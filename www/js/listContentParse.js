@@ -183,55 +183,55 @@ var getProductFromParse = function (productToQuery, callBack)
         }
     });
 };
-
-var facebookLogin = function ()
-{
-    facebookConnectPlugin.login(["user_about_me","email"],
-        function(result){
-            var expirationDate = new Date();
-            expirationDate.setSeconds(result.authResponse["expiresIn"]);
-            var facebookAuthData = {
-                "id": result.authResponse["userID"],
-                "access_token": result.authResponse["accessToken"],
-                "expiration_date": expirationDate
-            };
-            console.log(facebookAuthData);
-            loginToParse(facebookAuthData);
-        },
-        function () {
-            alert ("error");
-        }
-    );
-};
-
-var loginToParse = function (facebookAuthData)
-{
-    Parse.initialize(PARSE_APP, PARSE_JS);
-    Parse.FacebookUtils.logIn(facebookAuthData, {
-
-        success: function(_user) {
-            setUserDetailsInParse(_user);
-            console.log("Function loginToParse : User is logged into Parse");
-        },
-
-        error: function(error1, error2){
-            console.log("Unable to create/login to as Facebook user");
-            console.log("  ERROR1 = "+JSON.stringify(error1));
-            console.log("  ERROR2 = "+JSON.stringify(error2));
-        }
-    });
-};
-
-var setUserDetailsInParse = function (FBuser)
-{
-    facebookConnectPlugin.api("me?fields=id,name,email", [],
-        function (resultSuccess) {
-            FBuser.set("fullName", resultSuccess.name);
-            FBuser.set("email", resultSuccess.email);
-            FBuser.save();
-            console.log("Function setUserDetailsInParse: " + FBuser);
-        },
-        function (resultError) {
-            console.log(resultError);
-        });
-};
+//
+//var facebookLogin = function ()
+//{
+//    facebookConnectPlugin.login(["user_about_me","email"],
+//        function(result){
+//            var expirationDate = new Date();
+//            expirationDate.setSeconds(result.authResponse["expiresIn"]);
+//            var facebookAuthData = {
+//                "id": result.authResponse["userID"],
+//                "access_token": result.authResponse["accessToken"],
+//                "expiration_date": expirationDate
+//            };
+//            console.log(facebookAuthData);
+//            loginToParse(facebookAuthData);
+//        },
+//        function () {
+//            alert ("error");
+//        }
+//    );
+//};
+//
+//var loginToParse = function (facebookAuthData)
+//{
+//    Parse.initialize(PARSE_APP, PARSE_JS);
+//    Parse.FacebookUtils.logIn(facebookAuthData, {
+//
+//        success: function(_user) {
+//            setUserDetailsInParse(_user);
+//            console.log("Function loginToParse : User is logged into Parse");
+//        },
+//
+//        error: function(error1, error2){
+//            console.log("Unable to create/login to as Facebook user");
+//            console.log("  ERROR1 = "+JSON.stringify(error1));
+//            console.log("  ERROR2 = "+JSON.stringify(error2));
+//        }
+//    });
+//};
+//
+//var setUserDetailsInParse = function (FBuser)
+//{
+//    facebookConnectPlugin.api("me?fields=id,name,email", [],
+//        function (resultSuccess) {
+//            FBuser.set("fullName", resultSuccess.name);
+//            FBuser.set("email", resultSuccess.email);
+//            FBuser.save();
+//            console.log("Function setUserDetailsInParse: " + FBuser);
+//        },
+//        function (resultError) {
+//            console.log(resultError);
+//        });
+//};

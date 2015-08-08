@@ -210,37 +210,6 @@ listContentApp.controller('ShoppingListController', function ($scope) {
         this.hideLoadingWidget = function() {
             $.mobile.loading('hide');
         };
-
-        this.login = function ()
-        {
-            facebookLogin();
-        };
-
-
-        this.register = function()
-        {
-            ParsePushPlugin.register({
-                    appId:APP_ID, clientKey:CLIENT_KEY, eventKey:"myEventKey"}, //will trigger receivePN[pnObj.myEventKey]
-                function() {
-                    console.log('successfully registered device!');
-                }, function(e) {
-                    console.log('error registering device: ' + e);
-                });
-
-            ParsePushPlugin.on('receivePN', function(pn){
-                alert('yo i got this push notification:' + JSON.stringify(pn));
-            });
-
-            //ParsePushPlugin.register({
-            //        //appId:"McfhScnqoqzGb3sEYIuqvzdhD7orBXtaNEtijvQN", clientKey:"MXvPYbYZgZtwgcbI6728THXbji4AfNlzCoT9NpGz", eventKey:"myEventKey"}, //Easy List 1
-            //        appId:"YNiKFOkpulbY1j19E2gcdSREgTKd0AiZZKtzJaeg", clientKey:"wV1lOSJJWBlvQhvQYISlKyGlFiolEaXMsbOaMD7I", eventKey:"myEventKey"}, //Easy List 2
-            //    function() {
-            //        alert('successfully registered device!');
-            //    }, function(e) {
-            //        alert('error registering device: ' + e);
-            //    });
-        };
-
     }
 );
 

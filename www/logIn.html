@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html ng-app="SmartShoppingList">
+<html ng-app="loginApp">
 <head>
     <title>Easy List</title>
     <!--
@@ -9,27 +9,25 @@
     <script src='js/index.js' type='text/javascript'></script>
     <script src='cordova.js' type='text/javascript'></script>
 
-    <!--<script src="cordova.js"></script>-->
-
     <!--
     Scripts
     -->
-    <!--<script src="./JQuery/jquery-2.1.4.min.js"></script>-->
-    <!--<script src="./JQuery/jquery.mobile-1.4.5.min.js"></script>-->
-    <!--<script src="./js/energize-min.js"></script>-->
+    <script src="./JQuery/jquery-2.1.4.min.js"></script>
+    <script src="./JQuery/jquery.mobile-1.4.5.min.js"></script>
+    <script src="./angular/angular.min.js"></script>
+    <script src="./js/energize-min.js"></script>
     <script src="./Parse/parse-1.4.2.min.js"></script>
-    <!--<script src="./js/listContentParse.js"></script>-->
+    <script src="./js/loginApp.js"></script>
+
     <!--
     CSS
     -->
-    <!--<link rel="stylesheet" href="./JQuery/jquery.mobile-1.4.5.min.css"/>-->
-    <!--<link rel="stylesheet" href="./JQuery/jquery.mobile.theme-1.4.5.min.css"/>-->
     <link rel="stylesheet" href="./css/index2.css"/>
 
 
 </head>
 <body>
-<div class="wrapper">
+<div class="wrapper" ng-controller="loginAppController as login">
     <div class="container">
         <div>
             <img src="./img/EasyListText.png" />
@@ -41,7 +39,7 @@
         </div>
         <br>
         <form>
-            <a href="userLists.html"  data-role="button">
+            <a ng-click="login.facebookLogin()"  data-role="button">
                 <img src="./img/FacebookLoginButton.png" />
             </a>
         </form>
