@@ -12,7 +12,6 @@
     <script src="./angular/angular.min.js"></script>
     <script src="./js/energize-min.js"></script>
     <script src="./Parse/parse-1.4.2.min.js"></script>
-    <script src="./js/userListsParse.js"></script>
     <script src="js/userListsApp.js"></script>
 
     <!--
@@ -24,7 +23,7 @@
 
 
 </head>
-<body ng-controller="UserListsAppController">
+<body id="userLists" ng-controller="UserListsAppController">
 <div data-role="page" data-theme="c" data-content-theme="c">
     <ul data-role="listview" data-inset="true" ng-repeat="date in userLists">
         <!-- Divider -->
@@ -34,7 +33,7 @@
         </li>
         <!-- List -->
         <li ng-repeat="list in date.lists">
-            <a ng-click="listContent()">
+            <a ng-click="navigateToListContentPage(list.listId)">
                 <img src="{{list.listImage}}">
                 <h2>{{list.listName}}</h2>
                 <p>Shared users: {{list.sharedUsers.length}}</p></a>

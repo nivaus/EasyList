@@ -10,15 +10,17 @@ var listContent = new Object();
 var DEFAULT_PRODUCT_IMAGE = "http://files.parsetfss.com/64d6988d-576e-4edc-b686-e7a05d6ed73b/tfss-c2486cd8-6833-4ef0-b569-7d1445ebee99-shopping-cart.png";
 var PHOTO_LIBRARY = 0;
 var PHOTO_CAMERA = 1;
+var listId = localStorage.getItem("listId");
 
 var listContentApp = angular.module('SmartShoppingList', []);
+
 
 listContentApp.controller('ShoppingListController', function ($scope) {
         this.listContent = listContent;
         this.selectedProduct;
         this.inEditMode = false;
 
-        getList($scope);
+        getList($scope,listId);
 
         this.addProduct = function (productCategory, productName, productQuantity) {
             productQuantity = parseInt(productQuantity);

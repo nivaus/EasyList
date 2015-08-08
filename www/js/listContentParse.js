@@ -14,11 +14,11 @@ function Product(objectId, categoryName, productName, productQuantity, productIm
     this.productChecked = productChecked;
 }
 
-var getList = function ($scope) {
+var getList = function ($scope,listId) {
     Parse.initialize(PARSE_APP_ID, PARSE_JS_ID);
     var ListContent = Parse.Object.extend("ListContent");
     var query = new Parse.Query(ListContent);
-
+    query.equalTo("listId",listId);
     query.find(
         {
             success: function (results) {
