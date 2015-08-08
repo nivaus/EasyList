@@ -2,10 +2,8 @@
  * Created by oslander on 05/07/2015.
  */
 
-//var PARSE_APP = "d4eaDwYlkds7SajkbBzoedmbOnCS5SzY8ioZ8FQV";
-var PARSE_APP = "YNiKFOkpulbY1j19E2gcdSREgTKd0AiZZKtzJaeg"; //EasyList2
-//var PARSE_JS = "YZnk7gzaQfcAlzLrc4UmTJHEyGXsbEq0wXi984DC";
-var PARSE_JS = "Ht7VpNFFhB6KKod4L8gvWlyzjwWt0PEPXjEHVD1H"; //EasyList2
+var PARSE_APP_ID = "YNiKFOkpulbY1j19E2gcdSREgTKd0AiZZKtzJaeg";
+var PARSE_JS_ID = "Ht7VpNFFhB6KKod4L8gvWlyzjwWt0PEPXjEHVD1H";
 
 function Product(objectId, categoryName, productName, productQuantity, productImage, productChecked) {
     this.objectId = objectId;
@@ -17,7 +15,7 @@ function Product(objectId, categoryName, productName, productQuantity, productIm
 }
 
 var getList = function ($scope) {
-    Parse.initialize(PARSE_APP, PARSE_JS);
+    Parse.initialize(PARSE_APP_ID, PARSE_JS_ID);
     var ListContent = Parse.Object.extend("ListContent");
     var query = new Parse.Query(ListContent);
 
@@ -53,7 +51,7 @@ var getList = function ($scope) {
 };
 
 var addNewProductToParse = function ($scope, newProduct) {
-    Parse.initialize(PARSE_APP, PARSE_JS);
+    Parse.initialize(PARSE_APP_ID, PARSE_JS_ID);
     var ListContent = Parse.Object.extend("ListContent");
     var parseListContent = new ListContent();
 
@@ -78,7 +76,7 @@ var addNewProductToParse = function ($scope, newProduct) {
 };
 
 var toggleProductCheckedInParse = function ($scope, productToUpdate) {
-    Parse.initialize(PARSE_APP, PARSE_JS);
+    Parse.initialize(PARSE_APP_ID, PARSE_JS_ID);
     var ListContent = Parse.Object.extend("ListContent");
     var query = new Parse.Query(ListContent);
     query.equalTo("objectId", productToUpdate.objectId);
@@ -103,7 +101,7 @@ var toggleProductCheckedInParse = function ($scope, productToUpdate) {
 };
 
 var updateProductQuantityInParse = function ($scope, productToUpdate, newProductQuantity) {
-    Parse.initialize(PARSE_APP, PARSE_JS);
+    Parse.initialize(PARSE_APP_ID, PARSE_JS_ID);
     var ListContent = Parse.Object.extend("ListContent");
     var query = new Parse.Query(ListContent);
     query.equalTo("objectId", productToUpdate.objectId);
@@ -126,7 +124,7 @@ var updateProductQuantityInParse = function ($scope, productToUpdate, newProduct
 };
 
 var deleteProductFromParse = function ($scope, productToDelete) {
-    Parse.initialize(PARSE_APP, PARSE_JS);
+    Parse.initialize(PARSE_APP_ID, PARSE_JS_ID);
     var ListContent = Parse.Object.extend("ListContent");
     var query = new Parse.Query(ListContent);
     query.get(productToDelete.objectId, {
@@ -148,7 +146,7 @@ var deleteProductFromParse = function ($scope, productToDelete) {
 
 var changeProductPhotoInParse = function($scope, productToUpdate, imageURI)
 {
-    Parse.initialize(PARSE_APP, PARSE_JS);
+    Parse.initialize(PARSE_APP_ID, PARSE_JS_ID);
 
     var file = new Parse.File(productToUpdate.productName + ".jpg", {base64:imageURI});
     $scope.list.showLoadingWidget();
@@ -170,7 +168,7 @@ var changeProductPhotoInParse = function($scope, productToUpdate, imageURI)
 
 var getProductFromParse = function (productToQuery, callBack)
 {
-    Parse.initialize(PARSE_APP, PARSE_JS);
+    Parse.initialize(PARSE_APP_ID, PARSE_JS_ID);
     var ListContent = Parse.Object.extend("ListContent");
     var query = new Parse.Query(ListContent);
     query.equalTo("objectId", productToQuery.objectId);
@@ -183,55 +181,3 @@ var getProductFromParse = function (productToQuery, callBack)
         }
     });
 };
-//
-//var facebookLogin = function ()
-//{
-//    facebookConnectPlugin.login(["user_about_me","email"],
-//        function(result){
-//            var expirationDate = new Date();
-//            expirationDate.setSeconds(result.authResponse["expiresIn"]);
-//            var facebookAuthData = {
-//                "id": result.authResponse["userID"],
-//                "access_token": result.authResponse["accessToken"],
-//                "expiration_date": expirationDate
-//            };
-//            console.log(facebookAuthData);
-//            loginToParse(facebookAuthData);
-//        },
-//        function () {
-//            alert ("error");
-//        }
-//    );
-//};
-//
-//var loginToParse = function (facebookAuthData)
-//{
-//    Parse.initialize(PARSE_APP, PARSE_JS);
-//    Parse.FacebookUtils.logIn(facebookAuthData, {
-//
-//        success: function(_user) {
-//            setUserDetailsInParse(_user);
-//            console.log("Function loginToParse : User is logged into Parse");
-//        },
-//
-//        error: function(error1, error2){
-//            console.log("Unable to create/login to as Facebook user");
-//            console.log("  ERROR1 = "+JSON.stringify(error1));
-//            console.log("  ERROR2 = "+JSON.stringify(error2));
-//        }
-//    });
-//};
-//
-//var setUserDetailsInParse = function (FBuser)
-//{
-//    facebookConnectPlugin.api("me?fields=id,name,email", [],
-//        function (resultSuccess) {
-//            FBuser.set("fullName", resultSuccess.name);
-//            FBuser.set("email", resultSuccess.email);
-//            FBuser.save();
-//            console.log("Function setUserDetailsInParse: " + FBuser);
-//        },
-//        function (resultError) {
-//            console.log(resultError);
-//        });
-//};

@@ -1,7 +1,5 @@
-//var PARSE_APP = "d4eaDwYlkds7SajkbBzoedmbOnCS5SzY8ioZ8FQV";
-var PARSE_APP = "YNiKFOkpulbY1j19E2gcdSREgTKd0AiZZKtzJaeg"; //EasyList2
-//var PARSE_JS = "YZnk7gzaQfcAlzLrc4UmTJHEyGXsbEq0wXi984DC";
-var PARSE_JS = "Ht7VpNFFhB6KKod4L8gvWlyzjwWt0PEPXjEHVD1H"; //EasyList2
+var PARSE_APP_ID = "YNiKFOkpulbY1j19E2gcdSREgTKd0AiZZKtzJaeg";
+var PARSE_JS_ID = "Ht7VpNFFhB6KKod4L8gvWlyzjwWt0PEPXjEHVD1H";
 
 
 function UserList(objectId, adminUser, listName, sharedUsers, listImage, createdTime) {
@@ -14,7 +12,7 @@ function UserList(objectId, adminUser, listName, sharedUsers, listImage, created
 }
 
 var getUserLists = function (username,$scope) {
-    Parse.initialize(PARSE_APP, PARSE_JS);
+    Parse.initialize(PARSE_APP_ID, PARSE_JS_ID);
     var lists = Parse.Object.extend("Lists");
     var query = new Parse.Query(lists);
 
