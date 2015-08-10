@@ -19,6 +19,7 @@ listContentApp.controller('ShoppingListController', function ($scope) {
         this.listContent = listContent;
         this.selectedProduct;
         this.inEditMode = false;
+        $scope.notifyText = "I'm on my way to the supermarket. Last chance for changes!";
 
         getList($scope,listId);
 
@@ -96,18 +97,25 @@ listContentApp.controller('ShoppingListController', function ($scope) {
         };
 
         this.editList = function () {
+            $("#addProductButton").hide();
+            $("#menuButton").hide();
             this.addQuantityEditing();
         };
 
         this.executeEditOrSaveFunction = function () {
-            if (this.inEditMode === true)
+            if (this.inEditMode === true) {
                 this.saveList();
-            else
+            }
+            else {
                 this.editList();
+            }
+
             this.inEditMode = !this.inEditMode;
         };
 
         this.saveList = function () {
+            $("#addProductButton").show();
+            $("#menuButton").show();
             this.updateProductsQuantity();
         };
 
@@ -240,6 +248,18 @@ listContentApp.controller('ShoppingListController', function ($scope) {
         {
             localStorage.removeItem("listId");
         }
+
+        $scope.notifyFriends = function()
+        {
+            var query = new Parse.Query(Parse.Installation);
+            query.equalTo('channel', listId);
+            Parse.Push.send({
+                where: query, // Set our Installation query
+                data: {
+                    alert: "A test notification from Parse!"
+                }
+            });
+        };
 
     }
 );
