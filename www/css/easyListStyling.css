@@ -27,3 +27,7 @@ and open the template in the editor.
 .ui-listview>.ui-li-static {
     padding: .7em 0.3em;
 }
+
+.ui-content .popup {
+    padding: 4em;
+}

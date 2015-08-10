@@ -33,29 +33,36 @@
      Menu
     -->
     <div id="menu" data-role="panel" data-position="left">
-        <h3>Create New List</h3>
-        <form ng-submit="list.addProduct(productCategory, productName, productQuantity)">
-            <a href="userLists.html" data-rel="back"
+        <h3>Menu</h3>
+            <a href="#" data-rel="close"
                class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close
             </a>
 
-            <label for="productName">Product Name:</label>
-            <input type="text" name="productName" id="productName" data-clear-btn="true" placeholder="Product Name..." required="true" ng-model="productName">
-
-            <label for="productCategory">Product Category:</label>
-            <input type="text" name="productCategory" id="productCategory" data-clear-btn="true" placeholder="Product Category..." required ng-model="productCategory">
-
-            <label for="productQuantity">Product Quantity:</label>
-            <input type="number" name="productQuantity" pattern="[0-9]*" id="productQuantity" data-clear-btn="true" value="1" required ng-model="productQuantity">
-
-            <button type="submit">Add Product</button>
+            <ul data-role="listview" data-theme="d" data-divider-theme="a" style="margin-top:-16px;" class="nav-search">
+                <li>
+                    <a ng-click="navigateToUserLists()">My Lists</a>
+                </li>
+                <li>
+                    <a id="{{list.inEditMode ? 'saveListButton' : 'editListButton'}}"
+                    data-icon="{{list.inEditMode ? 'check' : 'edit'}}"
+                    ng-click="list.executeEditOrSaveFunction()">
+                    {{list.inEditMode ? 'Save List' : 'Edit List'}}
+                    </a>
+                </li>
+                <li>
+                    <a ng-click="logOut()">Logout</a>
+                </li>
+            </ul>
         </form>
     </div>
 
-    <div id="menu2" data-role="panel" data-position="right">
-        <h3>Create New List</h3>
+    <!--
+    Add Product Panel
+    -->
+    <div id="addProductPanel" data-role="panel" data-position="right" data-theme="b" data-overlay-theme="b" >
+        <h3>Add Product</h3>
         <form ng-submit="list.addProduct(productCategory, productName, productQuantity)">
-            <a href="userLists.html" data-rel="back"
+            <a href="#" data-rel="close"
                class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close
             </a>
 
@@ -77,14 +84,14 @@
      Header
     -->
     <div data-role="header" data-theme="a">
-        <a href="#menu" data-icon="plus">Menu</a>
+        <a href="#menu" class="ui-btn ui-shadow ui-corner-all ui-btn-inline ui-btn-icon-left ui-icon-bars">Menu</a>
         <!--<a id="{{list.inEditMode ? 'saveListButton' : 'editListButton'}}"-->
            <!--data-icon="{{list.inEditMode ? 'check' : 'edit'}}"-->
            <!--ng-click="list.executeEditOrSaveFunction()">-->
             <!--{{list.inEditMode ? 'Save List' : 'Edit List'}}-->
         <!--</a>-->
         <h1>Easy List</h1>
-        <a href="#menu2" data-icon="plus">Add Product</a>
+        <a href="#addProductPanel" data-icon="plus">Add Product</a>
     </div>
 
     <!--
@@ -139,26 +146,25 @@
     <!--
     Add Product Popup
     -->
-    <div data-role="popup" id="addProductPopup" data-theme="b" data-overlay-theme="b" class="ui-content"
-         style="max-width:340px; padding-bottom:2em;">
-        <h3>Add Product</h3>
-        <form ng-submit="list.addProduct(productCategory, productName, productQuantity)">
-            <a href="index.html" data-rel="back"
-               class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close
-            </a>
+    <!--<div id="addProductPopup" data-role="popup" data-theme="b" data-overlay-theme="b" class="popup">-->
+        <!--<h3>Add Product</h3>-->
+        <!--<form ng-submit="list.addProduct(productCategory, productName, productQuantity)">-->
+            <!--<a href="index.html" data-rel="back"-->
+               <!--class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close-->
+            <!--</a>-->
 
-            <label for="productName">Product Name:</label>
-            <input type="text" name="productName" id="productName" data-clear-btn="true" placeholder="Product Name..." required="true" ng-model="productName">
+            <!--<label for="productName">Product Name:</label>-->
+            <!--<input type="text" name="productName" id="productName" data-clear-btn="true" placeholder="Product Name..." required="true" ng-model="productName">-->
 
-            <label for="productCategory">Product Category:</label>
-            <input type="text" name="productCategory" id="productCategory" data-clear-btn="true" placeholder="Product Category..." required ng-model="productCategory">
+            <!--<label for="productCategory">Product Category:</label>-->
+            <!--<input type="text" name="productCategory" id="productCategory" data-clear-btn="true" placeholder="Product Category..." required ng-model="productCategory">-->
 
-            <label for="productQuantity">Product Quantity:</label>
-            <input type="number" name="productQuantity" pattern="[0-9]*" id="productQuantity" data-clear-btn="true" value="1" required ng-model="productQuantity">
+            <!--<label for="productQuantity">Product Quantity:</label>-->
+            <!--<input type="number" name="productQuantity" pattern="[0-9]*" id="productQuantity" data-clear-btn="true" value="1" required ng-model="productQuantity">-->
 
-            <button type="submit">Add Product</button>
-        </form>
-    </div>
+            <!--<button type="submit">Add Product</button>-->
+        <!--</form>-->
+    <!--</div>-->
 
 
     <!--
@@ -212,14 +218,14 @@
     <!--
      Footer
     -->
-    <!--<div data-role="footer" data-position="fixed" data-theme="a">-->
-        <!--<div data-role="navbar">-->
-            <!--<ul>-->
-                <!--<li><a data-icon="home" ng-click=""> Home </a></li>-->
-                <!--<li><a data-icon="plus" ng-click=""> Log Out </a></li>-->
-            <!--</ul>-->
-        <!--</div>-->
-    <!--</div>-->
+    <div data-role="footer" data-position="fixed" data-theme="a">
+        <div data-role="navbar">
+            <ul>
+                <li><a data-icon="home" ng-click=""> Home </a></li>
+                <li><a data-icon="plus" ng-click=""> Log Out </a></li>
+            </ul>
+        </div>
+    </div>
 </div>
 <script src='cordova.js' type='text/javascript'></script>
 </body>

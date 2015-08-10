@@ -34,6 +34,7 @@ listContentApp.controller('ShoppingListController', function ($scope) {
             }
 
             $("#addProductPopup").popup("close");
+            $("#addProductPanel").panel("close");
             $scope.productCategory = "";
             $scope.productName = "";
             $scope.productQuantity = "";
@@ -211,6 +212,35 @@ listContentApp.controller('ShoppingListController', function ($scope) {
         this.hideLoadingWidget = function() {
             $.mobile.loading('hide');
         };
+
+        $scope.navigateToUserLists = function() {
+            window.location = "userLists.html";
+        };
+
+        $scope.logOut = function()
+        {
+            facebookConnectPlugin.logout(
+                function(success)
+                {
+                    console.log("User logged Out From Facebook.");
+                    Parse.User.logOut();
+                    console.log("User logged Out From Parse.");
+                    cleanSavedLocalStorage();
+                    console.log("Local Storage Cleaned.");
+                    window.location = "logIn.html";
+                },
+                function(error)
+                {
+                    console.log(error);
+                }
+            );
+        };
+
+        function cleanSavedLocalStorage()
+        {
+            localStorage.removeItem("listId");
+        }
+
     }
 );
 
