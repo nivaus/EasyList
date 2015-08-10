@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html ng-app="loginApp">
+<html>
 <head>
     <title>Easy List</title>
     <meta http-equiv="Content-Security-Policy">
@@ -18,30 +18,33 @@
     <!--
     CSS
     -->
+    <link rel="stylesheet" href="./JQuery/jquery.mobile-1.4.5.min.css"/>
+    <link rel="stylesheet" href="./JQuery/jquery.mobile.theme-1.4.5.min.css"/>
     <link rel="stylesheet" href="./css/logIn.css"/>
 
 
 </head>
 <body>
-<div class="wrapper" ng-controller="loginAppController">
+
+
+
+<div class="wrapper">
+
     <div class="container">
         <div>
-            <img src="./img/EasyListText.png" />
+            <img src="./img/EasyListText.png"/>
         </div>
         <br>
         <br>
+
         <div>
-            <img src="./img/ShoppingCartIcon.png" />
+            <img src="./img/ShoppingCartIcon.png"/>
         </div>
         <br>
-
-    </div>
-
-    <form>
-        <a ng-click="facebookLogin()"  data-role="button">
-            <img src="./img/FacebookLoginButton.png" />
+        <a onclick="facebookLogin()">
+            <img src="./img/FacebookLoginButton.png"/>
         </a>
-    </form>
+    </div>
 
     <ul class="bg-bubbles">
         <li></li>
@@ -57,6 +60,7 @@
         <li></li>
         <li></li>
     </ul>
+
 </div>
 <script src='cordova.js' type='text/javascript'></script>
 </body>

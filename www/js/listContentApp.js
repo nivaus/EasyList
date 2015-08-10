@@ -11,15 +11,16 @@ var DEFAULT_PRODUCT_IMAGE = "http://files.parsetfss.com/64d6988d-576e-4edc-b686-
 var PHOTO_LIBRARY = 0;
 var PHOTO_CAMERA = 1;
 //var listId = localStorage.getItem("listId");
-var listId = "4vfJrTpOlW";
+var listId = "cnF6gv1Ps2";
 var listContentApp = angular.module('SmartShoppingList', []);
 
 
 listContentApp.controller('ShoppingListController', function ($scope) {
+        var username = localStorage.getItem("username");
         this.listContent = listContent;
         this.selectedProduct;
         this.inEditMode = false;
-        $scope.notifyText = "I'm on my way to the supermarket. Last chance for changes!";
+        $scope.notifyText="";
 
         getList($scope,listId);
 
@@ -161,16 +162,12 @@ listContentApp.controller('ShoppingListController', function ($scope) {
 
         this.changePhoto = function (product, photoType) {
             console.log("Take Photo!");
-            var popover = new CameraPopoverOptions(300, 300, 100, 100, Camera.PopoverArrowDirection.ARROW_ANY);
             var cameraOptions = {
-                quality: 100,
+                quality: 50,
                 destinationType: Camera.DestinationType.DATA_URL,
                 allowEdit: true,
                 sourceType: "",
                 encodingType: Camera.EncodingType.JPEG,
-                targetWidth: 500,
-                targetHeight: 500,
-                popoverOptions: popover,
                 saveToPhotoAlbum: true
             };
             if (photoType === PHOTO_CAMERA) {
@@ -249,18 +246,28 @@ listContentApp.controller('ShoppingListController', function ($scope) {
             localStorage.removeItem("listId");
         }
 
+
+
         $scope.notifyFriends = function()
         {
+
+            if ($scope.notifyText === "")
+            {
+                $scope.notifyText = "I'm on my way to the supermarket. Last chance for changes!";
+            }
+            console.log($scope.notifyText);
             var query = new Parse.Query(Parse.Installation);
-            query.equalTo('channel', listId);
+            query.equalTo('channels', listId);
+            console.log()
+            query.notEqualTo("channels", username);
             Parse.Push.send({
                 where: query, // Set our Installation query
                 data: {
-                    alert: "A test notification from Parse!"
+                    alert: $scope.notifyText
                 }
             });
+            $scope.notifyText = "";
         };
-
     }
 );
 
