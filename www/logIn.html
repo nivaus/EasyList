@@ -2,9 +2,6 @@
 <html ng-app="loginApp">
 <head>
     <title>Easy List</title>
-    <!--
-    Cordova
-    -->
     <meta http-equiv="Content-Security-Policy">
 
     <!--
@@ -21,12 +18,12 @@
     <!--
     CSS
     -->
-    <link rel="stylesheet" href="./css/easyListStyling.css"/>
+    <link rel="stylesheet" href="./css/logIn.css"/>
 
 
 </head>
 <body>
-<div class="wrapper" ng-controller="loginAppController as login">
+<div class="wrapper" ng-controller="loginAppController">
     <div class="container">
         <div>
             <img src="./img/EasyListText.png" />
@@ -37,12 +34,14 @@
             <img src="./img/ShoppingCartIcon.png" />
         </div>
         <br>
-        <form>
-            <a ng-click="facebookLogin()"  data-role="button">
-                <img src="./img/FacebookLoginButton.png" />
-            </a>
-        </form>
+
     </div>
+
+    <form>
+        <a ng-click="facebookLogin()"  data-role="button">
+            <img src="./img/FacebookLoginButton.png" />
+        </a>
+    </form>
 
     <ul class="bg-bubbles">
         <li></li>

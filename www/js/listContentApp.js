@@ -10,8 +10,8 @@ var listContent = new Object();
 var DEFAULT_PRODUCT_IMAGE = "http://files.parsetfss.com/64d6988d-576e-4edc-b686-e7a05d6ed73b/tfss-c2486cd8-6833-4ef0-b569-7d1445ebee99-shopping-cart.png";
 var PHOTO_LIBRARY = 0;
 var PHOTO_CAMERA = 1;
-var listId = localStorage.getItem("listId");
-
+//var listId = localStorage.getItem("listId");
+var listId = "4vfJrTpOlW";
 var listContentApp = angular.module('SmartShoppingList', []);
 
 

@@ -20,8 +20,9 @@ function UserList(listId, adminUser, listName, sharedUsers, listImage, createdTi
 var userListsApp = angular.module('UserListsApp', []);
 
 userListsApp.controller('UserListsAppController', function ($scope) {
-        $scope.username = Parse.User.current().attributes.username;
+        //$scope.username = Parse.User.current().attributes.username;
         $scope.userLists = new Object();
+        $scope.username = "WBKj6Xmo5WGiaMmsoz8q3B1Ty";
         getUserLists();
         $scope.navigateToListContentPage = function(listId)
         {
