@@ -56,6 +56,7 @@ userListsApp.controller('UserListsAppController', function ($scope) {
                 userList = getUserListFromParseObject(results[i]);
                 createdDate = results[i].createdAt.toDateString();
                 $scope.userLists[createdDate].lists.push(userList);
+                console.log("ListId " + userList.listId + " added.");
             }
             $scope.$apply();
         };
@@ -84,14 +85,10 @@ userListsApp.controller('UserListsAppController', function ($scope) {
         {
             var listId;
             for (var listDateIndex in $scope.userLists) {
-                console.log("listDateIndex =" + listDateIndex);
                 for (var listIndex in $scope.userLists[listDateIndex].lists) {
-                    console.log("listIndex =" + listIndex);
                     listId = $scope.userLists[listDateIndex].lists[listIndex].listId;
-                    console.log("listId =" + listId);
                     ParsePushPlugin.subscribe(listId, function (success) {
                             console.log(success);
-
                         },
                         function (error) {
                             console.log(error);
