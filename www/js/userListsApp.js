@@ -18,17 +18,53 @@ function UserList(listId, adminUser, listName, sharedUsers, listImage, createdTi
 }
 
 var userListsApp = angular.module('UserListsApp', []);
-
+var x;
 userListsApp.controller('UserListsAppController', function ($scope) {
         //$scope.username = Parse.User.current().attributes.username;
         $scope.userLists = new Object();
         $scope.username = "WBKj6Xmo5WGiaMmsoz8q3B1Ty";
+        $scope.defaultListImage = "http://files.parsetfss.com/78e798b2-27ce-4608-a903-5f5baf8a0899/tfss-02790cd8-92cb-4d01-ab48-e0372541c24a-checklist.png";
         getUserLists();
         $scope.navigateToListContentPage = function(listId)
         {
             localStorage.setItem("listId",listId);
             window.location = "./listContent.html";
         };
+
+        $scope.createNewList = function(listName)
+        {
+            Parse.initialize(PARSE_APP_ID, PARSE_JS_ID);
+            var Lists = Parse.Object.extend("Lists");
+            var parseUserLists = new Lists();
+
+            parseUserLists.save({
+                listName: listName,
+                adminUser: $scope.username,
+                sharedUsers: [$scope.username],
+                listImage: $scope.defaultListImage
+            }, {
+                success: function(listFromParse) {
+                    var createdTime = listFromParse.createdAt.toDateString();
+                    var listId = listFromParse.id;
+                    if ($scope.userLists.hasOwnProperty(createdTime) === false) //if the creation date is already created
+                    {
+                        $scope.userLists[createdTime] = {
+                            createdTime: createdTime,
+                            lists: []
+                        };
+                    }
+                    var newList = new UserList(listId, $scope.username, listName, [$scope.username], $scope.defaultListImage, createdTime);
+                    $scope.userLists[createdTime].lists.push(newList);
+                    $scope.$apply();
+                    $("#createNewListPanel").panel("close");
+                    console.log('New List created with listId: ' + listId.id);
+                },
+                error: function(productFromParse, error) {
+                    console.log('Failed to create new object, with error code: ' + error.message);
+                }
+            });
+        };
+
 
         function getUserLists() {
             var lists = Parse.Object.extend("Lists");

@@ -25,50 +25,37 @@
 </head>
 <body id="userLists" ng-controller="UserListsAppController">
 <div data-role="page" data-theme="c" data-content-theme="c">
-    <div id="myPanel" data-role="panel" data-position="left">
-        <h3>Create New List</h3>
-        <form ng-submit="list.addProduct(productCategory, productName, productQuantity)">
-            <a href="userLists.html" data-rel="back"
-               class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close
-            </a>
+    <div id="menuPanel" data-role="panel" data-position="left">
+        <h3>Menu</h3>
+        <a href="#" data-rel="close"
+           class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close
+        </a>
 
-            <label for="productName">Product Name:</label>
-            <input type="text" name="productName" id="productName" data-clear-btn="true" placeholder="Product Name..." required="true" ng-model="productName">
-
-            <label for="productCategory">Product Category:</label>
-            <input type="text" name="productCategory" id="productCategory" data-clear-btn="true" placeholder="Product Category..." required ng-model="productCategory">
-
-            <label for="productQuantity">Product Quantity:</label>
-            <input type="number" name="productQuantity" pattern="[0-9]*" id="productQuantity" data-clear-btn="true" value="1" required ng-model="productQuantity">
-
-            <button type="submit">Add Product</button>
-        </form>
+        <ul data-role="listview" data-theme="d" data-divider-theme="a" style="margin-top:-16px;" class="nav-search">
+            <li>
+                <a ng-click="logOut()">Logout</a>
+            </li>
+        </ul>
     </div>
 
-    <div id="myPanel2" data-role="panel" data-position="right">
+    <div id="createNewListPanel" data-role="panel" data-position="right">
         <h3>Create New List</h3>
-        <form ng-submit="list.addProduct(productCategory, productName, productQuantity)">
-            <a href="userLists.html" data-rel="back"
+        <form ng-submit="createNewList(listName)">
+            <a href="#" data-rel="back"
                class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close
             </a>
 
-            <label for="productName">Product Name:</label>
-            <input type="text" name="productName" id="productName" data-clear-btn="true" placeholder="Product Name..." required="true" ng-model="productName">
+            <label for="listName">List Name:</label>
+            <input type="text" name="listName" id="listName" data-clear-btn="true" placeholder="List Name..." required="true" ng-model="listName">
 
-            <label for="productCategory">Product Category:</label>
-            <input type="text" name="productCategory" id="productCategory" data-clear-btn="true" placeholder="Product Category..." required ng-model="productCategory">
-
-            <label for="productQuantity">Product Quantity:</label>
-            <input type="number" name="productQuantity" pattern="[0-9]*" id="productQuantity" data-clear-btn="true" value="1" required ng-model="productQuantity">
-
-            <button type="submit">Add Product</button>
+            <button type="submit" data-theme="b">Add Product</button>
         </form>
     </div>
 
     <div data-role="header" data-theme="a">
-        <a href="#myPanel" data-icon="plus">Options</a>
+        <a href="#menuPanel" data-icon="plus">Menu</a>
         <h1>Easy List</h1>
-        <a href="#myPanel2" data-icon="plus">Options2</a>
+        <a href="#createNewListPanel" data-icon="plus">Create New List</a>
     </div>
 
     <div data-role="main" class="ui-content">

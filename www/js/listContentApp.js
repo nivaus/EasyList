@@ -14,13 +14,17 @@ var PHOTO_CAMERA = 1;
 var listId = "cnF6gv1Ps2";
 var listContentApp = angular.module('SmartShoppingList', []);
 
-
 listContentApp.controller('ShoppingListController', function ($scope) {
         var username = localStorage.getItem("username");
         this.listContent = listContent;
         this.selectedProduct;
         this.inEditMode = false;
-        $scope.notifyText="";
+
+        $scope.productCategory = "";
+        $scope.productName = "";
+        $scope.productQuantity = "";
+        $scope.notfyText = "";
+
 
         getList($scope,listId);
 
@@ -34,12 +38,8 @@ listContentApp.controller('ShoppingListController', function ($scope) {
             else {
                 this.addNewProductToNewCategory(productCategory, productName, productQuantity);
             }
-
-            $("#addProductPopup").popup("close");
+            $scope.clearAddProductFields();
             $("#addProductPanel").panel("close");
-            $scope.productCategory = "";
-            $scope.productName = "";
-            $scope.productQuantity = "";
         };
 
         this.addNewProductToNewCategory = function (productCategory, productName, productQuantity) {
@@ -65,6 +65,13 @@ listContentApp.controller('ShoppingListController', function ($scope) {
                 var newProduct = new Product(null, productCategory, productName, productQuantity, productImage, false, listId);
                 addNewProductToParse($scope, newProduct);
             }
+        };
+
+        $scope.clearAddProductFields = function()
+        {
+            $scope.productCategory = "";
+            $scope.productName = "";
+            $scope.productQuantity = "";
         };
 
         this.itemClicked = function (product) {
@@ -247,8 +254,6 @@ listContentApp.controller('ShoppingListController', function ($scope) {
             localStorage.removeItem("username");
         }
 
-
-
         $scope.notifyFriends = function()
         {
 
@@ -267,6 +272,12 @@ listContentApp.controller('ShoppingListController', function ($scope) {
                     alert: $scope.notifyText
                 }
             });
+            $("#notifyFriendsPopUp").popup("close");
+            $scope.clearNotifyFriendsFields();
+        };
+
+        $scope.clearNotifyFriendsFields = function()
+        {
             $scope.notifyText = "";
         };
     }

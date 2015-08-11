@@ -7,12 +7,11 @@
     <!--
     CSS
     -->
-
     <link rel="stylesheet" href="./JQuery/jquery.mobile-1.4.5.min.css"/>
     <link rel="stylesheet" href="./JQuery/jquery.mobile.theme-1.4.5.min.css"/>
-
     <link rel="stylesheet" href="./css/dpNumberPicker-2.x-skin.grey.css"/>
     <link rel="stylesheet" href="./css/easyListStyling.css"/>
+
     <!--
     Scripts
     -->
@@ -26,13 +25,13 @@
     <script src="js/listContentApp.js"></script>
 
 </head>
-<body ng-controller="ShoppingListController as list">
+<body id="shoppingListController" ng-controller="ShoppingListController as list">
 
 <div data-role="page" data-theme="c" data-content-theme="c">
     <!--
      Menu
     -->
-    <div id="menu" data-role="panel" data-position="left">
+    <div id="menuPanel" class="panel" data-role="panel" data-position="left">
         <h3>Menu</h3>
         <a href="#" data-rel="close"
            class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close
@@ -46,17 +45,16 @@
                 <a ng-click="logOut()">Logout</a>
             </li>
         </ul>
-        </form>
     </div>
 
     <!--
     Add Product Panel
     -->
-    <div id="addProductPanel" data-role="panel" data-position="right">
+    <div id="addProductPanel" class="panel" data-role="panel" data-position="right">
         <h3>Add Product</h3>
 
         <form ng-submit="list.addProduct(productCategory, productName, productQuantity)">
-            <a href="#" data-rel="close"
+            <a href="#" data-rel="close" ng-click="clearAddProductFields()"
                class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close
             </a>
 
@@ -81,7 +79,7 @@
      Header
     -->
     <div data-role="header" data-theme="a">
-        <a id="menuButton" href="#menu"
+        <a id="menuButton" href="#menuPanel"
            class="ui-btn ui-shadow ui-corner-all ui-btn-inline ui-btn-icon-left ui-icon-bars">Menu</a>
 
         <h1>Easy List</h1>
@@ -195,14 +193,14 @@
      Notify Friends Popup
      -->
     <div data-role="popup" id="notifyFriendsPopUp" data-overlay-theme="b" data-theme="b" data-corners="true">
-        <a href="#" data-rel="back"
+        <a href="#" data-rel="back" ng-click="clearNotifyFriendsFields()"
            class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">
             Close
         </a>
 
         <form ng-submit="notifyFriends()">
             <h3>Enter Text : </h3>
-            <textarea id="notifyText" data-clear-btn="true" required="true" cols="30" rows="5"
+            <textarea id="notifyText" data-clear-btn="true" cols="30" rows="5"
                       placeholder="I'm on my way to the supermarket. Last chance for changes!"
                       ng-model="notifyText"></textarea>
             <button type="submit">Send Message To Friends!</button>
