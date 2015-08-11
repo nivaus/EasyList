@@ -41,12 +41,12 @@
     <div id="createNewListPanel" data-role="panel" data-position="right">
         <h3>Create New List</h3>
         <form ng-submit="createNewList(listName)">
-            <a href="#" data-rel="back"
+            <a href="#" data-rel="close" ng-click="clearCreateNewListFields()"
                class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close
             </a>
 
             <label for="listName">List Name:</label>
-            <input type="text" name="listName" id="listName" data-clear-btn="true" placeholder="List Name..." required="true" ng-model="listName">
+            <input type="text" name="listName" id="listName" data-clear-btn="true" placeholder="List Name..." required="true" ng-model="listNameInput">
 
             <button type="submit" data-theme="b">Add Product</button>
         </form>
