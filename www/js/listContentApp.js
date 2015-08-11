@@ -48,7 +48,7 @@ listContentApp.controller('ShoppingListController', function ($scope) {
                 products: []
             };
             var productImage = DEFAULT_PRODUCT_IMAGE;
-            var newProduct = new Product(null, productCategory, productName, productQuantity, productImage, false);
+            var newProduct = new Product(null, productCategory, productName, productQuantity, productImage, false, listId);
             addNewProductToParse($scope, newProduct);
         };
 
@@ -62,7 +62,7 @@ listContentApp.controller('ShoppingListController', function ($scope) {
             }
             else {
                 var productImage = DEFAULT_PRODUCT_IMAGE;
-                var newProduct = new Product(null, productCategory, productName, productQuantity, productImage, false);
+                var newProduct = new Product(null, productCategory, productName, productQuantity, productImage, false, listId);
                 addNewProductToParse($scope, newProduct);
             }
         };
@@ -244,6 +244,7 @@ listContentApp.controller('ShoppingListController', function ($scope) {
         function cleanSavedLocalStorage()
         {
             localStorage.removeItem("listId");
+            localStorage.removeItem("username");
         }
 
 

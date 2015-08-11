@@ -5,13 +5,14 @@
 var PARSE_APP_ID = "YNiKFOkpulbY1j19E2gcdSREgTKd0AiZZKtzJaeg";
 var PARSE_JS_ID = "Ht7VpNFFhB6KKod4L8gvWlyzjwWt0PEPXjEHVD1H";
 
-function Product(objectId, categoryName, productName, productQuantity, productImage, productChecked) {
+function Product(objectId, categoryName, productName, productQuantity, productImage, productChecked, listId) {
     this.objectId = objectId;
     this.categoryName = categoryName;
     this.productName = productName;
     this.productQuantity = productQuantity;
     this.productImage = productImage;
     this.productChecked = productChecked;
+    this.listId = listId;
 }
 
 var getList = function ($scope,listId) {
@@ -29,6 +30,8 @@ var getList = function ($scope,listId) {
                     var productQuantity = results[i].get("productQuantity");
                     var productImage = results[i].get("productImage");
                     var productChecked = results[i].get("productChecked");
+                    var listId = results[i].get("listId");
+
                     if (listContent.hasOwnProperty(categoryName) === false)
                     {
                         listContent[categoryName] = {
@@ -36,7 +39,7 @@ var getList = function ($scope,listId) {
                             products: []
                         };
                     }
-                    var newProduct = new Product(objectId, categoryName, productName, productQuantity, productImage, productChecked);
+                    var newProduct = new Product(objectId, categoryName, productName, productQuantity, productImage, productChecked, listId);
                     listContent[categoryName].products.push(newProduct);
                     $scope.$apply();
                     console.log("New Product added with objectId: " + objectId);
@@ -60,7 +63,8 @@ var addNewProductToParse = function ($scope, newProduct) {
         productName: newProduct.productName,
         productQuantity: newProduct.productQuantity,
         productImage: newProduct.productImage,
-        productChecked: newProduct.productChecked
+        productChecked: newProduct.productChecked,
+        listId: newProduct.listId
     }, {
         success: function(productFromParse) {
             var productCategory = newProduct.categoryName;
