@@ -264,7 +264,6 @@ listContentApp.controller('ShoppingListController', function ($scope) {
             console.log($scope.notifyText);
             var query = new Parse.Query(Parse.Installation);
             query.equalTo('channels', listId);
-            console.log()
             query.notEqualTo("channels", username);
             Parse.Push.send({
                 where: query, // Set our Installation query
@@ -280,6 +279,7 @@ listContentApp.controller('ShoppingListController', function ($scope) {
         {
             $scope.notifyText = "";
         };
+
     }
 );
 

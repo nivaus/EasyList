@@ -110,11 +110,6 @@ userListsApp.controller('UserListsAppController', function ($scope) {
             window.location = "./listContent.html";
         };
 
-
-
-
-
-
         var addListsFromParse = function (results) {
             var userList;
             var createdDate;
@@ -147,20 +142,47 @@ userListsApp.controller('UserListsAppController', function ($scope) {
             return new UserList(listId, adminUser, listName, sharedUsers,listImage, createdDate);
         };
 
-        //var subscribeToUserListsIdsInParse = function()
-        //{
-        //    var listId;
-        //    for (var listDateIndex in $scope.userLists) {
-        //        for (var listIndex in $scope.userLists[listDateIndex].lists) {
-        //            listId = $scope.userLists[listDateIndex].lists[listIndex].listId;
-        //            ParsePushPlugin.subscribe(listId, function (success) {
-        //                    console.log(success);
-        //                },
-        //                function (error) {
-        //                    console.log(error);
-        //                });
-        //        }
-        //    }
-        //};
+
+        function arraySubscribe (array, index)
+        {
+            ParsePushPlugin.subscribe(array[index], function(msg) {
+                console.log("successfully subscribed to channel: " + array[index]);
+                if (index < array.length - 1)
+                {
+                    index++;
+                    arraySubscribe(array,index);
+                }
+            }, function(e) {
+                consolo.log('error');
+            });
+        }
+
+        function arrayUnsubscribe (array, index)
+        {
+            ParsePushPlugin.unsubscribe(array[index], function(msg) {
+                console.log(msg);
+                if (index < array.length - 1)
+                {
+                    index++;
+                    arrayUnsubscribe(array,index);
+                }
+            }, function(e) {
+                consolo.log('error');
+            });
+        }
+
+        var subscribeToUserListsIdsInParse = function()
+        {
+            var listId;
+            var subscriptions = [];
+            for (var listDateIndex in $scope.userLists) {
+                for (var listIndex in $scope.userLists[listDateIndex].lists) {
+                    listId = $scope.userLists[listDateIndex].lists[listIndex].listId;
+                    subscriptions.push(listId);
+                }
+            }
+            arraySubscribe(subscriptions,0);
+        };
+
     }
 );

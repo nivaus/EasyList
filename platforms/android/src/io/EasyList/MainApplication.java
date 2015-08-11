@@ -19,7 +19,7 @@ public class MainApplication extends Application {
         ParseCrashReporting.enable(getApplicationContext());
         Parse.initialize(this, APP_ID, CLIENT_KEY);
         PushService.setDefaultPushCallback(this, MainActivity.class);
-//        ParsePush.subscribeInBackground("Broadcast");
-//        ParseInstallation.getCurrentInstallation().saveInBackground();
+        ParsePush.subscribeInBackground("Broadcast");
+        ParseInstallation.getCurrentInstallation().saveInBackground();
     }
 }
