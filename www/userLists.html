@@ -25,6 +25,10 @@
 </head>
 <body id="userLists" ng-controller="UserListsAppController">
 <div data-role="page" data-theme="c" data-content-theme="c">
+
+    <!--
+    Menu Panel
+    -->
     <div id="menuPanel" data-role="panel" data-position="left">
         <h3>Menu</h3>
         <a href="#" data-rel="close"
@@ -38,6 +42,9 @@
         </ul>
     </div>
 
+    <!--
+    Create New List Panel
+    -->
     <div id="createNewListPanel" data-role="panel" data-position="right">
         <h3>Create New List</h3>
         <form ng-submit="createNewList(listName)">
