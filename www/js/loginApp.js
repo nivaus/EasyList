@@ -11,7 +11,7 @@ var loginApp = angular.module('loginApp', []);
 
 function facebookLogin ()
 {
-    facebookConnectPlugin.login(["user_about_me", "email"],
+    facebookConnectPlugin.login(["user_about_me", "email", "user_friends"],
         function (result) {
             var expirationDate = new Date();
             expirationDate.setSeconds(result.authResponse["expiresIn"]);
@@ -73,24 +73,25 @@ function registerDeviceInParse (callback)
         }, //will trigger receivePN[pnObj.myEventKey]
         function () {
             console.log('successfully registered device!');
-            subscribeUsernameToParse(callback);
+            callback();
+            //subscribeUsernameToParse(callback);
         }, function (e) {
             console.log('error registering device: ' + e);
         });
 }
 
-function subscribeUsernameToParse (callback)
+//function subscribeUsernameToParse (callback)
 {
-    var username = Parse.User.current().attributes.username;
-    ParsePushPlugin.subscribe(username, function (success) {
-            console.log(success);
-            callback();
-        },
-        function (fail) {
-            console.log(fail);
-        });
+//    var username = Parse.User.current().attributes.username;
+//    ParsePushPlugin.subscribe(username, function (success) {
+//            console.log(success);
+//            callback();
+//        },
+//        function (fail) {
+//            console.log(fail);
+//        });
 }
-//
+
 //loginApp.controller('loginAppController', function ($scope) {
 //        $scope.facebookLogin = function() {
 //

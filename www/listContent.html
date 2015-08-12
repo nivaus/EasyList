@@ -22,7 +22,8 @@
     <script src="./js/dpNumberPicker-2.x.js"></script>
     <script src="./Parse/parse-1.4.2.min.js"></script>
     <script src="js/listContentParse.js"></script>
-    <script src="js/listContentApp.js"></script>
+    <script src="js/facebook-sdk.js"></script>
+
 
 </head>
 <body id="shoppingListController" ng-controller="ShoppingListController as list">
@@ -40,6 +41,10 @@
         <ul data-role="listview" data-theme="d" data-divider-theme="a" style="margin-top:-16px;" class="nav-search">
             <li>
                 <a ng-click="navigateToUserLists()">My Lists</a>
+            </li>
+
+            <li>
+                <a ng-click="getFacebookFriendsDetails()">Share List</a>
             </li>
             <li>
                 <a ng-click="logOut()">Logout</a>
@@ -210,40 +215,36 @@
     <!--
     Share List Popup
      -->
-    <div data-role="popup" id="shareListPopUp" data-overlay-theme="b" data-theme="b" data-corners="true">
+    <div data-role="popup" id="shareListPopUp" data-theme="d" data-overlay-theme="d" class="ui-content">
         <a href="#" data-rel="back"
            class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">
             Close
         </a>
-
-        <ul id="facebookFriendsListview" data-role="listview" data-inset="true">
+        <ul data-role="listview" data-inset="true">
             <li data-role="list-divider" data-theme="b">
                 Facebook Friends
-                <span class="ui-li-count">100</span>
             </li>
             <li>
                 <ul data-role="listview" data-split-theme="b" data-inset="true"
-                    ng-repeat="product in category.products">
-                    <li class='{{product.productName}} done-{{product.productChecked}}'
-                        data-icon="{{list.getIcon(product)}}">
-                        <a ng-click="list.itemClicked(product)">
-                            <img class="productImage" src="{{product.productImage}}" alt="{{product.productName}}">
-
-                            <!-- If not in edit mode-->
-                            <div ng-show=!list.inEditMode>
+                    ng-repeat="myFacebookFriend in facebookFriends">
+                    <li data-icon="carat-r">
+                        <a>
+                            <img src="{{myFacebookFriend.facebookFriendPicture}}" alt="{{myFacebookFriend.facebookFriendName}}">
+                            <div>
                                 <h2>
-                                    {{product.productName}}
+                                    {{myFacebookFriend.facebookFriendName}}
                                 </h2>
-
-                                <p>Quantity: {{product.productQuantity}}</p>
                             </div>
+                        </a>
+                        <a href=""
+                           data-rel="popup"
+                           data-position-to="window" data-transition="pop" data-theme="b">
                         </a>
                     </li>
                 </ul>
             </li>
         </ul>
     </div>
-
 
     <!--
     Footer
@@ -263,11 +264,18 @@
                        data-transition="pop">
                         Notify Friends</a>
                 </li>
+                <li>
+                    <a href="#shareListPopUp" data-icon="plus" data-rel="popup" data-position-to="window"
+                       data-transition="pop">
+                        Share List
+                    </a>
+                </li>
             </ul>
         </div>
     </div>
 </div>
 <script src='cordova.js' type='text/javascript'></script>
+<script src="js/listContentApp.js"></script>
 </body>
 
 </html>
