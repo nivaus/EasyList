@@ -48,6 +48,7 @@ userListsApp.controller('UserListsAppController', function ($scope) {
             );
         }
 
+        // TODO :Check my createdTime doesn't show when adding a list
         $scope.createNewList = function()
         {
             Parse.initialize(PARSE_APP_ID, PARSE_JS_ID);
