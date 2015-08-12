@@ -20,7 +20,6 @@ function facebookLogin ()
                 "access_token": result.authResponse["accessToken"],
                 "expiration_date": expirationDate
             };
-            console.log(facebookAuthData);
             loginToParse(facebookAuthData, function(){window.location = "userLists.html";});
         },
         function () {
@@ -34,7 +33,6 @@ function loginToParse (facebookAuthData, callback)
     console.log("loginToParse");
     Parse.initialize(PARSE_APP_ID, PARSE_JS_KEY);
     Parse.FacebookUtils.logIn(facebookAuthData, {
-
         success: function (user) {
             setUserDetailsInParse(user, callback);
             localStorage.setItem("username",user.attributes.username);
@@ -53,13 +51,26 @@ function setUserDetailsInParse (parseUser, callback)
 {
     facebookConnectPlugin.api("me?fields=id,name,email", [],
         function (resultSuccess) {
-            parseUser.set("fullName", resultSuccess.name);
-            parseUser.set("email", resultSuccess.email);
-            parseUser.save().then(function()
-            {
-                registerDeviceInParse(callback);
-            });
-            console.log("Function setUserDetailsInParse: " + parseUser);
+            var fullName = resultSuccess.name;
+            var email = resultSuccess.email;
+            // Get Profile Picture
+            facebookConnectPlugin.api("/me/picture?redirect=0&type=large", [],
+                function (resultSuccess){
+                    var profilePicture = resultSuccess.data.url;
+                    console.log(fullName);
+                    console.log(email);
+                    console.log(profilePicture);
+                    parseUser.set("fullName", fullName);
+                    parseUser.set("email", email);
+                    parseUser.set("profilePicture", profilePicture);
+                    parseUser.save().then(function()
+                    {
+                        registerDeviceInParse(callback);
+                    });
+                    console.log("Function setUserDetailsInParse: " + parseUser);
+                }
+            );
+
         },
         function (resultError) {
             console.log(resultError);
