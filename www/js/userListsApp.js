@@ -95,7 +95,8 @@ userListsApp.controller('UserListsAppController', function ($scope) {
             var sharedUsers = parseListObject.attributes.sharedUsers;
             var listImage = parseListObject.attributes.listImage;
             var createdTime = parseListObject.createdAt.toDateString();
-            var newList = new UserList(listId, adminUser, listName, sharedUsers, listImage, createdTime);
+            var newList;
+            newList = new UserList(listId, adminUser, listName, sharedUsers, listImage, createdTime);
             return newList;
         }
 
