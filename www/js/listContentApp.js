@@ -366,11 +366,29 @@ listContentApp.controller('ShoppingListController', function ($scope) {
                 success: function(result) {
                     console.log("Username " + friendUsernameInParse + " is now shared in listId " + listId);
                     //TODO : Send Push Notification To User
+                    sendPushMessageToFriendWhenSharedToList(friendUsernameInParse);
                 },
                 error: function(error) {
                     console.log(error.message);
                 }
             });
+        }
+
+        function sendPushMessageToFriendWhenSharedToList (friendUsernameInParse)
+        {
+            var message = $scope.username + " shared his list with you.";
+            $scope.notifyFriends = function () {
+                var query = new Parse.Query(Parse.Installation);
+                query.equalTo("channels", username);
+                Parse.Push.send({
+                    where: query, // Set our Installation query
+                    data: {
+                        alert: message
+                    }
+                });
+                $("#notifyFriendsPopUp").popup("close");
+                $scope.clearNotifyFriendsFields();
+            };
         }
     }
 );
