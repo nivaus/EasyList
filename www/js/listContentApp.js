@@ -376,10 +376,9 @@ listContentApp.controller('ShoppingListController', function ($scope) {
 
         function sendPushMessageToFriendWhenSharedToList (friendUsernameInParse)
         {
-            var message = $scope.username + " shared his list with you.";
-            $scope.notifyFriends = function () {
+            var message = username + " shared his list with you.";
                 var query = new Parse.Query(Parse.Installation);
-                query.equalTo("channels", username);
+                query.equalTo("channels", "ch" + friendUsernameInParse);
                 Parse.Push.send({
                     where: query, // Set our Installation query
                     data: {
@@ -390,7 +389,6 @@ listContentApp.controller('ShoppingListController', function ($scope) {
                 $scope.clearNotifyFriendsFields();
             };
         }
-    }
 );
 
 
