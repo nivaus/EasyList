@@ -7,11 +7,7 @@
 $.mobile.buttonMarkup.hoverDelay = 0;
 
 var listContent = new Object();
-var DEFAULT_PRODUCT_IMAGE = "http://files.parsetfss.com/64d6988d-576e-4edc-b686-e7a05d6ed73b/tfss-c2486cd8-6833-4ef0-b569-7d1445ebee99-shopping-cart.png";
-var PHOTO_LIBRARY = 0;
-var PHOTO_CAMERA = 1;
 
-var listId = localStorage.getItem("listId");
 
 //var listId = "cnF6gv1Ps2";
 //var facebookFriends = new Object();
@@ -28,9 +24,13 @@ listContentApp.controller('ShoppingListController', function ($scope) {
         var userName = localStorage.getItem("userName");
         var fullName = localStorage.getItem("fullName");
         var facebookId = localStorage.getItem("facebookId");
+        var listId = localStorage.getItem("listId");
 
         // Constants
         var CHANNEL_PREFIX = "ch";
+        var DEFAULT_PRODUCT_IMAGE = "http://files.parsetfss.com/64d6988d-576e-4edc-b686-e7a05d6ed73b/tfss-c2486cd8-6833-4ef0-b569-7d1445ebee99-shopping-cart.png";
+        var PHOTO_LIBRARY = 0;
+        var PHOTO_CAMERA = 1;
 
         // Scope Variables
         this.listContent = listContent;

@@ -20,6 +20,7 @@ function facebookLogin ()
                 "access_token": result.authResponse["accessToken"],
                 "expiration_date": expirationDate
             };
+            console.log("Successfully logged in to facebook.");
             loginToParse(facebookAuthData, function(){window.location = "userLists.html";});
         },
         function () {
@@ -30,7 +31,6 @@ function facebookLogin ()
 
 function loginToParse (facebookAuthData, callback)
 {
-    console.log("loginToParse");
     Parse.initialize(PARSE_APP_ID, PARSE_JS_KEY);
     Parse.FacebookUtils.logIn(facebookAuthData, {
         success: function (user) {
@@ -38,7 +38,7 @@ function loginToParse (facebookAuthData, callback)
             localStorage.setItem("userName",user.attributes.username);
             localStorage.setItem("fullName",user.attributes.fullName);
             localStorage.setItem("facebookId",user.attributes.facebookId);
-            console.log("Function loginToParse : User is logged into Parse");
+            console.log("User is logged into Parse.");
         },
 
         error: function (error1, error2) {
@@ -59,17 +59,14 @@ function setUserDetailsInParse (parseUser, callback)
             facebookConnectPlugin.api("/me/picture?redirect=0&type=large", [],
                 function (resultSuccess){
                     var profilePicture = resultSuccess.data.url;
-                    console.log(fullName);
-                    console.log(email);
-                    console.log(profilePicture);
                     parseUser.set("fullName", fullName);
                     parseUser.set("email", email);
                     parseUser.set("profilePicture", profilePicture);
                     parseUser.save().then(function()
                     {
+                        console.log("User details updated in parse.");
                         registerDeviceInParse(callback);
                     });
-                    console.log("Function setUserDetailsInParse: " + parseUser);
                 }
             );
 
@@ -97,7 +94,7 @@ function subscribeUsernameToParse (callback)
     var username = Parse.User.current().attributes.username;
     var subscription = "ch" + username;
     ParsePushPlugin.subscribe(subscription, function (success) {
-            console.log(success);
+            console.log("Successfully subscribed to channel " + subscription);
             callback();
         },
         function (fail) {
