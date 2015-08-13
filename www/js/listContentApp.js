@@ -10,6 +10,7 @@ var listContent = new Object();
 var DEFAULT_PRODUCT_IMAGE = "http://files.parsetfss.com/64d6988d-576e-4edc-b686-e7a05d6ed73b/tfss-c2486cd8-6833-4ef0-b569-7d1445ebee99-shopping-cart.png";
 var PHOTO_LIBRARY = 0;
 var PHOTO_CAMERA = 1;
+
 var listId = localStorage.getItem("listId");
 
 //var listId = "cnF6gv1Ps2";
@@ -23,20 +24,23 @@ function FacebookFriend(facebookFriendId, facebookFriendName, facebookFriendPict
 var listContentApp = angular.module('SmartShoppingList', []);
 
 listContentApp.controller('ShoppingListController', function ($scope) {
+        // Local Storage
         var userName = localStorage.getItem("userName");
         var fullName = localStorage.getItem("fullName");
         var facebookId = localStorage.getItem("facebookId");
 
+        // Constants
         var CHANNEL_PREFIX = "ch";
+
+        // Scope Variables
         this.listContent = listContent;
         this.selectedProduct;
         this.inEditMode = false;
-        //$scope.facebookFriends = new Object();
+
         $scope.facebookFriends = [
             new FacebookFriend("10206162796762317", "Idan Meir", "https://fbcdn-profile-a.akamaihd.net/hprofile-ak-xpt1/v/t1.0-1/p200x200/11259841_10152719200292364_4316760221844671350_n.jpg?oh=1b35f8aa0b64e111fc1512fab67b85d0&oe=564A4296&__gda__=1447318298_9b908e7ba739f5a0aa28ec1a6341461f"),
             new FacebookFriend("10152853548977364", "Niv Auslender", "https://fbcdn-profile-a.akamaihd.net/hprofile-ak-xpt1/v/t1.0-1/p200x200/11259841_10152719200292364_4316760221844671350_n.jpg?oh=1b35f8aa0b64e111fc1512fab67b85d0&oe=564A4296&__gda__=1447318298_9b908e7ba739f5a0aa28ec1a6341461f")
         ];
-        //$scope.facebookFriends = [new FacebookFriend(1111,"Idan Meir","https://fbcdn-profile-a.akamaihd.net/hprofile-ak-xpt1/v/t1.0-1/p50x50/11259841_10152719200292364_4316760221844671350_n.jpg?oh=b07bfb37b5b42fe504096088456cbb6c&oe=5641BD4B&__gda__=1446506550_e454e9e0494cd657e301fde4e787bfee"), new FacebookFriend(2222,"Niv Auslender","https://fbcdn-profile-a.akamaihd.net/hprofile-ak-xpt1/v/t1.0-1/p50x50/11259841_10152719200292364_4316760221844671350_n.jpg?oh=b07bfb37b5b42fe504096088456cbb6c&oe=5641BD4B&__gda__=1446506550_e454e9e0494cd657e301fde4e787bfee")];
 
         $scope.productCategory = "";
         $scope.productName = "";
