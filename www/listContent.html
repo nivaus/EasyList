@@ -228,7 +228,7 @@
                 <ul data-role="listview" data-split-theme="b" data-inset="true"
                     ng-repeat="myFacebookFriend in facebookFriends">
                     <li data-icon="carat-r">
-                        <a>
+                        <a ng-click="shareListWithFriend(myFacebookFriend)">
                             <img src="{{myFacebookFriend.facebookFriendPicture}}" alt="{{myFacebookFriend.facebookFriendName}}">
                             <div>
                                 <h2>
@@ -263,12 +263,6 @@
                     <a href="#notifyFriendsPopUp" data-icon="comment" data-rel="popup" data-position-to="window"
                        data-transition="pop">
                         Notify Friends</a>
-                </li>
-                <li>
-                    <a href="#shareListPopUp" data-icon="plus" data-rel="popup" data-position-to="window"
-                       data-transition="pop">
-                        Share List
-                    </a>
                 </li>
             </ul>
         </div>

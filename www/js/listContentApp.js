@@ -10,12 +10,11 @@ var listContent = new Object();
 var DEFAULT_PRODUCT_IMAGE = "http://files.parsetfss.com/64d6988d-576e-4edc-b686-e7a05d6ed73b/tfss-c2486cd8-6833-4ef0-b569-7d1445ebee99-shopping-cart.png";
 var PHOTO_LIBRARY = 0;
 var PHOTO_CAMERA = 1;
-//var listId = localStorage.getItem("listId");
-var listId = "cnF6gv1Ps2";
+var listId = localStorage.getItem("listId");
+//var listId = "cnF6gv1Ps2";
 //var x;
 //var facebookFriends = new Object();
-function FacebookFriend(facebookFriendId, facebookFriendName, facebookFriendPicture)
-{
+function FacebookFriend(facebookFriendId, facebookFriendName, facebookFriendPicture) {
     this.facebookFriendId = facebookFriendId;
     this.facebookFriendName = facebookFriendName;
     this.facebookFriendPicture = facebookFriendPicture;
@@ -28,7 +27,10 @@ listContentApp.controller('ShoppingListController', function ($scope) {
         this.selectedProduct;
         this.inEditMode = false;
         //$scope.facebookFriends = new Object();
-        $scope.facebookFriends = [new FacebookFriend(1111,"Idan Meir","https://fbcdn-profile-a.akamaihd.net/hprofile-ak-xpt1/v/t1.0-1/p200x200/11259841_10152719200292364_4316760221844671350_n.jpg?oh=1b35f8aa0b64e111fc1512fab67b85d0&oe=564A4296&__gda__=1447318298_9b908e7ba739f5a0aa28ec1a6341461f"), new FacebookFriend(2222,"Niv Auslender","https://fbcdn-profile-a.akamaihd.net/hprofile-ak-xpt1/v/t1.0-1/p200x200/11259841_10152719200292364_4316760221844671350_n.jpg?oh=1b35f8aa0b64e111fc1512fab67b85d0&oe=564A4296&__gda__=1447318298_9b908e7ba739f5a0aa28ec1a6341461f")];
+        $scope.facebookFriends = [
+            new FacebookFriend("10206162796762317", "Idan Meir", "https://fbcdn-profile-a.akamaihd.net/hprofile-ak-xpt1/v/t1.0-1/p200x200/11259841_10152719200292364_4316760221844671350_n.jpg?oh=1b35f8aa0b64e111fc1512fab67b85d0&oe=564A4296&__gda__=1447318298_9b908e7ba739f5a0aa28ec1a6341461f"),
+            new FacebookFriend("10152853548977364", "Niv Auslender", "https://fbcdn-profile-a.akamaihd.net/hprofile-ak-xpt1/v/t1.0-1/p200x200/11259841_10152719200292364_4316760221844671350_n.jpg?oh=1b35f8aa0b64e111fc1512fab67b85d0&oe=564A4296&__gda__=1447318298_9b908e7ba739f5a0aa28ec1a6341461f")
+        ];
         //$scope.facebookFriends = [new FacebookFriend(1111,"Idan Meir","https://fbcdn-profile-a.akamaihd.net/hprofile-ak-xpt1/v/t1.0-1/p50x50/11259841_10152719200292364_4316760221844671350_n.jpg?oh=b07bfb37b5b42fe504096088456cbb6c&oe=5641BD4B&__gda__=1446506550_e454e9e0494cd657e301fde4e787bfee"), new FacebookFriend(2222,"Niv Auslender","https://fbcdn-profile-a.akamaihd.net/hprofile-ak-xpt1/v/t1.0-1/p50x50/11259841_10152719200292364_4316760221844671350_n.jpg?oh=b07bfb37b5b42fe504096088456cbb6c&oe=5641BD4B&__gda__=1446506550_e454e9e0494cd657e301fde4e787bfee")];
 
         $scope.productCategory = "";
@@ -37,7 +39,7 @@ listContentApp.controller('ShoppingListController', function ($scope) {
         $scope.notfyText = "";
 
 
-        getList($scope,listId);
+        getList($scope, listId);
 
         this.addProduct = function (productCategory, productName, productQuantity) {
             productQuantity = parseInt(productQuantity);
@@ -78,8 +80,7 @@ listContentApp.controller('ShoppingListController', function ($scope) {
             }
         };
 
-        $scope.clearAddProductFields = function()
-        {
+        $scope.clearAddProductFields = function () {
             $scope.productCategory = "";
             $scope.productName = "";
             $scope.productQuantity = "";
@@ -99,7 +100,7 @@ listContentApp.controller('ShoppingListController', function ($scope) {
             }
         };
 
-        this.toggleProductChecked = function(product) {
+        this.toggleProductChecked = function (product) {
             product.productChecked = !product.productChecked;
         };
 
@@ -109,8 +110,7 @@ listContentApp.controller('ShoppingListController', function ($scope) {
 
         this.removeSelectedProduct = function () {
             var categoryName = this.selectedProduct.categoryName;
-            if (this.listContent.hasOwnProperty(categoryName) === true)
-            {
+            if (this.listContent.hasOwnProperty(categoryName) === true) {
                 deleteProductFromParse($scope, this.selectedProduct);
             }
         };
@@ -223,7 +223,7 @@ listContentApp.controller('ShoppingListController', function ($scope) {
             }
         };
 
-        this.showLoadingWidget = function() {
+        this.showLoadingWidget = function () {
             $.mobile.loading('show', {
                 text: 'Uploading Image...',
                 textVisible: true,
@@ -232,19 +232,17 @@ listContentApp.controller('ShoppingListController', function ($scope) {
             });
         };
 
-        this.hideLoadingWidget = function() {
+        this.hideLoadingWidget = function () {
             $.mobile.loading('hide');
         };
 
-        $scope.navigateToUserLists = function() {
+        $scope.navigateToUserLists = function () {
             window.location = "userLists.html";
         };
 
-        $scope.logOut = function()
-        {
+        $scope.logOut = function () {
             facebookConnectPlugin.logout(
-                function(success)
-                {
+                function (success) {
                     console.log("User logged Out From Facebook.");
                     Parse.User.logOut();
                     console.log("User logged Out From Parse.");
@@ -252,24 +250,20 @@ listContentApp.controller('ShoppingListController', function ($scope) {
                     console.log("Local Storage Cleaned.");
                     window.location = "logIn.html";
                 },
-                function(error)
-                {
+                function (error) {
                     console.log(error);
                 }
             );
         };
 
-        function cleanSavedLocalStorage()
-        {
+        function cleanSavedLocalStorage() {
             localStorage.removeItem("listId");
             localStorage.removeItem("username");
         }
 
-        $scope.notifyFriends = function()
-        {
+        $scope.notifyFriends = function () {
 
-            if ($scope.notifyText === "")
-            {
+            if ($scope.notifyText === "") {
                 $scope.notifyText = "I'm on my way to the supermarket. Last chance for changes!";
             }
             console.log($scope.notifyText);
@@ -286,69 +280,100 @@ listContentApp.controller('ShoppingListController', function ($scope) {
             $scope.clearNotifyFriendsFields();
         };
 
-        $scope.clearNotifyFriendsFields = function()
-        {
+        $scope.clearNotifyFriendsFields = function () {
             $scope.notifyText = "";
         };
 
-
-        $scope.getFacebookFriendsDetails = function()
-        {
+        // TODO : Disable showing friends who are already shared in the list
+        $scope.getFacebookFriendsDetails = function () {
             //facebookFriends = new Object();
-            facebookFriends = [];
-            facebookConnectPlugin.api("me?fields=friends{id,name,picture}", [],
-                function (resultSuccess) {
-                    //for (var index in resultSuccess.friends.data) {
-                    //    var myFriendFacebookId = resultSuccess.friends.data[index].id;
-                    //    var myFriendFacebookName = resultSuccess.friends.data[index].name;
-                    //    var myFriendFacebookPicture = resultSuccess.friends.data[index].picture;
-                    //    var newFacebookFriend = new FacebookFriend(myFriendFacebookId, myFriendFacebookName, myFriendFacebookPicture);
-                    //    facebookFriends.push(newFacebookFriend);
+            //facebookFriends = [];
+            //facebookConnectPlugin.api("me?fields=friends{id,name,picture}", [],
+            //    function (resultSuccess) {
+            //for (var index in resultSuccess.friends.data) {
+            //    var myFriendFacebookId = resultSuccess.friends.data[index].id;
+            //    var myFriendFacebookName = resultSuccess.friends.data[index].name;
+            //    var myFriendFacebookPicture = resultSuccess.friends.data[index].picture;
+            //    var newFacebookFriend = new FacebookFriend(myFriendFacebookId, myFriendFacebookName, myFriendFacebookPicture);
+            //    facebookFriends.push(newFacebookFriend);
 
-                        //facebookFriends[myFriendFacebookId] = {
-                        //    id: myFriendFacebookId,
-                        //    name: myFriendFacebookName
-                        //};
-                    //getImages();
-                    $("#menuPanel").panel("close");
-                    $("#shareListPopUp").popup("open");
-                    }
-                //}
-            );
+            //facebookFriends[myFriendFacebookId] = {
+            //    id: myFriendFacebookId,
+            //    name: myFriendFacebookName
+            //};
+            //getImages();
+            $("#menuPanel").panel("close");
+            $("#shareListPopUp").popup("open");
+            //}
+            //}
+            //);
         };
 
-        function getImages()
-        {
-            FB.init({
-                appId : '1060741983939011',
-                status : true,
-                xfbml : true,
-                version : 'v2.3' // or v2.0, v2.1, v2.0
+        //function getImages() {
+        //    FB.init({
+        //        appId: '1060741983939011',
+        //        status: true,
+        //        xfbml: true,
+        //        version: 'v2.3' // or v2.0, v2.1, v2.0
+        //    });
+        //
+        //    FB.api("10152238736957364/picture?type=large", function (s) {
+        //        x = s
+        //    })
+        //    var friendId;
+        //    for (var id in facebookFriends) {
+        //        friendId = facebookFriends[id].id;
+        //        //facebookConnectPlugin.api(, ["public_profile"],
+        //        FB.api(friendId + "/picture?type=large", function (success) {
+        //                facebookFriends[id].image = success.data.url;
+        //            }
+        //        );
+        //        //function (largePictureResultSuccess) {
+        //        //    console.log(largePictureResultSuccess);
+        //        //    var myFriendFacebookPicture = largePictureResultSuccess.data.url;
+        //        //    console.log(myFriendFacebookPicture);
+        //        //}
+        //        //);
+        //    }
+        //}
+
+        $scope.shareListWithFriend = function (myFacebookFriend) {
+            Parse.initialize(PARSE_APP_ID, PARSE_JS_ID);
+            // Get the Parse username of the given facebookId
+            var friendFacebookUserId = String(myFacebookFriend.facebookFriendId);
+            var query = new Parse.Query(Parse.User);
+            query.equalTo("facebookId", friendFacebookUserId);
+            query.first({
+                success: function(success) {
+                    // Update the username of the selected facebook friend in the sharedUsers in parse
+                    var friendUserNameInParse = success.attributes.username;
+                    updateSharedUsersInParse(friendUserNameInParse);
+                    $("#shareListPopUp").popup("close");
+                },
+                error: function(error) {
+                    console.log(error.message);
+                }
             });
+        };
 
-            FB.api("10152238736957364/picture?type=large",function(s){x = s})
-            var friendId;
-            for (var id in facebookFriends)
-            {
-                friendId = facebookFriends[id].id;
-                //facebookConnectPlugin.api(, ["public_profile"],
-                    FB.api(friendId + "/picture?type=large",function(success)
-                        {
-                            facebookFriends[id].image = success.data.url;
-                        }
-                    );
-                    //function (largePictureResultSuccess) {
-                    //    console.log(largePictureResultSuccess);
-                    //    var myFriendFacebookPicture = largePictureResultSuccess.data.url;
-                    //    console.log(myFriendFacebookPicture);
-                    //}
-                //);
-            }
-
+        function updateSharedUsersInParse(friendUsernameInParse)
+        {
+            var Lists = Parse.Object.extend("Lists");
+            var parseUserList = new Lists();
+            parseUserList.id = listId;
+            parseUserList.add("sharedUsers",friendUsernameInParse);
+            parseUserList.save(null, {
+                success: function(result) {
+                    console.log("Username " + friendUsernameInParse + " is now shared in listId " + listId);
+                    //TODO : Send Push Notification To User
+                },
+                error: function(error) {
+                    console.log(error.message);
+                }
+            });
         }
     }
 );
-
 
 
 function findProductByName(array, productName) {

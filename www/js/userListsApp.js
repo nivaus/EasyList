@@ -18,11 +18,10 @@ function UserList(listId, adminUser, listName, sharedUsers, listImage, createdTi
 }
 
 var userListsApp = angular.module('UserListsApp', []);
-var x;
 userListsApp.controller('UserListsAppController', function ($scope) {
-        //$scope.username = Parse.User.current().attributes.username;
+        $scope.username = Parse.User.current().attributes.username;
         $scope.userLists = new Object();
-        $scope.username = "WBKj6Xmo5WGiaMmsoz8q3B1Ty";
+        //$scope.username = "WBKj6Xmo5WGiaMmsoz8q3B1Ty";
         $scope.defaultListImage = "http://files.parsetfss.com/78e798b2-27ce-4608-a903-5f5baf8a0899/tfss-02790cd8-92cb-4d01-ab48-e0372541c24a-checklist.png";
         $scope.listNameInput = "";
 
