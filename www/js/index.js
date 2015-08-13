@@ -33,6 +33,7 @@ var init = {
     // deviceready Event Handler
     onDeviceReady: function() {
         init.receivedEvent('deviceready');
+        init.receivedEvent('backbutton');
     },
 
     // Update DOM on a Received Event

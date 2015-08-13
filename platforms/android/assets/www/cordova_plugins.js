@@ -53,6 +53,20 @@ module.exports = [
         "file": "plugins/cordova-plugin-whitelist/whitelist.js",
         "id": "cordova-plugin-whitelist.whitelist",
         "runs": true
+    },
+    {
+        "file": "plugins/org.apache.cordova.dialogs/www/notification.js",
+        "id": "org.apache.cordova.dialogs.notification",
+        "merges": [
+            "navigator.notification"
+        ]
+    },
+    {
+        "file": "plugins/org.apache.cordova.dialogs/www/android/notification.js",
+        "id": "org.apache.cordova.dialogs.notification_android",
+        "merges": [
+            "navigator.notification"
+        ]
     }
 ];
 module.exports.metadata = 
@@ -62,7 +76,8 @@ module.exports.metadata =
     "com.phonegap.plugins.ParsePushPlugin": "0.3.0",
     "cordova-plugin-camera": "1.2.0",
     "cordova-plugin-splashscreen": "2.1.0",
-    "cordova-plugin-whitelist": "1.0.0"
+    "cordova-plugin-whitelist": "1.0.0",
+    "org.apache.cordova.dialogs": "0.3.0"
 }
 // BOTTOM OF METADATA
 });
