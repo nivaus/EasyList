@@ -153,7 +153,7 @@ var changeProductPhotoInParse = function($scope, productToUpdate, imageURI)
     Parse.initialize(PARSE_APP_ID, PARSE_JS_ID);
 
     var file = new Parse.File(productToUpdate.productName + ".jpg", {base64:imageURI});
-    showLoadingWidget();
+    showLoadingWidget("Uploading Image...");
     file.save().then(function() {
         // The file has been saved to Parse.
         getProductFromParse(productToUpdate,function(productFromParse){

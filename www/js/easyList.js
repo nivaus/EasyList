@@ -1,9 +1,9 @@
 /**
  * Created by Idan on 13/08/2015.
  */
-function showLoadingWidget () {
+function showLoadingWidget (text) {
     $.mobile.loading('show', {
-        text: 'Uploading Image...',
+        text: text,
         textVisible: true,
         theme: 'a',
         html: ""
