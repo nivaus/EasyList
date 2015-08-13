@@ -11,9 +11,10 @@ var DEFAULT_PRODUCT_IMAGE = "http://files.parsetfss.com/64d6988d-576e-4edc-b686-
 var PHOTO_LIBRARY = 0;
 var PHOTO_CAMERA = 1;
 var listId = localStorage.getItem("listId");
+
 //var listId = "cnF6gv1Ps2";
-//var x;
 //var facebookFriends = new Object();
+
 function FacebookFriend(facebookFriendId, facebookFriendName, facebookFriendPicture) {
     this.facebookFriendId = facebookFriendId;
     this.facebookFriendName = facebookFriendName;
@@ -22,7 +23,11 @@ function FacebookFriend(facebookFriendId, facebookFriendName, facebookFriendPict
 var listContentApp = angular.module('SmartShoppingList', []);
 
 listContentApp.controller('ShoppingListController', function ($scope) {
-        var username = localStorage.getItem("username");
+        var userName = localStorage.getItem("userName");
+        var fullName = localStorage.getItem("fullName");
+        var facebookId = localStorage.getItem("facebookId");
+
+        var CHANNEL_PREFIX = "ch";
         this.listContent = listContent;
         this.selectedProduct;
         this.inEditMode = false;
@@ -115,12 +120,6 @@ listContentApp.controller('ShoppingListController', function ($scope) {
             }
         };
 
-        this.editList = function () {
-            $("#addProductButton").hide();
-            $("#menuButton").hide();
-            this.addQuantityEditing();
-        };
-
         this.executeEditOrSaveFunction = function () {
             if (this.inEditMode === true) {
                 this.saveList();
@@ -130,6 +129,12 @@ listContentApp.controller('ShoppingListController', function ($scope) {
             }
 
             this.inEditMode = !this.inEditMode;
+        };
+
+        this.editList = function () {
+            $("#addProductButton").hide();
+            $("#menuButton").hide();
+            this.addQuantityEditing();
         };
 
         this.saveList = function () {
@@ -176,7 +181,6 @@ listContentApp.controller('ShoppingListController', function ($scope) {
                 }
             }
         };
-
 
         this.changePhoto = function (product, photoType) {
             console.log("Take Photo!");
@@ -246,7 +250,7 @@ listContentApp.controller('ShoppingListController', function ($scope) {
                     console.log("User logged Out From Facebook.");
                     Parse.User.logOut();
                     console.log("User logged Out From Parse.");
-                    cleanSavedLocalStorage();
+                    clearSavedLocalStorage();
                     console.log("Local Storage Cleaned.");
                     window.location = "logIn.html";
                 },
@@ -256,29 +260,35 @@ listContentApp.controller('ShoppingListController', function ($scope) {
             );
         };
 
-        function cleanSavedLocalStorage() {
+        function clearSavedLocalStorage() {
             localStorage.removeItem("listId");
-            localStorage.removeItem("username");
+            localStorage.removeItem("userName");
+            localStorage.removeItem("fullName");
+            localStorage.removeItem("facebookId");
         }
 
         $scope.notifyFriends = function () {
-
             if ($scope.notifyText === "") {
                 $scope.notifyText = "I'm on my way to the supermarket. Last chance for changes!";
             }
-            console.log($scope.notifyText);
-            var query = new Parse.Query(Parse.Installation);
-            query.equalTo('channels', listId);
-            query.notEqualTo("channels", username);
-            Parse.Push.send({
-                where: query, // Set our Installation query
-                data: {
-                    alert: $scope.notifyText
-                }
-            });
+            sendPushMessage(listId,$scope.notifyText);
             $("#notifyFriendsPopUp").popup("close");
             $scope.clearNotifyFriendsFields();
         };
+
+        function sendPushMessage(channel, message) {
+            var pushChannel = CHANNEL_PREFIX + channel;
+            console.log(pushChannel);
+            console.log(message);
+            var query = new Parse.Query(Parse.Installation);
+            query.equalTo('channels', pushChannel);
+            Parse.Push.send({
+                where: query, // Set our Installation query
+                data: {
+                    alert: message
+                }
+            });
+        }
 
         $scope.clearNotifyFriendsFields = function () {
             $scope.notifyText = "";
@@ -344,51 +354,42 @@ listContentApp.controller('ShoppingListController', function ($scope) {
             var query = new Parse.Query(Parse.User);
             query.equalTo("facebookId", friendFacebookUserId);
             query.first({
-                success: function(success) {
+                success: function (success) {
                     // Update the username of the selected facebook friend in the sharedUsers in parse
                     var friendUserNameInParse = success.attributes.username;
                     updateSharedUsersInParse(friendUserNameInParse);
                     $("#shareListPopUp").popup("close");
                 },
-                error: function(error) {
+                error: function (error) {
                     console.log(error.message);
                 }
             });
         };
 
-        function updateSharedUsersInParse(friendUsernameInParse)
-        {
+        function updateSharedUsersInParse(friendUsernameInParse) {
             var Lists = Parse.Object.extend("Lists");
             var parseUserList = new Lists();
             parseUserList.id = listId;
-            parseUserList.add("sharedUsers",friendUsernameInParse);
+            parseUserList.add("sharedUsers", friendUsernameInParse);
             parseUserList.save(null, {
-                success: function(result) {
+                success: function (result) {
                     console.log("Username " + friendUsernameInParse + " is now shared in listId " + listId);
-                    //TODO : Send Push Notification To User
                     sendPushMessageToFriendWhenSharedToList(friendUsernameInParse);
                 },
-                error: function(error) {
+                error: function (error) {
                     console.log(error.message);
                 }
             });
         }
 
-        function sendPushMessageToFriendWhenSharedToList (friendUsernameInParse)
-        {
-            var message = username + " shared his list with you.";
-                var query = new Parse.Query(Parse.Installation);
-                query.equalTo("channels", "ch" + friendUsernameInParse);
-                Parse.Push.send({
-                    where: query, // Set our Installation query
-                    data: {
-                        alert: message
-                    }
-                });
-                $("#notifyFriendsPopUp").popup("close");
-                $scope.clearNotifyFriendsFields();
-            };
-        }
+        function sendPushMessageToFriendWhenSharedToList(friendUsernameInParse) {
+            var channel = friendUsernameInParse;
+            var message = fullName + " shared his list with you.";
+            sendPushMessage(channel,message);
+            $("#notifyFriendsPopUp").popup("close");
+            $scope.clearNotifyFriendsFields();
+        };
+    }
 );
 
 

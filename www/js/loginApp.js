@@ -35,7 +35,9 @@ function loginToParse (facebookAuthData, callback)
     Parse.FacebookUtils.logIn(facebookAuthData, {
         success: function (user) {
             setUserDetailsInParse(user, callback);
-            localStorage.setItem("username",user.attributes.username);
+            localStorage.setItem("userName",user.attributes.username);
+            localStorage.setItem("fullName",user.attributes.fullName);
+            localStorage.setItem("facebookId",user.attributes.facebookId);
             console.log("Function loginToParse : User is logged into Parse");
         },
 
