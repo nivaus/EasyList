@@ -37,7 +37,7 @@ userListsApp.controller('UserListsAppController', function ($scope) {
                 {
                     success: function (results) {
                         addListsFromParse(results);
-                        //subscribeToUserListsIdsInParse();
+                        subscribeToUserListsIdsInParse();
                     },
                     error: function (error) {
                         console.log(error);
@@ -95,8 +95,7 @@ userListsApp.controller('UserListsAppController', function ($scope) {
             var sharedUsers = parseListObject.attributes.sharedUsers;
             var listImage = parseListObject.attributes.listImage;
             var createdTime = parseListObject.createdAt.toDateString();
-            var newList;
-            newList = new UserList(listId, adminUser, listName, sharedUsers, listImage, createdTime);
+            var newList = new UserList(listId, adminUser, listName, sharedUsers, listImage, createdTime);
             return newList;
         }
 
@@ -144,46 +143,48 @@ userListsApp.controller('UserListsAppController', function ($scope) {
         };
 
 
-        //function arraySubscribe (array, index)
-        //{
-        //    ParsePushPlugin.subscribe(array[index], function(msg) {
-        //        console.log("successfully subscribed to channel: " + array[index]);
-        //        if (index < array.length - 1)
-        //        {
-        //            index++;
-        //            arraySubscribe(array,index);
-        //        }
-        //    }, function(e) {
-        //        consolo.log('error');
-        //    });
-        //}
-        //
-        //function arrayUnsubscribe (array, index)
-        //{
-        //    ParsePushPlugin.unsubscribe(array[index], function(msg) {
-        //        console.log(msg);
-        //        if (index < array.length - 1)
-        //        {
-        //            index++;
-        //            arrayUnsubscribe(array,index);
-        //        }
-        //    }, function(e) {
-        //        consolo.log('error');
-        //    });
-        //}
-        //
-        //var subscribeToUserListsIdsInParse = function()
-        //{
-        //    var listId;
-        //    var subscriptions = [];
-        //    for (var listDateIndex in $scope.userLists) {
-        //        for (var listIndex in $scope.userLists[listDateIndex].lists) {
-        //            listId = $scope.userLists[listDateIndex].lists[listIndex].listId;
-        //            subscriptions.push(listId);
-        //        }
-        //    }
-        //    arraySubscribe(subscriptions,0);
-        //};
+        function arraySubscribe (array, index)
+        {
+            ParsePushPlugin.subscribe(array[index], function(msg) {
+                console.log("successfully subscribed to channel: " + array[index]);
+                if (index < array.length - 1)
+                {
+                    index++;
+                    arraySubscribe(array,index);
+                }
+            }, function(e) {
+                console.log('error');
+            });
+        }
+
+        function arrayUnsubscribe (array, index)
+        {
+            ParsePushPlugin.unsubscribe(array[index], function(msg) {
+                console.log(msg);
+                if (index < array.length - 1)
+                {
+                    index++;
+                    arrayUnsubscribe(array,index);
+                }
+            }, function(e) {
+                consolo.log('error');
+            });
+        }
+
+        var subscribeToUserListsIdsInParse = function()
+        {
+            var listId;
+            var channel;
+            var subscriptions = [];
+            for (var listDateIndex in $scope.userLists) {
+                for (var listIndex in $scope.userLists[listDateIndex].lists) {
+                    listId = $scope.userLists[listDateIndex].lists[listIndex].listId;
+                    channel = "ch" + listId;
+                    subscriptions.push(channel);
+                }
+            }
+            arraySubscribe(subscriptions,0);
+        };
 
     }
 );

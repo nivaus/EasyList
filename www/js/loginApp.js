@@ -84,48 +84,21 @@ function registerDeviceInParse (callback)
         }, //will trigger receivePN[pnObj.myEventKey]
         function () {
             console.log('successfully registered device!');
-            callback();
-            //subscribeUsernameToParse(callback);
+            subscribeUsernameToParse(callback);
         }, function (e) {
             console.log('error registering device: ' + e);
         });
 }
 
-//function subscribeUsernameToParse (callback)
+function subscribeUsernameToParse (callback)
 {
-//    var username = Parse.User.current().attributes.username;
-//    ParsePushPlugin.subscribe(username, function (success) {
-//            console.log(success);
-//            callback();
-//        },
-//        function (fail) {
-//            console.log(fail);
-//        });
+    var username = Parse.User.current().attributes.username;
+    var subscription = "ch" + username;
+    ParsePushPlugin.subscribe(subscription, function (success) {
+            console.log(success);
+            callback();
+        },
+        function (fail) {
+            console.log(fail);
+        });
 }
-
-//loginApp.controller('loginAppController', function ($scope) {
-//        $scope.facebookLogin = function() {
-//
-//        };
-//
-//        var loginToParse = function (facebookAuthData, callback) {
-//
-//        };
-//
-//        var setUserDetailsInParse = function (FBuser, callback) {
-//
-//        };
-//
-//        var registerDeviceInParse = function (callback) {
-//
-//
-//            //ParsePushPlugin.on('receivePN', function(pn){
-//            //    alert('yo i got this push notification:' + JSON.stringify(pn));
-//            //});
-//        };
-//
-//        var subscribeUsernameToParse = function (callback) {
-//
-//        };
-//    }
-//);
