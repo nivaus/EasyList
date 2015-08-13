@@ -153,7 +153,7 @@ var changeProductPhotoInParse = function($scope, productToUpdate, imageURI)
     Parse.initialize(PARSE_APP_ID, PARSE_JS_ID);
 
     var file = new Parse.File(productToUpdate.productName + ".jpg", {base64:imageURI});
-    $scope.list.showLoadingWidget();
+    showLoadingWidget();
     file.save().then(function() {
         // The file has been saved to Parse.
         getProductFromParse(productToUpdate,function(productFromParse){
@@ -161,7 +161,7 @@ var changeProductPhotoInParse = function($scope, productToUpdate, imageURI)
             productFromParse.save().then(function(){
                 productToUpdate.productImage = file.url();
                 $scope.$apply();
-                $scope.list.hideLoadingWidget();
+                hideLoadingWidget();
             });
         })
     }, function(error) {

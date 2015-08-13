@@ -231,45 +231,45 @@ listContentApp.controller('ShoppingListController', function ($scope) {
             }
         };
 
-        this.showLoadingWidget = function () {
-            $.mobile.loading('show', {
-                text: 'Uploading Image...',
-                textVisible: true,
-                theme: 'a',
-                html: ""
-            });
-        };
-
-        this.hideLoadingWidget = function () {
-            $.mobile.loading('hide');
-        };
+        //this.showLoadingWidget = function () {
+        //    $.mobile.loading('show', {
+        //        text: 'Uploading Image...',
+        //        textVisible: true,
+        //        theme: 'a',
+        //        html: ""
+        //    });
+        //};
+        //
+        //this.hideLoadingWidget = function () {
+        //    $.mobile.loading('hide');
+        //};
 
         $scope.navigateToUserLists = function () {
             window.location = "userLists.html";
         };
 
-        $scope.logOut = function () {
-            facebookConnectPlugin.logout(
-                function (success) {
-                    console.log("User logged Out From Facebook.");
-                    Parse.User.logOut();
-                    console.log("User logged Out From Parse.");
-                    clearSavedLocalStorage();
-                    console.log("Local Storage Cleaned.");
-                    window.location = "logIn.html";
-                },
-                function (error) {
-                    console.log(error);
-                }
-            );
-        };
-
-        function clearSavedLocalStorage() {
-            localStorage.removeItem("listId");
-            localStorage.removeItem("userName");
-            localStorage.removeItem("fullName");
-            localStorage.removeItem("facebookId");
-        }
+        //$scope.logOut = function () {
+        //    facebookConnectPlugin.logout(
+        //        function (success) {
+        //            console.log("User logged Out From Facebook.");
+        //            Parse.User.logOut();
+        //            console.log("User logged Out From Parse.");
+        //            clearSavedLocalStorage();
+        //            console.log("Local Storage Cleaned.");
+        //            window.location = "logIn.html";
+        //        },
+        //        function (error) {
+        //            console.log(error);
+        //        }
+        //    );
+        //};
+        //
+        //function clearSavedLocalStorage() {
+        //    localStorage.removeItem("listId");
+        //    localStorage.removeItem("userName");
+        //    localStorage.removeItem("fullName");
+        //    localStorage.removeItem("facebookId");
+        //}
 
         $scope.notifyFriends = function () {
             if ($scope.notifyText === "") {
