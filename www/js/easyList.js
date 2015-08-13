@@ -36,3 +36,8 @@ function clearSavedLocalStorage() {
     localStorage.removeItem("fullName");
     localStorage.removeItem("facebookId");
 }
+
+function exitApp ()
+{
+    navigator.app.exitApp();
+}
