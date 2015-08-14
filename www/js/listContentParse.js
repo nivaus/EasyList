@@ -32,15 +32,15 @@ var getList = function ($scope,listId) {
                     var productChecked = results[i].get("productChecked");
                     var listId = results[i].get("listId");
 
-                    if (listContent.hasOwnProperty(categoryName) === false)
+                    if ($scope.listContent.hasOwnProperty(categoryName) === false)
                     {
-                        listContent[categoryName] = {
+                        $scope.listContent[categoryName] = {
                             categoryName: categoryName,
                             products: []
                         };
                     }
                     var newProduct = new Product(objectId, categoryName, productName, productQuantity, productImage, productChecked, listId);
-                    listContent[categoryName].products.push(newProduct);
+                    $scope.listContent[categoryName].products.push(newProduct);
                     $scope.$apply();
                     console.log("New Product added with objectId: " + objectId);
                 }
@@ -69,7 +69,7 @@ var addNewProductToParse = function ($scope, newProduct) {
         success: function(productFromParse) {
             var productCategory = newProduct.categoryName;
             newProduct.objectId = productFromParse.id;
-            listContent[productCategory].products.push(newProduct);
+            $scope.listContent[productCategory].products.push(newProduct);
             $scope.$apply();
             console.log('New Product created with objectId: ' + productFromParse.id);
         },
@@ -136,7 +136,7 @@ var deleteProductFromParse = function ($scope, productToDelete) {
             // Deleting the product from Parse
             product.destroy({}).then(function() {
                 // Deleting the product from listContent
-                removeProductFromList(listContent, productToDelete);
+                removeProductFromList($scope.listContent, productToDelete);
 
                 $scope.$apply();
                 console.log('Product with objectId ' + product.id + ' deleted successfully.');

@@ -100,7 +100,7 @@
     -->
     <div data-role="main" id="categories" class="ui-content">
         <ul id="{{category.categoryName}}" data-role="listview" data-inset="true"
-            ng-repeat="category in list.listContent">
+            ng-repeat="category in listContent">
             <li data-role="list-divider" data-theme="b">
                 {{category.categoryName}}
                 <span class="ui-li-count">{{category.products.length}}</span>
@@ -264,9 +264,21 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#notifyFriendsPopUp" data-icon="comment" data-rel="popup" data-position-to="window"
-                       data-transition="pop">
-                        Notify Friends</a>
+                    <!-- If not in edit mode-->
+                    <div ng-show=!list.inEditMode>
+                        <a href="#notifyFriendsPopUp" data-icon="comment" data-rel="popup" data-position-to="window"
+                           data-transition="pop">
+                            Notify Friends</a>
+                    </div>
+
+                    <!-- On Edit Mode-->
+                    <div ng-show=list.inEditMode>
+                        <a id="cancelEditListButton"
+                           data-icon="delete"
+                           ng-click="list.cancelEditListChanges()">
+                            Cancel
+                        </a>
+                    </div>
                 </li>
             </ul>
         </div>

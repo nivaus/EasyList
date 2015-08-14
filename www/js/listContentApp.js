@@ -24,7 +24,7 @@ function onBackKeyDown(e) {
 // TODO : Change every this element to $scope
 $.mobile.buttonMarkup.hoverDelay = 0;
 
-var listContent = new Object();
+
 
 function FacebookFriend(facebookFriendId, facebookFriendName, facebookFriendPicture) {
     this.facebookFriendId = facebookFriendId;
@@ -39,6 +39,7 @@ listContentApp.controller('ShoppingListController', function ($scope) {
         var fullName = localStorage.getItem("fullName");
         var facebookId = localStorage.getItem("facebookId");
         var listId = localStorage.getItem("listId");
+        var productsToRemove = [];
 
         // Constants
         var CHANNEL_PREFIX = "ch";
@@ -47,24 +48,23 @@ listContentApp.controller('ShoppingListController', function ($scope) {
         var PHOTO_CAMERA = 1;
 
         // Scope Variables
-        this.listContent = listContent;
+        //this.listContent = listContent;
         this.selectedProduct;
         this.inEditMode = false;
 
         $scope.facebookFriends = [];
-
         $scope.productCategory = "";
         $scope.productName = "";
         $scope.productQuantity = "";
         $scope.notfyText = "";
-
+        $scope.listContent = new Object();
 
         getList($scope, listId);
 
         this.addProduct = function (productCategory, productName, productQuantity) {
             productQuantity = parseInt(productQuantity);
 
-            if (listContent.hasOwnProperty(productCategory) === true) //if a category is already created
+            if ($scope.listContent.hasOwnProperty(productCategory) === true) //if a category is already created
             {
                 this.addNewProductToExistingCategory(productCategory, productName, productQuantity);
             }
@@ -76,7 +76,7 @@ listContentApp.controller('ShoppingListController', function ($scope) {
         };
 
         this.addNewProductToNewCategory = function (productCategory, productName, productQuantity) {
-            listContent[productCategory] = {
+            $scope.listContent[productCategory] = {
                 categoryName: productCategory,
                 products: []
             };
@@ -86,7 +86,7 @@ listContentApp.controller('ShoppingListController', function ($scope) {
         };
 
         this.addNewProductToExistingCategory = function (productCategory, productName, productQuantity) {
-            var products = listContent[productCategory].products;
+            var products = $scope.listContent[productCategory].products;
             var indexOfProductName = findProductByName(products, productName);
             if (indexOfProductName !== -1) { //if a product is already in the list
                 var product = products[indexOfProductName];
@@ -130,7 +130,7 @@ listContentApp.controller('ShoppingListController', function ($scope) {
 
         this.removeSelectedProduct = function () {
             var categoryName = this.selectedProduct.categoryName;
-            if (this.listContent.hasOwnProperty(categoryName) === true) {
+            if ($scope.listContent.hasOwnProperty(categoryName) === true) {
                 deleteProductFromParse($scope, this.selectedProduct);
             }
         };
@@ -142,11 +142,11 @@ listContentApp.controller('ShoppingListController', function ($scope) {
             else {
                 this.editList();
             }
-
             this.inEditMode = !this.inEditMode;
         };
 
         this.editList = function () {
+            localStorage.setItem("listContent",JSON.stringify($scope.listContent));
             $("#addProductButton").hide();
             $("#menuButton").hide();
             this.addQuantityEditing();
@@ -156,11 +156,21 @@ listContentApp.controller('ShoppingListController', function ($scope) {
             $("#addProductButton").show();
             $("#menuButton").show();
             this.updateProductsQuantity();
+            localStorage.removeItem("listContent");
+        };
+
+        this.cancelEditListChanges = function () {
+            var oldContent = localStorage.getItem("listContent");
+            $scope.listContent = JSON.parse(oldContent);
+            localStorage.removeItem("listContent");
+            $("#addProductButton").show();
+            $("#menuButton").show();
+            this.inEditMode = !this.inEditMode;
         };
 
         this.updateProductsQuantity = function () {
-            for (var categoryName in listContent) {
-                var products = listContent[categoryName].products;
+            for (var categoryName in $scope.listContent) {
+                var products = $scope.listContent[categoryName].products;
                 for (var productIndex in products) {
                     var product = products[productIndex];
                     var newProductQuantity = parseInt($("#quantity" + product.objectId + " input").val());
@@ -177,8 +187,8 @@ listContentApp.controller('ShoppingListController', function ($scope) {
         };
 
         this.addQuantityEditing = function () {
-            for (var categoryName in listContent) {
-                var products = listContent[categoryName].products;
+            for (var categoryName in $scope.listContent) {
+                var products = $scope.listContent[categoryName].products;
                 for (var productIndex in products) {
                     if (products[productIndex].productChecked === false) {
                         var elementId = "quantity" + products[productIndex].objectId;
