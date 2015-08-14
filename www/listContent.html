@@ -33,9 +33,9 @@
     <!--
      Menu
     -->
-    <div id="menuPanel" class="panel" data-role="panel" data-position="left">
+    <div id="menuPanel" data-role="panel" data-position="left">
         <h3>Menu</h3>
-        <a href="#" data-rel="close"
+        <a href="#" data-rel="back"
            class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close
         </a>
 
@@ -59,7 +59,7 @@
     <!--
     Add Product Panel
     -->
-    <div id="addProductPanel" class="panel" data-role="panel" data-position="right">
+    <div id="addProductPanel" data-role="panel" data-position="right">
         <h3>Add Product</h3>
 
         <form ng-submit="list.addProduct(productCategory, productName, productQuantity)">

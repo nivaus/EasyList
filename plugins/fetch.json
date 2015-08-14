@@ -43,13 +43,5 @@
             "APP_ID": "1060741983939011",
             "APP_NAME": "Easy List"
         }
-    },
-    "org.apache.cordova.dialogs": {
-        "source": {
-            "type": "registry",
-            "id": "org.apache.cordova.dialogs"
-        },
-        "is_top_level": true,
-        "variables": {}
     }
 }

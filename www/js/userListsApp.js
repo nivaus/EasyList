@@ -1,5 +1,21 @@
 $.mobile.buttonMarkup.hoverDelay = 0;
 
+document.addEventListener("deviceready", onDeviceReady, false);
+
+function onDeviceReady() {
+    document.addEventListener("backbutton", onBackKeyDown, false); //Listen to the User clicking on the back button
+}
+
+function onBackKeyDown(e) {
+    if( $(".ui-panel").hasClass("ui-panel-open") == true ){
+        e.preventDefault();
+        $( ".ui-panel" ).panel( "close" );
+    }
+    else{
+        navigator.app.exitApp();
+    }
+}
+
 //Constants
 var PARSE_APP_ID = "YNiKFOkpulbY1j19E2gcdSREgTKd0AiZZKtzJaeg";
 var PARSE_JS_ID = "Ht7VpNFFhB6KKod4L8gvWlyzjwWt0PEPXjEHVD1H";
@@ -185,6 +201,5 @@ userListsApp.controller('UserListsAppController', function ($scope) {
             }
             arraySubscribe(subscriptions,0);
         };
-
     }
 );

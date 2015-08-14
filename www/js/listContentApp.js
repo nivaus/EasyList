@@ -3,14 +3,28 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
+document.addEventListener("deviceready", onDeviceReady, false);
+
+function onDeviceReady() {
+    document.addEventListener("backbutton", onBackKeyDown, false); //Listen to the User clicking on the back button
+}
+
+function onBackKeyDown(e) {
+    if( $(".ui-panel").hasClass("ui-panel-open") == true ){
+        e.preventDefault();
+        $( ".ui-panel" ).panel( "close" );
+    }
+    else{
+        navigator.app.backHistory();
+    }
+}
+
+
 // TODO : Change every this element to $scope
 $.mobile.buttonMarkup.hoverDelay = 0;
 
 var listContent = new Object();
-
-
-//var listId = "cnF6gv1Ps2";
-//var facebookFriends = new Object();
 
 function FacebookFriend(facebookFriendId, facebookFriendName, facebookFriendPicture) {
     this.facebookFriendId = facebookFriendId;
@@ -38,11 +52,6 @@ listContentApp.controller('ShoppingListController', function ($scope) {
         this.inEditMode = false;
 
         $scope.facebookFriends = [];
-
-        //$scope.facebookFriends = [
-        //    new FacebookFriend("10206162796762317", "Idan Meir", "https://fbcdn-profile-a.akamaihd.net/hprofile-ak-xaf1/v/t1.0-1/s200x200/1452431_10201879162874147_1945910730_n.jpg?oh=b5ecd8bc1a2410dda55b2f13022de9b7&oe=5682267C&__gda__=1447307619_3aaa2f1cb190e4d3986ef98fe5d838ea"),
-        //    new FacebookFriend("10152853548977364", "Niv Auslender", "https://fbcdn-profile-a.akamaihd.net/hprofile-ak-xpt1/v/t1.0-1/p200x200/11259841_10152719200292364_4316760221844671350_n.jpg?oh=1b35f8aa0b64e111fc1512fab67b85d0&oe=564A4296&__gda__=1447318298_9b908e7ba739f5a0aa28ec1a6341461f")
-        //];
 
         $scope.productCategory = "";
         $scope.productName = "";
@@ -367,4 +376,3 @@ function deleteCategoryFromListIfEmpty(listContent, categoryName) {
         delete listContent[categoryName];
     }
 }
-
