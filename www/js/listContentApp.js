@@ -48,7 +48,6 @@ listContentApp.controller('ShoppingListController', function ($scope) {
         var PHOTO_CAMERA = 1;
 
         // Scope Variables
-        //this.listContent = listContent;
         this.selectedProduct;
         this.inEditMode = false;
 
