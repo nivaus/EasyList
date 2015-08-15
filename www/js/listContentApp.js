@@ -39,7 +39,6 @@ listContentApp.controller('ShoppingListController', function ($scope) {
         var fullName = localStorage.getItem("fullName");
         var facebookId = localStorage.getItem("facebookId");
         var listId = localStorage.getItem("listId");
-        var productsToRemove = [];
 
         // Constants
         var CHANNEL_PREFIX = "ch";
@@ -57,6 +56,7 @@ listContentApp.controller('ShoppingListController', function ($scope) {
         $scope.productQuantity = "";
         $scope.notfyText = "";
         $scope.listContent = new Object();
+        $scope.productsToRemove = [];
 
         getList($scope, listId);
 
@@ -130,9 +130,27 @@ listContentApp.controller('ShoppingListController', function ($scope) {
         this.removeSelectedProduct = function () {
             var categoryName = this.selectedProduct.categoryName;
             if ($scope.listContent.hasOwnProperty(categoryName) === true) {
-                deleteProductFromParse($scope, this.selectedProduct);
+                $scope.productsToRemove.push(this.selectedProduct);
+                removeProductFromList($scope.listContent,this.selectedProduct);
+                //deleteProductFromParse($scope, this.selectedProduct);
             }
         };
+
+        function removeProductFromList(listContent, productToRemove) {
+            var categoryName = productToRemove.categoryName;
+            var productsList = listContent[categoryName].products;
+            var productIndex = findProduct(productsList, productToRemove);
+            if (productIndex != -1) {
+                productsList.splice(productIndex, 1);
+                deleteCategoryFromListIfEmpty(listContent, categoryName);
+            }
+        }
+
+        function deleteCategoryFromListIfEmpty(listContent, categoryName) {
+            if (listContent[categoryName].products.length === 0) {
+                delete listContent[categoryName];
+            }
+        }
 
         this.executeEditOrSaveFunction = function () {
             if (this.inEditMode === true) {
@@ -155,16 +173,21 @@ listContentApp.controller('ShoppingListController', function ($scope) {
             $("#addProductButton").show();
             $("#menuButton").show();
             this.updateProductsQuantity();
+            console.log("saveList " + $scope.productsToRemove);
+            removeDeletedProductsInParse ($scope, $scope.productsToRemove);
             localStorage.removeItem("listContent");
+            console.log("List Changes Saved.");
         };
 
         this.cancelEditListChanges = function () {
             var oldContent = localStorage.getItem("listContent");
             $scope.listContent = JSON.parse(oldContent);
             localStorage.removeItem("listContent");
+            $scope.productsToRemove = [];
             $("#addProductButton").show();
             $("#menuButton").show();
             this.inEditMode = !this.inEditMode;
+            console.log("List Changes Canceled.");
         };
 
         this.updateProductsQuantity = function () {
@@ -368,20 +391,4 @@ function findProduct(array, product) {
         }
     }
     return -1;
-}
-
-function removeProductFromList(listContent, productToRemove) {
-    var categoryName = productToRemove.categoryName;
-    var productsList = listContent[categoryName].products;
-    var productIndex = findProduct(productsList, productToRemove);
-    if (productIndex != -1) {
-        productsList.splice(productIndex, 1);
-        deleteCategoryFromListIfEmpty(listContent, categoryName);
-    }
-}
-
-function deleteCategoryFromListIfEmpty(listContent, categoryName) {
-    if (listContent[categoryName].products.length === 0) {
-        delete listContent[categoryName];
-    }
 }
