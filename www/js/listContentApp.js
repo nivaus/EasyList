@@ -39,6 +39,7 @@ listContentApp.controller('ShoppingListController', function ($scope) {
         var fullName = localStorage.getItem("fullName");
         var facebookId = localStorage.getItem("facebookId");
         var listId = localStorage.getItem("listId");
+        //var sharedFacebookFriendsIds = [];
 
         // Constants
         var CHANNEL_PREFIX = "ch";
@@ -51,6 +52,8 @@ listContentApp.controller('ShoppingListController', function ($scope) {
         this.inEditMode = false;
 
         $scope.facebookFriends = [];
+        $scope.sharedFacebookFriends = [];
+        $scope.notSharedFacebookFriends = [];
         $scope.productCategory = "";
         $scope.productName = "";
         $scope.productQuantity = "";
@@ -327,14 +330,54 @@ listContentApp.controller('ShoppingListController', function ($scope) {
                         facebookFriend = new FacebookFriend(facebookFriendId,facebookFriendName,facebookFriendPicture);
                         $scope.facebookFriends.push(facebookFriend);
                     }
-                    $scope.$apply();
-                    $("#menuPanel").panel("close");
-                    $("#shareListPopUp").popup("open");
+                    getSharedFacebookFriendsDetails();
                 }
             );
         };
 
-        $scope.getSharedFacebookFriends = function (sharedFriendsIdArray) {
+        function getSharedFacebookFriendsDetails () {
+            Parse.initialize(PARSE_APP_ID, PARSE_JS_ID);
+            var Lists = Parse.Object.extend("Lists");
+            var query = new Parse.Query(Lists);
+            var sharedFacebookFriendsIds =[];
+            query.equalTo("objectId", listId);
+            query.first(
+                {
+                    success: function (results) {
+                        var sharedFriendsUserNamesInParse = results.get("sharedUsers");
+                        var query = new Parse.Query(Parse.User);
+                        query.containedIn("username",sharedFriendsUserNamesInParse);
+                        query.find(
+                            {
+                                success: function (results) {
+                                    for (var index in results)
+                                    {
+                                        var friendFacebookId = results[index].attributes.facebookId;
+                                        if (friendFacebookId !== facebookId) {
+                                            sharedFacebookFriendsIds.push(friendFacebookId);
+                                        }
+                                    }
+                                    $scope.sharedFacebookFriends = getSharedFacebookFriends(sharedFacebookFriendsIds);
+                                    $scope.notSharedFacebookFriends = $($scope.facebookFriends).not($scope.sharedFacebookFriends).get();
+                                    console.log($scope.notSharedFacebookFriends);
+                                    $("#menuPanel").panel("close");
+                                    $("#shareListPopUp").popup("open");
+                                    $scope.$apply();
+                                },
+                                error: function (error) {
+                                    console.log(error);
+                                }
+                            }
+                        );
+                    },
+                    error: function (error) {
+                        console.log(error);
+                    }
+                }
+            );
+        };
+
+        function getSharedFacebookFriends (sharedFriendsIdArray) {
             var sharedFacebookFriends = [];
             for (var index in $scope.facebookFriends)
             {

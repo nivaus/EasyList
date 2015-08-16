@@ -225,11 +225,33 @@
         </a>
         <ul data-role="listview" data-inset="true">
             <li data-role="list-divider" data-theme="b">
-                Facebook Friends
+                Not Shared Facebook Friends
             </li>
             <li>
                 <ul data-role="listview" data-split-theme="b" data-inset="true"
-                    ng-repeat="myFacebookFriend in facebookFriends">
+                    ng-repeat="myFacebookFriend in notSharedFacebookFriends">
+                    <li data-icon="carat-r">
+                        <a ng-click="shareListWithFriend(myFacebookFriend)">
+                            <img src="{{myFacebookFriend.facebookFriendPicture}}" alt="{{myFacebookFriend.facebookFriendName}}">
+                            <div>
+                                <h2>
+                                    {{myFacebookFriend.facebookFriendName}}
+                                </h2>
+                            </div>
+                        </a>
+                        <a href=""
+                           data-rel="popup"
+                           data-position-to="window" data-transition="pop" data-theme="b">
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li data-role="list-divider" data-theme="b">
+                Shared Friends
+            </li>
+            <li>
+                <ul data-role="listview" data-split-theme="b" data-inset="true"
+                    ng-repeat="myFacebookFriend in sharedFacebookFriends">
                     <li data-icon="carat-r">
                         <a ng-click="shareListWithFriend(myFacebookFriend)">
                             <img src="{{myFacebookFriend.facebookFriendPicture}}" alt="{{myFacebookFriend.facebookFriendName}}">
