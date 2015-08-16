@@ -35,9 +35,9 @@ function UserList(listId, adminUser, listName, sharedUsers, listImage, createdTi
 
 var userListsApp = angular.module('UserListsApp', []);
 userListsApp.controller('UserListsAppController', function ($scope) {
-        $scope.username = Parse.User.current().attributes.username;
+        //$scope.username = Parse.User.current().attributes.username;
         $scope.userLists = new Object();
-        //$scope.username = "WBKj6Xmo5WGiaMmsoz8q3B1Ty";
+        $scope.username = "I8OECfZ0Zt2d4MCUUmNP1HV4E";
         $scope.defaultListImage = "http://files.parsetfss.com/78e798b2-27ce-4608-a903-5f5baf8a0899/tfss-02790cd8-92cb-4d01-ab48-e0372541c24a-checklist.png";
         $scope.listNameInput = "";
 
@@ -86,16 +86,17 @@ userListsApp.controller('UserListsAppController', function ($scope) {
                     if ($scope.userLists.hasOwnProperty(newList.createdTime) === false) //if the creation date is already created
                     {
                         $scope.userLists[newList.createdTime] = {
-                            createdTime: newList.createdTime,
+                            createdDate: newList.createdTime,
                             lists: []
                         };
                     }
                     console.log(newList.createdTime);
                     $scope.userLists[newList.createdTime].lists.push(newList);
                     $scope.clearCreateNewListFields();
-                    $scope.$apply();
                     $("#createNewListPanel").panel("close");
                     console.log('New List created with listId: ' + newList.listId);
+                    $scope.$apply();
+
                 },
                 error: function(productFromParse, error) {
                     console.log('Failed to create new object, with error code: ' + error.message);
