@@ -54,7 +54,7 @@ listContentApp.controller('ShoppingListController', function ($scope) {
         $scope.productCategory = "";
         $scope.productName = "";
         $scope.productQuantity = "";
-        $scope.notfyText = "";
+        $scope.notifyText="";
         $scope.listContent = new Object();
         $scope.productsToRemove = [];
 
@@ -282,21 +282,26 @@ listContentApp.controller('ShoppingListController', function ($scope) {
             if ($scope.notifyText === "") {
                 $scope.notifyText = "I'm on my way to the supermarket. Last chance for changes!";
             }
-            sendPushMessage(listId,$scope.notifyText);
+            sendNotifyPushMessage(listId,$scope.notifyText);
             $("#notifyFriendsPopUp").popup("close");
             $scope.clearNotifyFriendsFields();
         };
 
-        function sendPushMessage(channel, message) {
-            var pushChannel = CHANNEL_PREFIX + channel;
-            console.log(pushChannel);
+        function sendNotifyPushMessage(channel, message) {
+            var listPushChannel = CHANNEL_PREFIX + channel;
+            var userPushChannel = CHANNEL_PREFIX + userName;
+            console.log(listPushChannel);
             console.log(message);
-            var query = new Parse.Query(Parse.Installation);
-            query.equalTo('channels', pushChannel);
+
+            var listIdQuery = new Parse.Query(Parse.Installation);
+            var pushQuery = new Parse.Query(Parse.Installation);
+            listIdQuery.equalTo('channels', listPushChannel);
+            pushQuery.notEqualTo('channels', userPushChannel);
+            pushQuery.matchesKeyInQuery("channels","channels",listIdQuery);
             Parse.Push.send({
-                where: query, // Set our Installation query
+                where: pushQuery, // Set our Installation query
                 data: {
-                    alert: message
+                    alert: fullName + ": " + message
                 }
             });
         }
@@ -365,9 +370,21 @@ listContentApp.controller('ShoppingListController', function ($scope) {
         }
 
         function sendPushMessageToFriendWhenSharedToList(friendUsernameInParse) {
-            var channel = friendUsernameInParse;
+            var pushChannel = CHANNEL_PREFIX + friendUsernameInParse;
             var message = fullName + " shared his list with you.";
-            sendPushMessage(channel,message);
+            //sendPushMessage(channel,message);
+
+            console.log(pushChannel);
+            console.log(message);
+            var query = new Parse.Query(Parse.Installation);
+            query.equalTo('channels', pushChannel);
+            Parse.Push.send({
+                where: query, // Set our Installation query
+                data: {
+                    alert: message
+                }
+            });
+
             $("#notifyFriendsPopUp").popup("close");
             $scope.clearNotifyFriendsFields();
         };

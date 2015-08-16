@@ -3,7 +3,9 @@ $.mobile.buttonMarkup.hoverDelay = 0;
 document.addEventListener("deviceready", onDeviceReady, false);
 
 function onDeviceReady() {
+    console.log("Device Ready");
     document.addEventListener("backbutton", onBackKeyDown, false); //Listen to the User clicking on the back button
+    subscribe();
 }
 
 function onBackKeyDown(e) {
@@ -15,6 +17,8 @@ function onBackKeyDown(e) {
         navigator.app.exitApp();
     }
 }
+
+var subscribe;
 
 //Constants
 var PARSE_APP_ID = "YNiKFOkpulbY1j19E2gcdSREgTKd0AiZZKtzJaeg";
@@ -36,15 +40,15 @@ function UserList(listId, adminUser, listName, sharedUsers, listImage, createdTi
 
 var userListsApp = angular.module('UserListsApp', []);
 userListsApp.controller('UserListsAppController', function ($scope) {
-        //$scope.username = Parse.User.current().attributes.username;
-        $scope.userLists = new Object();
-        $scope.username = "I8OECfZ0Zt2d4MCUUmNP1HV4E";
+        $scope.username = Parse.User.current().attributes.username;
+        $scope.userLists = {};
+        //$scope.username = "I8OECfZ0Zt2d4MCUUmNP1HV4E";
         $scope.defaultListImage = "http://files.parsetfss.com/78e798b2-27ce-4608-a903-5f5baf8a0899/tfss-02790cd8-92cb-4d01-ab48-e0372541c24a-checklist.png";
         $scope.listNameInput = "";
 
-        getUserLists();
+        //getUserLists();
 
-        function getUserLists() {
+        var getUserLists = function() {
             var lists = Parse.Object.extend("Lists");
             var query = new Parse.Query(lists);
 
@@ -62,7 +66,8 @@ userListsApp.controller('UserListsAppController', function ($scope) {
 
                 }
             );
-        }
+        };
+        subscribe = getUserLists;
 
         // TODO :Check my createdTime doesn't show when adding a list
         $scope.createNewList = function()
