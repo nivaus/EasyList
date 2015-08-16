@@ -334,6 +334,20 @@ listContentApp.controller('ShoppingListController', function ($scope) {
             );
         };
 
+        $scope.getSharedFacebookFriends = function (sharedFriendsIdArray) {
+            var sharedFacebookFriends = [];
+            for (var index in $scope.facebookFriends)
+            {
+                var friendId = $scope.facebookFriends[index].facebookFriendId;
+                var sharedFriendIndex = $.inArray(friendId,sharedFriendsIdArray);
+                if (sharedFriendIndex !== -1)
+                {
+                    sharedFacebookFriends.push($scope.facebookFriends[index]);
+                }
+            }
+            return sharedFacebookFriends;
+        }
+
         $scope.shareListWithFriend = function (myFacebookFriend) {
             Parse.initialize(PARSE_APP_ID, PARSE_JS_ID);
             // Get the Parse username of the given facebookId

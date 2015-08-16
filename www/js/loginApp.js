@@ -53,8 +53,11 @@ function setUserDetailsInParse (parseUser, callback)
 {
     facebookConnectPlugin.api("me?fields=id,name,email", [],
         function (resultSuccess) {
+            console.log(resultSuccess);
             var fullName = resultSuccess.name;
             var email = resultSuccess.email;
+            var facebookId = resultSuccess.id;
+            console.log(facebookId);
             // Get Profile Picture
             facebookConnectPlugin.api("/me/picture?redirect=0&type=large", [],
                 function (resultSuccess){
@@ -62,6 +65,7 @@ function setUserDetailsInParse (parseUser, callback)
                     parseUser.set("fullName", fullName);
                     parseUser.set("email", email);
                     parseUser.set("profilePicture", profilePicture);
+                    parseUser.set("facebookId", facebookId);
                     parseUser.save().then(function()
                     {
                         console.log("User details updated in parse.");
