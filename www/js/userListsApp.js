@@ -19,6 +19,7 @@ function onBackKeyDown(e) {
 //Constants
 var PARSE_APP_ID = "YNiKFOkpulbY1j19E2gcdSREgTKd0AiZZKtzJaeg";
 var PARSE_JS_ID = "Ht7VpNFFhB6KKod4L8gvWlyzjwWt0PEPXjEHVD1H";
+var CHANNEL_PREFIX = "ch";
 
 //Initializing Parse
 Parse.initialize(PARSE_APP_ID, PARSE_JS_ID);
@@ -96,6 +97,14 @@ userListsApp.controller('UserListsAppController', function ($scope) {
                     $("#createNewListPanel").panel("close");
                     console.log('New List created with listId: ' + newList.listId);
                     $scope.$apply();
+                    ParsePushPlugin.subscribe(CHANNEL_PREFIX + newList.listId,function (success)
+                    {
+                        console.log(success);
+                    },
+                    function (error)
+                    {
+                        console.log(error);
+                    });
 
                 },
                 error: function(productFromParse, error) {
@@ -184,7 +193,7 @@ userListsApp.controller('UserListsAppController', function ($scope) {
                     arrayUnsubscribe(array,index);
                 }
             }, function(e) {
-                consolo.log('error');
+                console.log('error');
             });
         }
 
@@ -196,7 +205,7 @@ userListsApp.controller('UserListsAppController', function ($scope) {
             for (var listDateIndex in $scope.userLists) {
                 for (var listIndex in $scope.userLists[listDateIndex].lists) {
                     listId = $scope.userLists[listDateIndex].lists[listIndex].listId;
-                    channel = "ch" + listId;
+                    channel = CHANNEL_PREFIX + listId;
                     subscriptions.push(channel);
                 }
             }
