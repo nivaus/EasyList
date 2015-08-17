@@ -39,6 +39,7 @@ listContentApp.controller('ShoppingListController', function ($scope) {
         var fullName = localStorage.getItem("fullName");
         var facebookId = localStorage.getItem("facebookId");
         var listId = localStorage.getItem("listId");
+        var listAdminUserName = localStorage.getItem("listAdminUserName");
         //var sharedFacebookFriendsIds = [];
 
         // Constants
@@ -51,6 +52,7 @@ listContentApp.controller('ShoppingListController', function ($scope) {
         this.selectedProduct;
         this.inEditMode = false;
 
+        $scope.isListAdmin = (userName === listAdminUserName) ? "true" : "false";
         $scope.facebookFriends = [];
         $scope.sharedFacebookFriends = [];
         $scope.notSharedFacebookFriends = [];
