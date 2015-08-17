@@ -159,11 +159,11 @@
         <h3>{{list.selectedProduct.productName}}</h3>
 
         <p>Change/Add product photo.</p>
-        <a href="index.html" id="choosePhoto" data-rel="back"
+        <a href="#" id="choosePhoto" data-rel="back"
            class="ui-shadow ui-btn ui-corner-all ui-btn-b ui-icon-check ui-btn-icon-left ui-btn-inline ui-mini"
            ng-click="list.changePhoto(list.selectedProduct, 0)">Choose a photo from library
         </a>
-        <a href="index.html" id="takePhoto" data-rel="back"
+        <a href="#" id="takePhoto" data-rel="back"
            class="ui-shadow ui-btn ui-corner-all ui-btn-b ui-icon-camera ui-btn-icon-left ui-btn-inline ui-mini"
            ng-click="list.changePhoto(list.selectedProduct, 1)">Take a photo
         </a>
@@ -186,12 +186,12 @@
            class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>
 
         <h3>Are you sure you want to delete the product {{list.selectedProduct.productName}} ?</h3>
-        <a href="index.html" data-rel="back"
+        <a href="#" data-rel="back"
            class="ui-shadow ui-btn ui-corner-all ui-btn-b ui-icon-check ui-btn-icon-left ui-btn-inline ui-mini"
            ng-click="list.removeSelectedProduct()">
             Yes
         </a>
-        <a href="index.html" data-rel="back"
+        <a href="#" data-rel="back"
            class="ui-shadow ui-btn ui-corner-all ui-btn-b ui-icon-check ui-btn-icon-left ui-btn-inline ui-mini">
             No
         </a>
@@ -218,7 +218,7 @@
     <!--
     Share List Popup
      -->
-    <div data-role="popup" id="shareListPopUp" data-theme="d" data-overlay-theme="d">
+    <div data-role="popup" id="shareListPopUp" class="popupParent" data-theme="d" data-overlay-theme="d">
         <a href="#" data-rel="back"
            class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">
             Close
@@ -249,17 +249,21 @@
                 Shared Friends
             </li>
             <li>
-                <ul data-role="listview" data-split-theme="b" data-inset="true"
+                <ul data-role="listview" data-split-theme="g" data-inset="true"
                     ng-repeat="myFacebookFriend in sharedFacebookFriends">
-                    <li>
-                        <img src="{{myFacebookFriend.facebookFriendPicture}}"
-                             alt="{{myFacebookFriend.facebookFriendName}}">
+                    <li data-icon="delete">
+                        <a>
+                            <img src="{{myFacebookFriend.facebookFriendPicture}}"
+                                 alt="{{myFacebookFriend.facebookFriendName}}">
 
-                        <div>
-                            <h2>
-                                {{myFacebookFriend.facebookFriendName}}
-                            </h2>
-                        </div>
+                            <div>
+                                <h2>
+                                    {{myFacebookFriend.facebookFriendName}}
+                                </h2>
+                            </div>
+                        </a>
+                        <a href="#confirmRemoveSharedFriend">
+                        </a>
                     </li>
                 </ul>
             </li>
@@ -294,6 +298,24 @@
                 </ul>
             </li>
         </ul>
+    </div>
+
+    <!--
+    Confirm Remove Shared Friend
+    -->
+    <div data-role="popup" id="confirmRemoveSharedFriend" class="popupChild" data-overlay-theme="b" data-theme="b" data-corners="true">
+        <a href="#" data-rel="back"
+           class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>
+
+        <h3>Are you sure you want to remove the selected friend ?</h3>
+        <a href="#" data-rel="back"
+           class="ui-shadow ui-btn ui-corner-all ui-btn-b ui-icon-check ui-btn-icon-left ui-btn-inline ui-mini">
+            Yes
+        </a>
+        <a href="#" data-rel="back"
+           class="ui-shadow ui-btn ui-corner-all ui-btn-b ui-icon-check ui-btn-icon-left ui-btn-inline ui-mini">
+            No
+        </a>
     </div>
 
     <!--

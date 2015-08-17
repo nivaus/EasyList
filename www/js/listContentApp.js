@@ -4,6 +4,24 @@
  * and open the template in the editor.
  */
 
+//***************************************************************
+//TEST
+//***************************************************************
+$(document).on("pageinit", function () {
+    $('.popupParent').on({
+        popupafterclose: function () {
+            setTimeout(function () {
+                    $('.popupChild').popup('open');
+                    console.log("Kaki");
+                }
+                , 100);
+        }
+    });
+});
+//***************************************************************
+//***************************************************************
+
+
 document.addEventListener("deviceready", onDeviceReady, false);
 
 function onDeviceReady() {
@@ -11,11 +29,11 @@ function onDeviceReady() {
 }
 
 function onBackKeyDown(e) {
-    if( $(".ui-panel").hasClass("ui-panel-open") == true ){
+    if ($(".ui-panel").hasClass("ui-panel-open") == true) {
         e.preventDefault();
-        $( ".ui-panel" ).panel( "close" );
+        $(".ui-panel").panel("close");
     }
-    else{
+    else {
         navigator.app.backHistory();
     }
 }
@@ -23,7 +41,6 @@ function onBackKeyDown(e) {
 
 // TODO : Change every this element to $scope
 $.mobile.buttonMarkup.hoverDelay = 0;
-
 
 
 function FacebookFriend(facebookFriendId, facebookFriendName, facebookFriendPicture) {
@@ -59,7 +76,7 @@ listContentApp.controller('ShoppingListController', function ($scope) {
         $scope.productCategory = "";
         $scope.productName = "";
         $scope.productQuantity = "";
-        $scope.notifyText="";
+        $scope.notifyText = "";
         $scope.listContent = new Object();
         $scope.productsToRemove = [];
 
@@ -136,7 +153,7 @@ listContentApp.controller('ShoppingListController', function ($scope) {
             var categoryName = this.selectedProduct.categoryName;
             if ($scope.listContent.hasOwnProperty(categoryName) === true) {
                 $scope.productsToRemove.push(this.selectedProduct);
-                removeProductFromList($scope.listContent,this.selectedProduct);
+                removeProductFromList($scope.listContent, this.selectedProduct);
                 //deleteProductFromParse($scope, this.selectedProduct);
             }
         };
@@ -168,7 +185,7 @@ listContentApp.controller('ShoppingListController', function ($scope) {
         };
 
         this.editList = function () {
-            localStorage.setItem("listContent",JSON.stringify($scope.listContent));
+            localStorage.setItem("listContent", JSON.stringify($scope.listContent));
             $("#addProductButton").hide();
             $("#menuButton").hide();
             this.addQuantityEditing();
@@ -179,7 +196,7 @@ listContentApp.controller('ShoppingListController', function ($scope) {
             $("#menuButton").show();
             this.updateProductsQuantity();
             console.log("saveList " + $scope.productsToRemove);
-            removeDeletedProductsInParse ($scope, $scope.productsToRemove);
+            removeDeletedProductsInParse($scope, $scope.productsToRemove);
             localStorage.removeItem("listContent");
             console.log("List Changes Saved.");
         };
@@ -287,7 +304,7 @@ listContentApp.controller('ShoppingListController', function ($scope) {
             if ($scope.notifyText === "") {
                 $scope.notifyText = "I'm on my way to the supermarket. Last chance for changes!";
             }
-            sendNotifyPushMessage(listId,$scope.notifyText);
+            sendNotifyPushMessage(listId, $scope.notifyText);
             $("#notifyFriendsPopUp").popup("close");
             $scope.clearNotifyFriendsFields();
         };
@@ -302,7 +319,7 @@ listContentApp.controller('ShoppingListController', function ($scope) {
             var pushQuery = new Parse.Query(Parse.Installation);
             listIdQuery.equalTo('channels', listPushChannel);
             pushQuery.notEqualTo('channels', userPushChannel);
-            pushQuery.matchesKeyInQuery("channels","channels",listIdQuery);
+            pushQuery.matchesKeyInQuery("channels", "channels", listIdQuery);
             Parse.Push.send({
                 where: pushQuery, // Set our Installation query
                 data: {
@@ -319,17 +336,16 @@ listContentApp.controller('ShoppingListController', function ($scope) {
         $scope.getFacebookFriendsDetails = function () {
             $scope.facebookFriends = [];
             facebookConnectPlugin.api("/me?fields=friends{name,id,picture.width(150).height(150)}", [],
-                function(results) {
+                function (results) {
                     var facebookFriendId;
                     var facebookFriendName;
                     var facebookFriendPicture;
                     var facebookFriend;
-                    for (var index in results.friends.data)
-                    {
+                    for (var index in results.friends.data) {
                         facebookFriendId = results.friends.data[index].id;
                         facebookFriendName = results.friends.data[index].name;
                         facebookFriendPicture = results.friends.data[index].picture.data.url;
-                        facebookFriend = new FacebookFriend(facebookFriendId,facebookFriendName,facebookFriendPicture);
+                        facebookFriend = new FacebookFriend(facebookFriendId, facebookFriendName, facebookFriendPicture);
                         $scope.facebookFriends.push(facebookFriend);
                     }
                     getSharedFacebookFriendsDetails();
@@ -337,23 +353,22 @@ listContentApp.controller('ShoppingListController', function ($scope) {
             );
         };
 
-        function getSharedFacebookFriendsDetails () {
+        function getSharedFacebookFriendsDetails() {
             Parse.initialize(PARSE_APP_ID, PARSE_JS_ID);
             var Lists = Parse.Object.extend("Lists");
             var query = new Parse.Query(Lists);
-            var sharedFacebookFriendsIds =[];
+            var sharedFacebookFriendsIds = [];
             query.equalTo("objectId", listId);
             query.first(
                 {
                     success: function (results) {
                         var sharedFriendsUserNamesInParse = results.get("sharedUsers");
                         var query = new Parse.Query(Parse.User);
-                        query.containedIn("username",sharedFriendsUserNamesInParse);
+                        query.containedIn("username", sharedFriendsUserNamesInParse);
                         query.find(
                             {
                                 success: function (results) {
-                                    for (var index in results)
-                                    {
+                                    for (var index in results) {
                                         var friendFacebookId = results[index].attributes.facebookId;
                                         if (friendFacebookId !== facebookId) {
                                             sharedFacebookFriendsIds.push(friendFacebookId);
@@ -383,14 +398,12 @@ listContentApp.controller('ShoppingListController', function ($scope) {
             );
         };
 
-        function getSharedFacebookFriends (sharedFriendsIdArray) {
+        function getSharedFacebookFriends(sharedFriendsIdArray) {
             var sharedFacebookFriends = [];
-            for (var index in $scope.facebookFriends)
-            {
+            for (var index in $scope.facebookFriends) {
                 var friendId = $scope.facebookFriends[index].facebookFriendId;
-                var sharedFriendIndex = $.inArray(friendId,sharedFriendsIdArray);
-                if (sharedFriendIndex !== -1)
-                {
+                var sharedFriendIndex = $.inArray(friendId, sharedFriendsIdArray);
+                if (sharedFriendIndex !== -1) {
                     sharedFacebookFriends.push($scope.facebookFriends[index]);
                 }
             }
