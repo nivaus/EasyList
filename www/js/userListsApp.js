@@ -40,9 +40,9 @@ function UserList(listId, adminUser, listName, sharedUsers, listImage, createdTi
 
 var userListsApp = angular.module('UserListsApp', []);
 userListsApp.controller('UserListsAppController', function ($scope) {
-        //$scope.username = Parse.User.current().attributes.username;
+        $scope.username = Parse.User.current().attributes.username;
         $scope.userLists = {};
-        $scope.username = "I8OECfZ0Zt2d4MCUUmNP1HV4E";
+        //$scope.username = "I8OECfZ0Zt2d4MCUUmNP1HV4E";
         $scope.defaultListImage = "http://files.parsetfss.com/78e798b2-27ce-4608-a903-5f5baf8a0899/tfss-02790cd8-92cb-4d01-ab48-e0372541c24a-checklist.png";
         $scope.listNameInput = "";
 
@@ -63,13 +63,12 @@ userListsApp.controller('UserListsAppController', function ($scope) {
                     error: function (error) {
                         console.log(error);
                     }
-
                 }
             );
         };
         subscribe = getUserLists;
 
-        getUserLists();
+        //getUserLists();
 
         // TODO :Check my createdTime doesn't show when adding a list
         $scope.createNewList = function()

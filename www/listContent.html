@@ -44,7 +44,7 @@
             </li>
 
             <li>
-                <a ng-click="getFacebookFriendsDetails()">Share List</a>
+                <a ng-click="getFacebookFriendsDetails()">{{isListAdmin ? 'Share List' : 'Show Shared Friends'}}</a>
             </li>
             <li>
                 <a onclick="logOut()">Logout</a>
@@ -218,7 +218,7 @@
     <!--
     Share List Popup
      -->
-    <div data-role="popup" id="shareListPopUp" data-theme="d" data-overlay-theme="d" class="ui-content">
+    <div data-role="popup" id="shareListPopUp" data-theme="d" data-overlay-theme="d">
         <a href="#" data-rel="back"
            class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">
             Close
@@ -232,17 +232,16 @@
                     ng-repeat="myFacebookFriend in notSharedFacebookFriends">
                     <li data-icon="carat-r">
                         <a ng-click="shareListWithFriend(myFacebookFriend)">
-                            <img src="{{myFacebookFriend.facebookFriendPicture}}" alt="{{myFacebookFriend.facebookFriendName}}">
+                            <img src="{{myFacebookFriend.facebookFriendPicture}}"
+                                 alt="{{myFacebookFriend.facebookFriendName}}">
+
                             <div>
                                 <h2>
                                     {{myFacebookFriend.facebookFriendName}}
                                 </h2>
                             </div>
                         </a>
-                        <a href=""
-                           data-rel="popup"
-                           data-position-to="window" data-transition="pop" data-theme="b">
-                        </a>
+                        <a ng-click="shareListWithFriend(myFacebookFriend)"></a>
                     </li>
                 </ul>
             </li>
@@ -252,19 +251,45 @@
             <li>
                 <ul data-role="listview" data-split-theme="b" data-inset="true"
                     ng-repeat="myFacebookFriend in sharedFacebookFriends">
-                    <li data-icon="carat-r">
-                        <a ng-click="shareListWithFriend(myFacebookFriend)">
-                            <img src="{{myFacebookFriend.facebookFriendPicture}}" alt="{{myFacebookFriend.facebookFriendName}}">
-                            <div>
-                                <h2>
-                                    {{myFacebookFriend.facebookFriendName}}
-                                </h2>
-                            </div>
-                        </a>
-                        <a href=""
-                           data-rel="popup"
-                           data-position-to="window" data-transition="pop" data-theme="b">
-                        </a>
+                    <li>
+                        <img src="{{myFacebookFriend.facebookFriendPicture}}"
+                             alt="{{myFacebookFriend.facebookFriendName}}">
+
+                        <div>
+                            <h2>
+                                {{myFacebookFriend.facebookFriendName}}
+                            </h2>
+                        </div>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+
+    <!--
+    Show Shared Users Popup
+     -->
+    <div data-role="popup" id="showSharedUsersPopUp" data-theme="d" data-overlay-theme="d">
+        <a href="#" data-rel="back"
+           class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">
+            Close
+        </a>
+        <ul data-role="listview" data-inset="true">
+            <li data-role="list-divider" data-theme="b">
+                Shared Friends
+            </li>
+            <li>
+                <ul data-role="listview" data-split-theme="b" data-inset="true"
+                    ng-repeat="myFacebookFriend in sharedFacebookFriends">
+                    <li>
+                        <img src="{{myFacebookFriend.facebookFriendPicture}}"
+                             alt="{{myFacebookFriend.facebookFriendName}}">
+
+                        <div>
+                            <h2>
+                                {{myFacebookFriend.facebookFriendName}}
+                            </h2>
+                        </div>
                     </li>
                 </ul>
             </li>

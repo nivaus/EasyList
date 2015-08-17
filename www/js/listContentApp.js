@@ -52,7 +52,7 @@ listContentApp.controller('ShoppingListController', function ($scope) {
         this.selectedProduct;
         this.inEditMode = false;
 
-        $scope.isListAdmin = (userName === listAdminUserName) ? "true" : "false";
+        $scope.isListAdmin = (userName === listAdminUserName) ? true : false;
         $scope.facebookFriends = [];
         $scope.sharedFacebookFriends = [];
         $scope.notSharedFacebookFriends = [];
@@ -361,9 +361,13 @@ listContentApp.controller('ShoppingListController', function ($scope) {
                                     }
                                     $scope.sharedFacebookFriends = getSharedFacebookFriends(sharedFacebookFriendsIds);
                                     $scope.notSharedFacebookFriends = $($scope.facebookFriends).not($scope.sharedFacebookFriends).get();
-                                    console.log($scope.notSharedFacebookFriends);
                                     $("#menuPanel").panel("close");
-                                    $("#shareListPopUp").popup("open");
+                                    if ($scope.isListAdmin === true) {
+                                        $("#shareListPopUp").popup("open");
+                                    }
+                                    else {
+                                        $("#showSharedUsersPopUp").popup("open");
+                                    }
                                     $scope.$apply();
                                 },
                                 error: function (error) {
