@@ -36,6 +36,7 @@ function clearSavedLocalStorage() {
     localStorage.removeItem("userName");
     localStorage.removeItem("fullName");
     localStorage.removeItem("facebookId");
+    localStorage.removeItem("listName");
     localStorage.removeItem("listAdminUserName");
 }
 

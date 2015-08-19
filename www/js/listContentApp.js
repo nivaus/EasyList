@@ -7,17 +7,17 @@
 //***************************************************************
 //TEST
 //***************************************************************
-$(document).on("pageinit", function () {
-    $('.popupParent').on({
-        popupafterclose: function () {
-            setTimeout(function () {
-                    $('.popupChild').popup('open');
-                    console.log("Kaki");
-                }
-                , 100);
-        }
-    });
-});
+//$(document).on("pageinit", function () {
+//    $('.popupParent').on({
+//        popupafterclose: function () {
+//            setTimeout(function () {
+//                    $('.popupChild').popup('open');
+//                    console.log("Kaki");
+//                }
+//                , 100);
+//        }
+//    });
+//});
 //***************************************************************
 //***************************************************************
 
@@ -69,6 +69,7 @@ listContentApp.controller('ShoppingListController', function ($scope) {
         this.selectedProduct;
         this.inEditMode = false;
 
+        $scope.listName = localStorage.getItem("listName");
         $scope.isListAdmin = (userName === listAdminUserName) ? true : false;
         $scope.facebookFriends = [];
         $scope.sharedFacebookFriends = [];
@@ -463,7 +464,7 @@ listContentApp.controller('ShoppingListController', function ($scope) {
 
             $("#notifyFriendsPopUp").popup("close");
             $scope.clearNotifyFriendsFields();
-        };
+        }
     }
 );
 

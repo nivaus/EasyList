@@ -90,8 +90,8 @@
         <a id="menuButton" href="#menuPanel"
            class="ui-btn ui-shadow ui-corner-all ui-btn-inline ui-btn-icon-left ui-icon-bars">Menu</a>
 
-        <h1>Easy List</h1>
-        <a id="addProductButton" href="#addProductPanel" data-icon="plus">Add Product</a>
+        <h1>{{listName}}</h1>
+        <a id="addProductButton" href="#addProductPanel" data-icon="plus">Add Item</a>
     </div>
 
     <!--
@@ -249,9 +249,9 @@
                 Shared Friends
             </li>
             <li>
-                <ul data-role="listview" data-split-theme="g" data-inset="true"
+                <ul data-role="listview" data-split-theme="f" data-inset="true"
                     ng-repeat="myFacebookFriend in sharedFacebookFriends">
-                    <li data-icon="delete">
+                    <li data-icon="check">
                         <a>
                             <img src="{{myFacebookFriend.facebookFriendPicture}}"
                                  alt="{{myFacebookFriend.facebookFriendName}}">
@@ -268,6 +268,14 @@
                 </ul>
             </li>
         </ul>
+        <a href="#" data-rel="back"
+           class="ui-shadow ui-btn ui-corner-all ui-btn-b ui-icon-check ui-btn-icon-left ui-btn-inline ui-mini">
+            Save Changes
+        </a>
+        <a href="#" data-rel="back"
+           class="ui-shadow ui-btn ui-corner-all ui-btn-b ui-icon-check ui-btn-icon-left ui-btn-inline ui-mini">
+            Cancel
+        </a>
     </div>
 
     <!--

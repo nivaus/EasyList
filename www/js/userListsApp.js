@@ -138,13 +138,17 @@ userListsApp.controller('UserListsAppController', function ($scope) {
 
         $scope.navigateToListContentPage = function(listId)
         {
-            var listAdminUserName = getAdminUserNameOfList(listId);
+            var list = getListFromListId(listId);
+            var listName = list.listName;
+            var listAdminUserName = list.adminUser;
+
             localStorage.setItem("listId",listId);
+            localStorage.setItem("listName",listName);
             localStorage.setItem("listAdminUserName",listAdminUserName);
             window.location = "./listContent.html";
         };
 
-        function getAdminUserNameOfList(listId)
+        function getListFromListId(listId)
         {
             for(var createdDate in $scope.userLists) {
                 for (var listIndex in $scope.userLists[createdDate].lists)
@@ -152,12 +156,15 @@ userListsApp.controller('UserListsAppController', function ($scope) {
                     var userList = $scope.userLists[createdDate].lists[listIndex];
                     if (userList.listId === listId)
                     {
-                        var listAdminUserName =  $scope.userLists[createdDate].lists[listIndex].adminUser;
-                        return listAdminUserName;
+                        var list = $scope.userLists[createdDate].lists[listIndex];
+                        return list;
+                        //var listAdminUserName =  $scope.userLists[createdDate].lists[listIndex].adminUser;
+                        //return listAdminUserName;
                     }
                 }
             }
         }
+
         var addListsFromParse = function (results) {
             var userList;
             var createdDate;
