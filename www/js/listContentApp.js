@@ -4,23 +4,8 @@
  * and open the template in the editor.
  */
 
-//***************************************************************
-//TEST
-//***************************************************************
-//$(document).on("pageinit", function () {
-//    $('.popupParent').on({
-//        popupafterclose: function () {
-//            setTimeout(function () {
-//                    $('.popupChild').popup('open');
-//                    console.log("Kaki");
-//                }
-//                , 100);
-//        }
-//    });
-//});
-//***************************************************************
-//***************************************************************
-
+// TODO : Remove this variable
+var test;
 
 document.addEventListener("deviceready", onDeviceReady, false);
 
@@ -72,8 +57,22 @@ listContentApp.controller('ShoppingListController', function ($scope) {
         $scope.listName = localStorage.getItem("listName");
         $scope.isListAdmin = (userName === listAdminUserName) ? true : false;
         $scope.facebookFriends = [];
-        $scope.sharedFacebookFriends = [];
-        $scope.notSharedFacebookFriends = [];
+        //$scope.sharedFacebookFriends = [];
+        $scope.sharedFacebookFriends = [{
+            "facebookFriendId": "10152853548977364",
+            "facebookFriendName": "Niv Auslender",
+            "facebookFriendPicture": "https://fbcdn-profile-a.akamaihd.net/hprofile-ak-xpt1/v/t1.0-1/p160x160/112…cd4dfe36f4&oe=56726438&__gda__=1450988468_a94542f0cb957e4fcdfb74d13fecdb00"
+        }, {
+            "facebookFriendId": "104191196601860",
+            "facebookFriendName": "Eas List",
+            "facebookFriendPicture": "https://fbcdn-profile-a.akamaihd.net/hprofile-ak-xfp1/v/t1.0-1/p160x160/118…e5e0644f03&oe=567DDACE&__gda__=1450396837_06a77902830c7970a257cc6ee57dd064"
+        }];
+        $scope.notSharedFacebookFriends = [{
+            "facebookFriendId": "729690643826959",
+            "facebookFriendName": "Desig Patter",
+            "facebookFriendPicture": "https://fbcdn-profile-a.akamaihd.net/hprofile-ak-prn2/v/t1.0-1/c27.0.160.16…501dd5b39f&oe=563BE84F&__gda__=1451518196_9089f84bfbadde13dacf56a7f51f0a02"
+        }];
+        //$scope.notSharedFacebookFriends = [];
         $scope.productCategory = "";
         $scope.productName = "";
         $scope.productQuantity = "";
@@ -155,7 +154,6 @@ listContentApp.controller('ShoppingListController', function ($scope) {
             if ($scope.listContent.hasOwnProperty(categoryName) === true) {
                 $scope.productsToRemove.push(this.selectedProduct);
                 removeProductFromList($scope.listContent, this.selectedProduct);
-                //deleteProductFromParse($scope, this.selectedProduct);
             }
         };
 
@@ -377,14 +375,17 @@ listContentApp.controller('ShoppingListController', function ($scope) {
                                     }
                                     $scope.sharedFacebookFriends = getSharedFacebookFriends(sharedFacebookFriendsIds);
                                     $scope.notSharedFacebookFriends = $($scope.facebookFriends).not($scope.sharedFacebookFriends).get();
-                                    $("#menuPanel").panel("close");
+                                    localStorage.setItem("sharedFacebookFriends", JSON.stringify($scope.sharedFacebookFriends));
+                                    localStorage.setItem("notSharedFacebookFriends", JSON.stringify($scope.notSharedFacebookFriends));
+                                    $scope.$apply();
                                     if ($scope.isListAdmin === true) {
                                         $("#shareListPopUp").popup("open");
                                     }
                                     else {
                                         $("#showSharedUsersPopUp").popup("open");
                                     }
-                                    $scope.$apply();
+                                    $("#menuPanel").panel("close");
+
                                 },
                                 error: function (error) {
                                     console.log(error);
@@ -410,6 +411,58 @@ listContentApp.controller('ShoppingListController', function ($scope) {
             }
             return sharedFacebookFriends;
         }
+
+        $scope.toggleSharedFriend = function (myFacebookFriend) {
+            var index = $scope.sharedFacebookFriends.indexOf(myFacebookFriend);
+            if (index > -1) {
+                $scope.sharedFacebookFriends.splice(index, 1);
+            }
+            $scope.notSharedFacebookFriends.push(myFacebookFriend);
+            //$scope.$apply();
+        };
+
+        $scope.toggleUnSharedFriend = function (myFacebookFriend) {
+            var index = $scope.notSharedFacebookFriends.indexOf(myFacebookFriend);
+            if (index > -1) {
+                $scope.notSharedFacebookFriends.splice(index, 1);
+            }
+            $scope.sharedFacebookFriends.push(myFacebookFriend);
+            //$scope.$apply();
+        };
+
+        $scope.cancelShareListChanges = function () {
+            var originalSharedFacebookFriends = localStorage.getItem("sharedFacebookFriends");
+            $scope.sharedFacebookFriends = JSON.parse(originalSharedFacebookFriends);
+            localStorage.removeItem("sharedFacebookFriends");
+
+            var originalNotSharedFacebookFriends = localStorage.getItem("notSharedFacebookFriends");
+            $scope.notSharedFacebookFriends = JSON.parse(originalNotSharedFacebookFriends);
+            localStorage.removeItem("notSharedFacebookFriends");
+        };
+
+        $scope.saveShareListChanges = function () {
+            var x = {
+                listId : listId,
+                sharedFacebookFriends: $scope.sharedFacebookFriends,
+                notSharedFacebookFriends: $scope.notSharedFacebookFriends
+            };
+            //x.array.push($scope.notSharedFacebookFriends);
+            //x.array = [];
+            //x.array.push($scope.sharedFacebookFriends);
+            //x.array.push($scope.notSharedFacebookFriends);
+            //test =
+            console.log(JSON.stringify(x));
+            Parse.Cloud.run('hello',x, {
+                success: function (result) {
+                    // result is 'Hello world!'
+                    console.log(result);
+                },
+                error: function (error) {
+                }
+            });
+
+            console.log("Shared Users Changes Canceled.");
+        };
 
         $scope.shareListWithFriend = function (myFacebookFriend) {
             Parse.initialize(PARSE_APP_ID, PARSE_JS_ID);

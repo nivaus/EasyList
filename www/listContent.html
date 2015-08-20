@@ -231,7 +231,7 @@
                 <ul data-role="listview" data-split-theme="b" data-inset="true"
                     ng-repeat="myFacebookFriend in notSharedFacebookFriends">
                     <li data-icon="carat-r">
-                        <a ng-click="shareListWithFriend(myFacebookFriend)">
+                        <a ng-click="toggleUnSharedFriend(myFacebookFriend)">
                             <img src="{{myFacebookFriend.facebookFriendPicture}}"
                                  alt="{{myFacebookFriend.facebookFriendName}}">
 
@@ -241,7 +241,7 @@
                                 </h2>
                             </div>
                         </a>
-                        <a ng-click="shareListWithFriend(myFacebookFriend)"></a>
+                        <a ng-click="toggleUnSharedFriend(myFacebookFriend)"></a>
                     </li>
                 </ul>
             </li>
@@ -252,7 +252,7 @@
                 <ul data-role="listview" data-split-theme="f" data-inset="true"
                     ng-repeat="myFacebookFriend in sharedFacebookFriends">
                     <li data-icon="check">
-                        <a>
+                        <a ng-click="toggleSharedFriend(myFacebookFriend)">
                             <img src="{{myFacebookFriend.facebookFriendPicture}}"
                                  alt="{{myFacebookFriend.facebookFriendName}}">
 
@@ -262,18 +262,19 @@
                                 </h2>
                             </div>
                         </a>
-                        <a href="#confirmRemoveSharedFriend">
-                        </a>
+                        <a ng-click="toggleSharedFriend(myFacebookFriend)"></a>
                     </li>
                 </ul>
             </li>
         </ul>
         <a href="#" data-rel="back"
-           class="ui-shadow ui-btn ui-corner-all ui-btn-b ui-icon-check ui-btn-icon-left ui-btn-inline ui-mini">
+           class="ui-shadow ui-btn ui-corner-all ui-btn-b ui-icon-check ui-btn-icon-left ui-btn-inline ui-mini"
+           ng-click="savedShareListChanges()">
             Save Changes
         </a>
         <a href="#" data-rel="back"
-           class="ui-shadow ui-btn ui-corner-all ui-btn-b ui-icon-check ui-btn-icon-left ui-btn-inline ui-mini">
+           class="ui-shadow ui-btn ui-corner-all ui-btn-b ui-icon-check ui-btn-icon-left ui-btn-inline ui-mini"
+           ng-click="cancelShareListChanges()">
             Cancel
         </a>
     </div>
@@ -311,7 +312,8 @@
     <!--
     Confirm Remove Shared Friend
     -->
-    <div data-role="popup" id="confirmRemoveSharedFriend" class="popupChild" data-overlay-theme="b" data-theme="b" data-corners="true">
+    <div data-role="popup" id="confirmRemoveSharedFriend" class="popupChild" data-overlay-theme="b" data-theme="b"
+         data-corners="true">
         <a href="#" data-rel="back"
            class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>
 
