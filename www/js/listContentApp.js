@@ -4,9 +4,6 @@
  * and open the template in the editor.
  */
 
-// TODO : Remove this variable
-var test;
-
 document.addEventListener("deviceready", onDeviceReady, false);
 
 function onDeviceReady() {
@@ -42,13 +39,13 @@ listContentApp.controller('ShoppingListController', function ($scope) {
         var facebookId = localStorage.getItem("facebookId");
         var listId = localStorage.getItem("listId");
         var listAdminUserName = localStorage.getItem("listAdminUserName");
-        //var sharedFacebookFriendsIds = [];
 
         // Constants
         var CHANNEL_PREFIX = "ch";
         var DEFAULT_PRODUCT_IMAGE = "http://files.parsetfss.com/64d6988d-576e-4edc-b686-e7a05d6ed73b/tfss-c2486cd8-6833-4ef0-b569-7d1445ebee99-shopping-cart.png";
         var PHOTO_LIBRARY = 0;
         var PHOTO_CAMERA = 1;
+        var facebookFriendsMap = {};
 
         // Scope Variables
         this.selectedProduct;
@@ -57,22 +54,23 @@ listContentApp.controller('ShoppingListController', function ($scope) {
         $scope.listName = localStorage.getItem("listName");
         $scope.isListAdmin = (userName === listAdminUserName) ? true : false;
         $scope.facebookFriends = [];
-        //$scope.sharedFacebookFriends = [];
-        $scope.sharedFacebookFriends = [{
-            "facebookFriendId": "10152853548977364",
-            "facebookFriendName": "Niv Auslender",
-            "facebookFriendPicture": "https://fbcdn-profile-a.akamaihd.net/hprofile-ak-xpt1/v/t1.0-1/p160x160/112…cd4dfe36f4&oe=56726438&__gda__=1450988468_a94542f0cb957e4fcdfb74d13fecdb00"
-        }, {
-            "facebookFriendId": "104191196601860",
-            "facebookFriendName": "Eas List",
-            "facebookFriendPicture": "https://fbcdn-profile-a.akamaihd.net/hprofile-ak-xfp1/v/t1.0-1/p160x160/118…e5e0644f03&oe=567DDACE&__gda__=1450396837_06a77902830c7970a257cc6ee57dd064"
-        }];
-        $scope.notSharedFacebookFriends = [{
-            "facebookFriendId": "729690643826959",
-            "facebookFriendName": "Desig Patter",
-            "facebookFriendPicture": "https://fbcdn-profile-a.akamaihd.net/hprofile-ak-prn2/v/t1.0-1/c27.0.160.16…501dd5b39f&oe=563BE84F&__gda__=1451518196_9089f84bfbadde13dacf56a7f51f0a02"
-        }];
-        //$scope.notSharedFacebookFriends = [];
+        $scope.sharedFacebookFriends = [];
+        //$scope.sharedFacebookFriends = [{
+        //    "facebookFriendId": "10152853548977364",
+        //    "facebookFriendName": "Niv Auslender",
+        //    "facebookFriendPicture": "https://fbcdn-profile-a.akamaihd.net/hprofile-ak-xpt1/v/t1.0-1/p160x160/112…cd4dfe36f4&oe=56726438&__gda__=1450988468_a94542f0cb957e4fcdfb74d13fecdb00"
+        //}, {
+        //    "facebookFriendId": "104191196601860",
+        //    "facebookFriendName": "Eas List",
+        //    "facebookFriendPicture": "https://fbcdn-profile-a.akamaihd.net/hprofile-ak-xfp1/v/t1.0-1/p160x160/118…e5e0644f03&oe=567DDACE&__gda__=1450396837_06a77902830c7970a257cc6ee57dd064"
+        //}];
+        //$scope.notSharedFacebookFriends = [{
+        //    "facebookFriendId": "729690643826959",
+        //    "facebookFriendName": "Desig Patter",
+        //    "facebookFriendPicture": "https://fbcdn-profile-a.akamaihd.net/hprofile-ak-prn2/v/t1.0-1/c27.0.160.16…501dd5b39f&oe=563BE84F&__gda__=1451518196_9089f84bfbadde13dacf56a7f51f0a02"
+        //}];
+
+        $scope.notSharedFacebookFriends = [];
         $scope.productCategory = "";
         $scope.productName = "";
         $scope.productQuantity = "";
@@ -367,10 +365,16 @@ listContentApp.controller('ShoppingListController', function ($scope) {
                         query.find(
                             {
                                 success: function (results) {
+                                    var friendFacebookId;
+                                    var parseUserName;
                                     for (var index in results) {
-                                        var friendFacebookId = results[index].attributes.facebookId;
+                                        friendFacebookId = results[index].attributes.facebookId;
+                                        parseUserName = results[index].attributes.username;
                                         if (friendFacebookId !== facebookId) {
                                             sharedFacebookFriendsIds.push(friendFacebookId);
+                                            facebookFriendsMap[sharedFacebookFriendsIds] = {
+                                                userName: parseUserName
+                                            };
                                         }
                                     }
                                     $scope.sharedFacebookFriends = getSharedFacebookFriends(sharedFacebookFriendsIds);
@@ -441,18 +445,21 @@ listContentApp.controller('ShoppingListController', function ($scope) {
         };
 
         $scope.saveShareListChanges = function () {
-            var x = {
-                listId : listId,
+            var originalSharedFacebookFriends = localStorage.getItem("sharedFacebookFriends");
+            originalSharedFacebookFriends = JSON.parse(originalSharedFacebookFriends);
+            var originalNotSharedFacebookFriends = localStorage.getItem("notSharedFacebookFriends");
+            originalNotSharedFacebookFriends = JSON.parse(originalNotSharedFacebookFriends);
+
+            var request = {
+                listId: listId,
                 sharedFacebookFriends: $scope.sharedFacebookFriends,
-                notSharedFacebookFriends: $scope.notSharedFacebookFriends
+                notSharedFacebookFriends: $scope.notSharedFacebookFriends,
+                originalSharedFacebookFriends: originalSharedFacebookFriends,
+                originalNotSharedFacebookFriends: originalNotSharedFacebookFriends,
+                facebookFriendsMap: facebookFriendsMap
             };
-            //x.array.push($scope.notSharedFacebookFriends);
-            //x.array = [];
-            //x.array.push($scope.sharedFacebookFriends);
-            //x.array.push($scope.notSharedFacebookFriends);
-            //test =
-            console.log(JSON.stringify(x));
-            Parse.Cloud.run('hello',x, {
+
+            Parse.Cloud.run('updateSharesSubscribeAndPushNotification', request, {
                 success: function (result) {
                     // result is 'Hello world!'
                     console.log(result);
