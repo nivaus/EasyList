@@ -1,6 +1,6 @@
 // Use Parse.Cloud.define to define as many cloud functions as you want.
 // For example:
-Parse.Cloud.define("updateSharesSubscribeAndPushNotification", function (request, response) {
+Parse.Cloud.define("updateSharesSubscribeAndSendPushNotification", function (request, response) {
     var query = new Parse.Query(Parse.User);
     var listId = request.params.listId;
     var sharedFacebookFriends = request.params.sharedFacebookFriends;
@@ -11,6 +11,7 @@ Parse.Cloud.define("updateSharesSubscribeAndPushNotification", function (request
 
     var addedSharedFacebookFriendsIds = [];
     var removedSharedFacebookFriends = [];
+    var friendsUserNamesInParse = [];
     console.log("=================================================================================================================================================");
 
     // Find the add friends
@@ -47,46 +48,74 @@ Parse.Cloud.define("updateSharesSubscribeAndPushNotification", function (request
         }
     }
 
-    // Update the list with the new shared users
+    // Update shared friends in the current list
+    friendsUserNamesInParse = [];
     for (var index in addedSharedFacebookFriendsIds) {
-        var facebookId = addedSharedFacebookFriendsIds[index].facebookFriendId;
+        var facebookId = addedSharedFacebookFriendsIds[index];
         var parseUserName = facebookFriendsMap[facebookId].userName;
-        addSharedFriendToListInParse(listId, parseUserName);
+        friendsUserNamesInParse.push(parseUserName);
     }
+    addSharedFriendsToListInParse(listId, friendsUserNamesInParse, response);
+    //// Update the list with the removed shared users
+    //friendsUserNamesInParse = [];
+    //for (var index in removedSharedFacebookFriends) {
+    //    var facebookId = removedSharedFacebookFriends[index].facebookFriendId;
+    //    var parseUserName = facebookFriendsMap[facebookId].userName;
+    //    friendsUserNamesInParse.push(parseUserName);
+    //}
+    //removeSharedFriendsToListInParse(listId, friendsUserNamesInParse);
 
-    // Update the list with the removed shared users
-    for (var index in removedSharedFacebookFriends) {
-        var facebookId = removedSharedFacebookFriends[index].facebookFriendId;
-        var parseUserName = facebookFriendsMap[facebookId].userName;
-        addSharedFriendToListInParse(listId, parseUserName);
-    }
-    response.success("OK");
+
 });
 
-function addSharedFriendToListInParse(listId, friendUsernameInParse) {
+function addSharedFriendsToListInParse(listId, friendsUserNamesInParse, response) {
     var Lists = Parse.Object.extend("Lists");
-    var parseUserList = new Lists();
-    parseUserList.id = listId;
-    parseUserList.add("sharedUsers", friendUsernameInParse);
-    parseUserList.save(null, {
-        success: function (result) {
-            console.log("Username " + friendUsernameInParse + " is now shared in listId " + listId);
-            //sendPushMessageToFriendWhenSharedToList(friendUsernameInParse);
-        },
-        error: function (error) {
-            console.log(error.message);
+    var parseUserList = new Parse.Query(Lists);
+    var parseUserName;
+    parseUserList.equalTo("objectId", listId);
+    parseUserList.first(
+        {
+            success: function (result) {
+                for (var index in friendsUserNamesInParse) {
+
+                    parseUserName = friendsUserNamesInParse[index];
+                    result.addUnique("sharedUsers", parseUserName);
+                    console.log("Username " + parseUserName + " are now shared in listId " + listId);
+                }
+                result.save(function (success) {
+                        response.success("OK");
+                    },
+                    function (error) {
+                        response.error("ERROR");
+                    }
+                )
+            },
+            error: function (error) {
+                console.log(error);
+            }
         }
-    });
+    );
+
+    //parseUserList.add("sharedUsers", friendsUserNamesInParse);
+    //parseUserList.save(null, {
+    //    success: function (result) {
+    //        console.log("Usernames " + JSON.stringify(friendsUserNamesInParse) + " are now shared in listId " + listId);
+    //        sendPushMessageToFriendWhenSharedToList(friendUsernameInParse);
+    //},
+    //error: function (error) {
+    //    console.log(error.message);
+    //}
+    //});
 }
 
-function removeSharedFriendToListInParse(listId, friendUsernameInParse) {
+function removeSharedFriendsToListInParse(listId, friendsUserNamesInParse) {
     var Lists = Parse.Object.extend("Lists");
     var parseUserList = new Lists();
     parseUserList.id = listId;
-    parseUserList.add("sharedUsers", friendUsernameInParse);
+    parseUserList.remove("sharedUsers", friendsUserNamesInParse);
     parseUserList.save(null, {
         success: function (result) {
-            console.log("Username " + friendUsernameInParse + " is now shared in listId " + listId);
+            console.log("Usernames " + JSON.stringify(friendsUserNamesInParse) + " are now un-shared in listId " + listId);
             //sendPushMessageToFriendWhenSharedToList(friendUsernameInParse);
         },
         error: function (error) {

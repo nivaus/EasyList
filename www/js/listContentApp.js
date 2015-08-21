@@ -1,5 +1,4 @@
-/* 
- * To change this license header, choose License Headers in Project Properties.
+/* To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
@@ -329,7 +328,6 @@ listContentApp.controller('ShoppingListController', function ($scope) {
             $scope.notifyText = "";
         };
 
-        // TODO : Disable showing friends who are already shared in the list
         $scope.getFacebookFriendsDetails = function () {
             $scope.facebookFriends = [];
             facebookConnectPlugin.api("/me?fields=friends{name,id,picture.width(150).height(150)}", [],
@@ -372,13 +370,14 @@ listContentApp.controller('ShoppingListController', function ($scope) {
                                         parseUserName = results[index].attributes.username;
                                         if (friendFacebookId !== facebookId) {
                                             sharedFacebookFriendsIds.push(friendFacebookId);
-                                            facebookFriendsMap[sharedFacebookFriendsIds] = {
+                                            facebookFriendsMap[friendFacebookId] = {
                                                 userName: parseUserName
                                             };
                                         }
                                     }
                                     $scope.sharedFacebookFriends = getSharedFacebookFriends(sharedFacebookFriendsIds);
                                     $scope.notSharedFacebookFriends = $($scope.facebookFriends).not($scope.sharedFacebookFriends).get();
+                                    addNotSharedFriendsUserNamesToMap();
                                     localStorage.setItem("sharedFacebookFriends", JSON.stringify($scope.sharedFacebookFriends));
                                     localStorage.setItem("notSharedFacebookFriends", JSON.stringify($scope.notSharedFacebookFriends));
                                     $scope.$apply();
@@ -404,6 +403,7 @@ listContentApp.controller('ShoppingListController', function ($scope) {
             );
         };
 
+        // Get array of facebook Id's and creates array of FacebookFriend
         function getSharedFacebookFriends(sharedFriendsIdArray) {
             var sharedFacebookFriends = [];
             for (var index in $scope.facebookFriends) {
@@ -414,6 +414,40 @@ listContentApp.controller('ShoppingListController', function ($scope) {
                 }
             }
             return sharedFacebookFriends;
+        }
+
+        // Adds the usernames of the users who are not shared in the list to the map
+        function addNotSharedFriendsUserNamesToMap() {
+            var friendsFacebookIds = createFacebookIdsArrayFromNotSharedFacebookFriends();
+            var query = new Parse.Query(Parse.User);
+            query.containedIn("facebookId", friendsFacebookIds);
+            query.find(
+                {
+                    success: function (results) {
+                        for (var index in results) {
+                            var facebookId = results[index].attributes.facebookId;
+                            var parseUserName = results[index].attributes.username;
+                            facebookFriendsMap[facebookId] = {
+                                userName: parseUserName
+                            }
+                        }
+                    },
+                    error: function (error) {
+                        console.log(error);
+                    }
+                }
+            );
+        }
+
+        // Gets array of FacebookFriends who are not shared in the list, and created an array of their facebookId
+        function createFacebookIdsArrayFromNotSharedFacebookFriends() {
+            var facebookIdsArray = [];
+            var facebookId;
+            for (var index in $scope.notSharedFacebookFriends) {
+                facebookId = $scope.notSharedFacebookFriends[index].facebookFriendId;
+                facebookIdsArray.push(facebookId);
+            }
+            return facebookIdsArray;
         }
 
         $scope.toggleSharedFriend = function (myFacebookFriend) {
@@ -458,37 +492,40 @@ listContentApp.controller('ShoppingListController', function ($scope) {
                 originalNotSharedFacebookFriends: originalNotSharedFacebookFriends,
                 facebookFriendsMap: facebookFriendsMap
             };
-
-            Parse.Cloud.run('updateSharesSubscribeAndPushNotification', request, {
+            console.log(facebookFriendsMap);
+            Parse.Cloud.run('updateSharesSubscribeAndSendPushNotification', request, {
                 success: function (result) {
                     // result is 'Hello world!'
                     console.log(result);
+                    console.log("Shared Users Changes Saved.");
                 },
                 error: function (error) {
+                    console.log("Error in saving changes.");
                 }
             });
 
-            console.log("Shared Users Changes Canceled.");
+
         };
 
-        $scope.shareListWithFriend = function (myFacebookFriend) {
-            Parse.initialize(PARSE_APP_ID, PARSE_JS_ID);
-            // Get the Parse username of the given facebookId
-            var friendFacebookUserId = String(myFacebookFriend.facebookFriendId);
-            var query = new Parse.Query(Parse.User);
-            query.equalTo("facebookId", friendFacebookUserId);
-            query.first({
-                success: function (success) {
-                    // Update the username of the selected facebook friend in the sharedUsers in parse
-                    var friendUserNameInParse = success.attributes.username;
-                    updateSharedUsersInParse(friendUserNameInParse);
-                    $("#shareListPopUp").popup("close");
-                },
-                error: function (error) {
-                    console.log(error.message);
-                }
-            });
-        };
+        // TODO : MOVE TO PARSE CLOUDE CODE
+        //$scope.shareListWithFriend = function (myFacebookFriend) {
+        //    Parse.initialize(PARSE_APP_ID, PARSE_JS_ID);
+        //    // Get the Parse username of the given facebookId
+        //    var friendFacebookUserId = String(myFacebookFriend.facebookFriendId);
+        //    var query = new Parse.Query(Parse.User);
+        //    query.equalTo("facebookId", friendFacebookUserId);
+        //    query.first({
+        //        success: function (success) {
+        //            // Update the username of the selected facebook friend in the sharedUsers in parse
+        //            var friendUserNameInParse = success.attributes.username;
+        //            updateSharedUsersInParse(friendUserNameInParse);
+        //            $("#shareListPopUp").popup("close");
+        //        },
+        //        error: function (error) {
+        //            console.log(error.message);
+        //        }
+        //    });
+        //};
 
         function updateSharedUsersInParse(friendUsernameInParse) {
             var Lists = Parse.Object.extend("Lists");
