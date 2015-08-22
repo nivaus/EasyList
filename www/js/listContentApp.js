@@ -481,18 +481,13 @@ listContentApp.controller('ShoppingListController', function ($scope) {
         $scope.saveShareListChanges = function () {
             var originalSharedFacebookFriends = localStorage.getItem("sharedFacebookFriends");
             originalSharedFacebookFriends = JSON.parse(originalSharedFacebookFriends);
-            var originalNotSharedFacebookFriends = localStorage.getItem("notSharedFacebookFriends");
-            originalNotSharedFacebookFriends = JSON.parse(originalNotSharedFacebookFriends);
 
             var request = {
                 listId: listId,
                 sharedFacebookFriends: $scope.sharedFacebookFriends,
-                notSharedFacebookFriends: $scope.notSharedFacebookFriends,
                 originalSharedFacebookFriends: originalSharedFacebookFriends,
-                originalNotSharedFacebookFriends: originalNotSharedFacebookFriends,
                 facebookFriendsMap: facebookFriendsMap
             };
-            console.log(facebookFriendsMap);
             Parse.Cloud.run('updateSharesSubscribeAndSendPushNotification', request, {
                 success: function (result) {
                     // result is 'Hello world!'
