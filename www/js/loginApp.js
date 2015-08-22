@@ -87,10 +87,34 @@ function registerDeviceInParse (callback)
         }, //will trigger receivePN[pnObj.myEventKey]
         function () {
             console.log('successfully registered device!');
-            subscribeUsernameToParse(callback);
+            //TODO : replace with cloud code
+            //subscribeUsernameToParse(callback); Cloud code
+            ParsePushPlugin.getInstallationObjectId(
+                function (installationObjectId){
+                    subscribeLoggedInUserInParse(installationObjectId);
+                    callback();
+                },
+                function (error)
+                {
+                    console.log(error);
+                }
+            );
+
+
         }, function (e) {
             console.log('error registering device: ' + e);
         });
+}
+
+function subscribeLoggedInUserInParse(installationObjectId)
+{
+    Parse.Cloud.run('subscribeLoggedInUser', {installationObjectId: installationObjectId}, {
+        success: function (result) {
+            console.log(result);
+        },
+        error: function (error) {
+        }
+    });
 }
 
 function subscribeUsernameToParse (callback)

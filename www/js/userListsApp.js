@@ -4,6 +4,7 @@ document.addEventListener("deviceready", onDeviceReady, false);
 
 function onDeviceReady() {
     console.log("Device Ready");
+    navigator.splashscreen.hide();
     document.addEventListener("backbutton", onBackKeyDown, false); //Listen to the User clicking on the back button
     subscribe();
 }

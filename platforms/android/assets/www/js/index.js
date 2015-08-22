@@ -32,6 +32,7 @@ var init = {
 
     // deviceready Event Handler
     onDeviceReady: function() {
+        navigator.splashscreen.show();
         init.receivedEvent('deviceready');
         init.receivedEvent('backbutton');
     },
@@ -40,9 +41,12 @@ var init = {
     receivedEvent: function(id) {
         console.log('Received Event: ' + id);
         Parse.initialize(PARSE_APP, PARSE_JS);
-        if (Parse.User.current() !== null)
-        {
+        if (Parse.User.current() !== null) {
             window.location = "userLists.html";
+        }
+        else {
+            navigator.splashscreen.hide();
+
         }
     }
 };

@@ -24,14 +24,15 @@
         <param name="onload" value="true" />
     </feature>
     <icon src="www/img/logo.png" />
-    <splash density="land-hdpi" src="www/img/splash.png" />
-    <splash density="land-ldpi" src="www/img/splash.png" />
-    <splash density="land-mdpi" src="www/img/splash.png" />
-    <splash density="land-xhdpi" src="www/img/splash.png" />
-    <splash density="port-hdpi" src="www/img/splash.png" />
-    <splash density="port-ldpi" src="www/img/splash.png" />
-    <splash density="port-mdpi" src="www/img/splash.png" />
-    <splash density="port-xhdpi" src="www/img/splash.png" />
+    <splash density="land-hdpi" src="www/img/drawable-hdpi/background.9.png" />
+    <splash density="land-ldpi" src="www/img/drawable-ldpi/background.9.png" />
+    <splash density="land-mdpi" src="www/img/drawable-mdpi/background.9.png" />
+    <splash density="land-xhdpi" src="www/img/drawable-xhdpi/background.9.png" />
+    <splash density="port-hdpi" src="www/img/drawable-hdpi/background.9.png" />
+    <splash density="port-ldpi" src="www/img/drawable-ldpi/background.9.png" />
+    <splash density="port-mdpi" src="www/img/drawable-mdpi/background.9.png" />
+    <splash density="port-xhdpi" src="www/img/drawable-xhdpi/background.9.png" />
+    <preference name="splashScreenDelay" value="10000" />
     <allow-intent href="market:*" />
     <name>EasyList</name>
     <description>

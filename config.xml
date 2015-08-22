@@ -18,15 +18,17 @@
     <allow-intent href="geo:*" />
     <platform name="android">
         <icon src="www/img/logo.png" />
-        <splash src="www/img/splash.png" density="land-hdpi"/>
-        <splash src="www/img/splash.png" density="land-ldpi"/>
-        <splash src="www/img/splash.png" density="land-mdpi"/>
-        <splash src="www/img/splash.png" density="land-xhdpi"/>
+        <splash src="www/img/drawable-hdpi/background.9.png" density="land-hdpi"/>
+        <splash src="www/img/drawable-ldpi/background.9.png" density="land-ldpi"/>
+        <splash src="www/img/drawable-mdpi/background.9.png" density="land-mdpi"/>
+        <splash src="www/img/drawable-xhdpi/background.9.png" density="land-xhdpi"/>
 
-        <splash src="www/img/splash.png" density="port-hdpi"/>
-        <splash src="www/img/splash.png" density="port-ldpi"/>
-        <splash src="www/img/splash.png" density="port-mdpi"/>
-        <splash src="www/img/splash.png" density="port-xhdpi"/>
+        <splash src="www/img/drawable-hdpi/background.9.png" density="port-hdpi"/>
+        <splash src="www/img/drawable-ldpi/background.9.png" density="port-ldpi"/>
+        <splash src="www/img/drawable-mdpi/background.9.png" density="port-mdpi"/>
+        <splash src="www/img/drawable-xhdpi/background.9.png" density="port-xhdpi"/>
+        <!--<preference name="splashscreen" value="splash" />-->
+        <preference name="splashScreenDelay" value="10000" />
         <allow-intent href="market:*" />
     </platform>
     <platform name="ios">
