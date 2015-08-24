@@ -1,7 +1,7 @@
 var _ = require('underscore');
 
 //=================================================================================================================================================================================================================================================================================================================================================================================
-// IDAN
+// IDAN - updateSharesSubscribeAndSendPushNotification
 //=================================================================================================================================================================================================================================================================================================================================================================================
 
 Parse.Cloud.define("updateSharesSubscribeAndSendPushNotification", function (request, response) {
@@ -111,7 +111,7 @@ function saveSharedFriendsChangesInParse(listId, friendsUserNamesInParseToAdd, f
 }
 
 //=================================================================================================================================================================================================================================================================================================================================================================================
-//NIV
+//NIV - subscribeLoggedInUser
 //=================================================================================================================================================================================================================================================================================================================================================================================
 
 Parse.Cloud.define("subscribeLoggedInUser", function (request, response) {
@@ -126,9 +126,11 @@ Parse.Cloud.define("subscribeLoggedInUser", function (request, response) {
         success: function (installation) {
             // object is an instance of Parse.Object.
             installation.set("username", username);
-            installation.save();
-            addChannelsToInstallations(username, ["ch" + username], response);
-            //response.success("OK");
+            installation.save().then(function (success) {
+                addChannelsToInstallations(username, ["ch" + username]).then(function (success) {
+                    response.success("OK");
+                });
+            });
         },
 
         error: function (object, e) {
@@ -140,43 +142,56 @@ Parse.Cloud.define("subscribeLoggedInUser", function (request, response) {
     });
 });
 
+//=================================================================================================================================================================================================================================================================================================================================================================================
+//NIV - subscribeToAllSharedLists
+//=================================================================================================================================================================================================================================================================================================================================================================================
 
-function addChannelsToInstallations(username, channelsArray, response) {
+Parse.Cloud.define("subscribeToAllSharedLists", function (request, response) {
+    var userListsIds = request.params.userListsIds;
+    var username = Parse.User.current().attributes.username;
+    addChannelsToInstallations(username, userListsIds).then(
+        function (success) {
+            response.success("Successfully Subscribed To Shared Lists");
+        },
+        function (error) {
+            response.error("Error On Subscribe to Shared Lists");
+        }
+    );
+
+});
+
+//=================================================================================================================================================================================================================================================================================================================================================================================
+//Global Functions
+//=================================================================================================================================================================================================================================================================================================================================================================================
+function addChannelsToInstallations(username, channelsArray) {
     console.log("addChannelsToInstallations");
     Parse.Cloud.useMasterKey();
+    var promise = new Parse.Promise();
     var query = new Parse.Query(Parse.Installation);
     query.equalTo("username", username);
 
-    query.find(function (results) {
-            // results is an array of Parse.Object.
-            console.log(results);
-            var newChannels;
-            for (var index in results) {
-                newChannels = results[index].get("channels");
-                console.log("new Channels: " + newChannels);
-                console.log("channels array: " + channelsArray);
-                newChannels = newChannels.concat(channelsArray);
+    query.find().then(function (results) {
+        // results is an array of Parse.Object.
+        console.log(results);
+        var newChannels;
+        for (var index in results) {
+            newChannels = results[index].get("channels");
+            console.log("new Channels: " + newChannels);
+            console.log("channels array: " + channelsArray);
+            newChannels = newChannels.concat(channelsArray);
 
-                newChannels = _.uniq(newChannels)
-                results[index] .set("channels", newChannels);
+            newChannels = _.uniq(newChannels)
+            results[index].set("channels", newChannels);
+        }
+
+        Parse.Object.saveAll(results, function (list, error) {
+            if (list) {
+                promise.resolve(list);
+            } else {
+                promise.reject(error);
             }
-            Parse.Object.saveAll(results, {
-                success: function(list) {
-                    // All the objects were saved.
-                    console.log("success");
-                    response.success("OK");
-                },
-                error: function(error) {
-                    // An error occurred while saving one of the objects.
-                    console.log("error");
-                    response.error("Error");
-                },
-            });
-
-        },
-        function (error) {
-            // error is an instance of Parse.Error
-            console.log(error);
-            response.error("ERROR");
         });
+
+    });
+    return promise;
 }

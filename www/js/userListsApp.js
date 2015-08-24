@@ -59,7 +59,15 @@ userListsApp.controller('UserListsAppController', function ($scope) {
                 {
                     success: function (results) {
                         addListsFromParse(results);
-                        subscribeToUserListsIdsInParse();
+                        var userListsIds = getListsIdsForSubscription();
+
+                        Parse.Cloud.run('subscribeToAllSharedLists', {userListsIds:  userListsIds}, {
+                            success: function (result) {
+                                console.log(result);
+                            },
+                            error: function (error) {
+                            }
+                        });
                     },
                     error: function (error) {
                         console.log(error);
@@ -198,36 +206,7 @@ userListsApp.controller('UserListsAppController', function ($scope) {
             return new UserList(listId, adminUser, listName, sharedUsers,listImage, createdDate);
         };
 
-
-        function arraySubscribe (array, index)
-        {
-            ParsePushPlugin.subscribe(array[index], function(msg) {
-                console.log("successfully subscribed to channel: " + array[index]);
-                if (index < array.length - 1)
-                {
-                    index++;
-                    arraySubscribe(array,index);
-                }
-            }, function(e) {
-                console.log('error');
-            });
-        }
-
-        function arrayUnsubscribe (array, index)
-        {
-            ParsePushPlugin.unsubscribe(array[index], function(msg) {
-                console.log(msg);
-                if (index < array.length - 1)
-                {
-                    index++;
-                    arrayUnsubscribe(array,index);
-                }
-            }, function(e) {
-                console.log('error');
-            });
-        }
-
-        var subscribeToUserListsIdsInParse = function()
+        var getListsIdsForSubscription = function()
         {
             var listId;
             var channel;
@@ -239,7 +218,7 @@ userListsApp.controller('UserListsAppController', function ($scope) {
                     subscriptions.push(channel);
                 }
             }
-            arraySubscribe(subscriptions,0);
+            return subscriptions;
         };
     }
 );
