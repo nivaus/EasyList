@@ -7,7 +7,9 @@ document.addEventListener("deviceready", onDeviceReady, false);
 
 function onDeviceReady() {
     document.addEventListener("backbutton", onBackKeyDown, false); //Listen to the User clicking on the back button
+    document.addEventListener("menubutton", onMenuKeyDown, false); // Listen to the User clicking on the menu button
 }
+
 
 function onBackKeyDown(e) {
     //Panel Is Opened
@@ -21,6 +23,19 @@ function onBackKeyDown(e) {
         clearSavedLocalStorageOfList();
         navigator.app.backHistory();
     }
+    // TODO : DOESN'T WORK!!!
+    // In Edit Mode
+    else if (angular.element("#shoppingListController").scope().list.inEditMode === true)
+    {
+        e.preventDefault();
+        localStorage.removeItem("listContent");
+        alert("TEST");
+        while (1)
+        {
+
+        }
+        angular.element("#shoppingListController").scope().list.inEditMode = false;
+    }
     // Popup Is Opened
     else {
         localStorage.removeItem("sharedFacebookFriends");
@@ -28,19 +43,15 @@ function onBackKeyDown(e) {
         localStorage.removeItem("listContent");
         navigator.app.backHistory();
     }
+}
 
-    // TODO : DOESN'T WORK!!!
-    // In Edit Mode
-    if (angular.element("#shoppingListController").scope().list.inEditMode === true)
-    {
-        e.preventDefault();
-        localStorage.removeItem("listContent");
-        angular.element("#shoppingListController").scope().list.inEditMode = false;
-    }
+// TODO : DOESN'T WORK!!!
+function onMenuKeyDown(e) {
+    console.log("MENU");
+    alert("MENU");
 }
 
 
-// TODO : Change every this element to $scope
 $.mobile.buttonMarkup.hoverDelay = 0;
 
 
