@@ -21,8 +21,8 @@ function facebookLogin ()
                 "expiration_date": expirationDate
             };
             console.log("Successfully logged in to facebook.");
-            //loginToParse(facebookAuthData, function(){window.location = "userLists.html";});
-            loginToParse(facebookAuthData, function(){console.log("LOGGED IN");});
+            loginToParse(facebookAuthData, function(){window.location = "userLists.html";});
+            //loginToParse(facebookAuthData, function(){console.log("LOGGED IN");});
         },
         function () {
             alert("Error login with facebook.");

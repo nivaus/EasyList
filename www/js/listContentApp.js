@@ -10,12 +10,32 @@ function onDeviceReady() {
 }
 
 function onBackKeyDown(e) {
+    //Panel Is Opened
+    console.log(angular.element("#shoppingListController").scope().list.inEditMode);
     if ($(".ui-panel").hasClass("ui-panel-open") == true) {
         e.preventDefault();
         $(".ui-panel").panel("close");
     }
-    else {
+    // No Popup Is Opened
+    else if ($(".ui-popup-container").hasClass("ui-popup-active") == false) {
+        clearSavedLocalStorageOfList();
         navigator.app.backHistory();
+    }
+    // Popup Is Opened
+    else {
+        localStorage.removeItem("sharedFacebookFriends");
+        localStorage.removeItem("notSharedFacebookFriends");
+        localStorage.removeItem("listContent");
+        navigator.app.backHistory();
+    }
+
+    // TODO : DOESN'T WORK!!!
+    // In Edit Mode
+    if (angular.element("#shoppingListController").scope().list.inEditMode === true)
+    {
+        e.preventDefault();
+        localStorage.removeItem("listContent");
+        angular.element("#shoppingListController").scope().list.inEditMode = false;
     }
 }
 
@@ -293,6 +313,7 @@ listContentApp.controller('ShoppingListController', function ($scope) {
         };
 
         $scope.navigateToUserLists = function () {
+            clearSavedLocalStorageOfList();
             window.location = "userLists.html";
         };
 
@@ -490,9 +511,10 @@ listContentApp.controller('ShoppingListController', function ($scope) {
             };
             Parse.Cloud.run('updateSharesSubscribeAndSendPushNotification', request, {
                 success: function (result) {
-                    // result is 'Hello world!'
                     console.log(result);
                     console.log("Shared Users Changes Saved.");
+                    localStorage.removeItem("sharedFacebookFriends");
+                    localStorage.removeItem("notSharedFacebookFriends");
                 },
                 error: function (error) {
                     console.log("Error in saving changes.");

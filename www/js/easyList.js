@@ -21,7 +21,7 @@ function logOut () {
             console.log("User logged Out From Facebook.");
             Parse.User.logOut();
             console.log("User logged Out From Parse.");
-            clearSavedLocalStorage();
+            localStorage.clear();
             console.log("Local Storage Cleaned.");
 
         },
@@ -31,17 +31,24 @@ function logOut () {
     );
 }
 
-function clearSavedLocalStorage() {
+function clearSavedLocalStorageOfList() {
     localStorage.removeItem("listId");
+    localStorage.removeItem("listName");
+    localStorage.removeItem("listAdminUserName");
+    localStorage.removeItem("sharedFacebookFriends");
+    localStorage.removeItem("notSharedFacebookFriends");
+    localStorage.removeItem("listContent");
+}
+
+function clearSavedLocalStorageOfUser() {
     localStorage.removeItem("userName");
     localStorage.removeItem("fullName");
     localStorage.removeItem("facebookId");
-    localStorage.removeItem("listName");
-    localStorage.removeItem("listAdminUserName");
 }
 
 function exitApp ()
 {
+    clearSavedLocalStorageOfList();
     navigator.app.exitApp();
 }
 
