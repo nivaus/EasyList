@@ -15,7 +15,7 @@ function onBackKeyDown(e) {
         $( ".ui-panel" ).panel( "close" );
     }
     else{
-        navigator.app.exitApp();
+        exitApp();
     }
 }
 
