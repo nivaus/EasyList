@@ -24,10 +24,12 @@ Parse.Cloud.define("updateSharesSubscribeAndSendPushNotification", function (req
     // Update shared friends in the current list
     friendsUserNamesInParseToAdd = createArrayOfParseUserNames(addedSharedFacebookFriendsIds, facebookFriendsMap);
     friendsUserNamesInParseToRemove = createArrayOfParseUserNames(removedSharedFacebookFriends, facebookFriendsMap);
-    saveSharedFriendsChangesInParse(listId, friendsUserNamesInParseToAdd, friendsUserNamesInParseToRemove, function (response) {
-        respones.success("OK");
-    }, function (response) {
-        respones.error("error");
+    saveSharedFriendsChangesInParse(listId, friendsUserNamesInParseToAdd, friendsUserNamesInParseToRemove).then(function (success) {
+        addUsersToChannelListId(friendsUserNamesInParseToAdd, "ch" + listId);
+    }).then(function (success) {
+        response.success("OK");
+    }, function (error) {
+        response.error("Error");
     });
 
 });
@@ -87,6 +89,7 @@ function saveSharedFriendsChangesInParse(listId, friendsUserNamesInParseToAdd, f
     var Lists = Parse.Object.extend("Lists");
     var parseUserList = new Parse.Query(Lists);
     var parseUserName;
+    var promise = new Parse.Promise();
     parseUserList.equalTo("objectId", listId);
     parseUserList.find().then(function (results) {
         for (var index in friendsUserNamesInParseToAdd) {
@@ -103,11 +106,12 @@ function saveSharedFriendsChangesInParse(listId, friendsUserNamesInParseToAdd, f
         }
         return result.save();
     }).then(function (success) {
-            console.log("SUCCESS !!")
+            promise.resolve(success);
         },
         function (error) {
-            console.log("ERROR !!")
+            promise.reject(error);
         });
+    return promise;
 }
 
 //=================================================================================================================================================================================================================================================================================================================================================================================
@@ -179,6 +183,40 @@ function addChannelsToInstallations(username, channelsArray) {
             console.log("new Channels: " + newChannels);
             console.log("channels array: " + channelsArray);
             newChannels = newChannels.concat(channelsArray);
+
+            newChannels = _.uniq(newChannels)
+            results[index].set("channels", newChannels);
+        }
+
+        Parse.Object.saveAll(results, function (list, error) {
+            if (list) {
+                promise.resolve(list);
+            } else {
+                promise.reject(error);
+            }
+        });
+
+    });
+    return promise;
+}
+
+
+function addUsersToChannelListId(usernames, channelListId) {
+    console.log("addUsersToChannelListId");
+    Parse.Cloud.useMasterKey();
+    var promise = new Parse.Promise();
+    var query = new Parse.Query(Parse.Installation);
+    query.containedIn("username", usernames);
+    console.log(usernames);
+    query.find().then(function (results) {
+        // results is an array of Parse.Object.
+        console.log(results);
+        var newChannels;
+        for (var index in results) {
+            newChannels = results[index].get("channels");
+            console.log("new Channels: " + newChannels);
+            console.log("channels array: " + channelListId);
+            newChannels = newChannels.push(channelListId);
 
             newChannels = _.uniq(newChannels)
             results[index].set("channels", newChannels);
