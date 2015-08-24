@@ -7,20 +7,51 @@ document.addEventListener("deviceready", onDeviceReady, false);
 
 function onDeviceReady() {
     document.addEventListener("backbutton", onBackKeyDown, false); //Listen to the User clicking on the back button
+    document.addEventListener("menubutton", onMenuKeyDown, false); // Listen to the User clicking on the menu button
 }
 
+
 function onBackKeyDown(e) {
+    //Panel Is Opened
+    console.log(angular.element("#shoppingListController").scope().list.inEditMode);
     if ($(".ui-panel").hasClass("ui-panel-open") == true) {
         e.preventDefault();
         $(".ui-panel").panel("close");
     }
+    // No Popup Is Opened
+    else if ($(".ui-popup-container").hasClass("ui-popup-active") == false) {
+        clearSavedLocalStorageOfList();
+        navigator.app.backHistory();
+    }
+    // TODO : DOESN'T WORK!!!
+    // In Edit Mode
+    else if (angular.element("#shoppingListController").scope().list.inEditMode === true)
+    {
+        e.preventDefault();
+        localStorage.removeItem("listContent");
+        alert("TEST");
+        while (1)
+        {
+
+        }
+        angular.element("#shoppingListController").scope().list.inEditMode = false;
+    }
+    // Popup Is Opened
     else {
+        localStorage.removeItem("sharedFacebookFriends");
+        localStorage.removeItem("notSharedFacebookFriends");
+        localStorage.removeItem("listContent");
         navigator.app.backHistory();
     }
 }
 
+// TODO : DOESN'T WORK!!!
+function onMenuKeyDown(e) {
+    console.log("MENU");
+    alert("MENU");
+}
 
-// TODO : Change every this element to $scope
+
 $.mobile.buttonMarkup.hoverDelay = 0;
 
 
@@ -293,6 +324,7 @@ listContentApp.controller('ShoppingListController', function ($scope) {
         };
 
         $scope.navigateToUserLists = function () {
+            clearSavedLocalStorageOfList();
             window.location = "userLists.html";
         };
 
@@ -490,9 +522,10 @@ listContentApp.controller('ShoppingListController', function ($scope) {
             };
             Parse.Cloud.run('updateSharesSubscribeAndSendPushNotification', request, {
                 success: function (result) {
-                    // result is 'Hello world!'
                     console.log(result);
                     console.log("Shared Users Changes Saved.");
+                    localStorage.removeItem("sharedFacebookFriends");
+                    localStorage.removeItem("notSharedFacebookFriends");
                 },
                 error: function (error) {
                     console.log("Error in saving changes.");
