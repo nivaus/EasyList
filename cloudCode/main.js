@@ -159,10 +159,27 @@ Parse.Cloud.define("subscribeToAllSharedLists", function (request, response) {
 });
 
 //=================================================================================================================================================================================================================================================================================================================================================================================
+//NIV - clearUserInstallationOnLogout
+//=================================================================================================================================================================================================================================================================================================================================================================================
+
+Parse.Cloud.define("clearUserInstallationOnLogout", function (request, response) {
+    var username = Parse.User.current().attributes.username;
+    clearUserChannelsFromInstallation(username).then(function (success) {
+        clearUsernameFromInstallation(username).then(function (success) {
+                response.success("Successfully Cleared Installation For User");
+            },
+            function (error) {
+                response.error("Error Clearing Installation For User");
+            });
+    });
+
+});
+
+//=================================================================================================================================================================================================================================================================================================================================================================================
 //Global Functions
 //=================================================================================================================================================================================================================================================================================================================================================================================
 function addChannelsToInstallations(username, channelsArray) {
-    console.log("addChannelsToInstallations - Need To Return OK");
+    console.log("addChannelsToInstallations");
     Parse.Cloud.useMasterKey();
 
     var query = new Parse.Query(Parse.Installation);
@@ -185,6 +202,7 @@ function addChannelsToInstallations(username, channelsArray) {
     });
 }
 
+
 function addUsersToChannelListId(usernames, channelListId) {
     console.log("addUsersToChannelListId");
     Parse.Cloud.useMasterKey();
@@ -201,6 +219,42 @@ function addUsersToChannelListId(usernames, channelListId) {
             newChannels = _.uniq(newChannels);
             console.log(newChannels);
             results[index].set("channels", newChannels);
+        }
+        return Parse.Object.saveAll(results);
+    });
+}
+
+
+function clearUserChannelsFromInstallation(username) {
+    console.log("clearUserChannelsFromInstallation");
+    Parse.Cloud.useMasterKey();
+
+    var query = new Parse.Query(Parse.Installation);
+    query.equalTo("username", username);
+
+    return query.find().then(function (results) {
+        // results is an array of Parse.Object.
+        console.log(results);
+        var newChannels;
+        for (var index in results) {
+            results[index].set("channels", []);
+        }
+        return Parse.Object.saveAll(results);
+    });
+}
+
+function clearUsernameFromInstallation (username)
+{
+    console.log("clearUsernameFromInstallation");
+    Parse.Cloud.useMasterKey();
+    var query = new Parse.Query(Parse.Installation);
+    query.equalTo("username", username);
+    return query.find().then(function (results) {
+        // results is an array of Parse.Object.
+        console.log(results);
+        var newChannels;
+        for (var index in results) {
+            results[index].set("username", "");
         }
         return Parse.Object.saveAll(results);
     });
