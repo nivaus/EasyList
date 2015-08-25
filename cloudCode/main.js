@@ -164,6 +164,7 @@ Parse.Cloud.define("subscribeToAllSharedLists", function (request, response) {
 
 Parse.Cloud.define("clearUserInstallationOnLogout", function (request, response) {
     var username = Parse.User.current().attributes.username;
+    var installationObjectId = request.params.installationObjectId;
     clearUserChannelsFromInstallation(username).then(function (success) {
         clearUsernameFromInstallation(username).then(function (success) {
                 response.success("Successfully Cleared Installation For User");

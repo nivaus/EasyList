@@ -16,6 +16,7 @@ function hideLoadingWidget() {
 
 function logOut() {
 
+    var installationObjectId = localStorage.get("installationObjectId");
     facebookConnectPlugin.logout(function (success) {
             console.log("User logged out from facebook.");
         },
@@ -23,7 +24,7 @@ function logOut() {
             console.log("error logging out of facebook");
         });
 
-    Parse.Cloud.run('clearUserInstallationOnLogout', {}, function (success) {
+    Parse.Cloud.run('clearUserInstallationOnLogout', {installationObjectId:installationObjectId}, function (success) {
         console.log("User unsubscribed from installations.");
         Parse.User.logOut().then(function (success) {
                 localStorage.clear();

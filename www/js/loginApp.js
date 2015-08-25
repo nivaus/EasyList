@@ -92,6 +92,7 @@ function registerDeviceInParse (callback)
             //subscribeUsernameToParse(callback); Cloud code
             ParsePushPlugin.getInstallationObjectId(
                 function (installationObjectId){
+                    localStorage.setItem("installationObjectId",installationObjectId);
                     subscribeLoggedInUserInParse(installationObjectId);
                     callback();
                 },
