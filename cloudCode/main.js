@@ -25,7 +25,7 @@ Parse.Cloud.define("updateSharesSubscribeAndSendPushNotification", function (req
     friendsUserNamesInParseToAdd = createArrayOfParseUserNames(addedSharedFacebookFriendsIds, facebookFriendsMap);
     friendsUserNamesInParseToRemove = createArrayOfParseUserNames(removedSharedFacebookFriends, facebookFriendsMap);
     saveSharedFriendsChangesInParse(listId, friendsUserNamesInParseToAdd, friendsUserNamesInParseToRemove).then(function (success) {
-        addUsersToChannelListId(friendsUserNamesInParseToAdd, "ch" + listId);
+        return addUsersToChannelListId(friendsUserNamesInParseToAdd, "ch" + listId);
     }).then(function (success) {
         response.success("OK");
     }, function (error) {
@@ -91,7 +91,7 @@ function saveSharedFriendsChangesInParse(listId, friendsUserNamesInParseToAdd, f
     var parseUserName;
     var promise = new Parse.Promise();
     parseUserList.equalTo("objectId", listId);
-    parseUserList.find().then(function (results) {
+    return parseUserList.find().then(function (results) {
         for (var index in friendsUserNamesInParseToAdd) {
             parseUserName = friendsUserNamesInParseToAdd[index];
             results[0].addUnique("sharedUsers", parseUserName);
@@ -105,13 +105,7 @@ function saveSharedFriendsChangesInParse(listId, friendsUserNamesInParseToAdd, f
             console.log("Username " + parseUserName + " is now un-shared in listId " + listId);
         }
         return result.save();
-    }).then(function (success) {
-            promise.resolve(success);
-        },
-        function (error) {
-            promise.reject(error);
-        });
-    return promise;
+    });
 }
 
 //=================================================================================================================================================================================================================================================================================================================================================================================
@@ -168,13 +162,13 @@ Parse.Cloud.define("subscribeToAllSharedLists", function (request, response) {
 //Global Functions
 //=================================================================================================================================================================================================================================================================================================================================================================================
 function addChannelsToInstallations(username, channelsArray) {
-    console.log("addChannelsToInstallations");
+    console.log("addChannelsToInstallations - Need To Return OK");
     Parse.Cloud.useMasterKey();
-    var promise = new Parse.Promise();
+
     var query = new Parse.Query(Parse.Installation);
     query.equalTo("username", username);
 
-    query.find().then(function (results) {
+    return query.find().then(function (results) {
         // results is an array of Parse.Object.
         console.log(results);
         var newChannels;
@@ -184,52 +178,30 @@ function addChannelsToInstallations(username, channelsArray) {
             console.log("channels array: " + channelsArray);
             newChannels = newChannels.concat(channelsArray);
 
-            newChannels = _.uniq(newChannels)
+            newChannels = _.uniq(newChannels);
             results[index].set("channels", newChannels);
         }
-
-        Parse.Object.saveAll(results, function (list, error) {
-            if (list) {
-                promise.resolve(list);
-            } else {
-                promise.reject(error);
-            }
-        });
-
+        return Parse.Object.saveAll(results);
     });
-    return promise;
 }
-
 
 function addUsersToChannelListId(usernames, channelListId) {
     console.log("addUsersToChannelListId");
     Parse.Cloud.useMasterKey();
-    var promise = new Parse.Promise();
     var query = new Parse.Query(Parse.Installation);
     query.containedIn("username", usernames);
     console.log(usernames);
-    query.find().then(function (results) {
+    return query.find().then(function (results) {
         // results is an array of Parse.Object.
-        console.log(results);
         var newChannels;
         for (var index in results) {
             newChannels = results[index].get("channels");
-            console.log("new Channels: " + newChannels);
-            console.log("channels array: " + channelListId);
-            newChannels = newChannels.push(channelListId);
-
-            newChannels = _.uniq(newChannels)
+            console.log(channelListId);
+            newChannels.push(channelListId);
+            newChannels = _.uniq(newChannels);
+            console.log(newChannels);
             results[index].set("channels", newChannels);
         }
-
-        Parse.Object.saveAll(results, function (list, error) {
-            if (list) {
-                promise.resolve(list);
-            } else {
-                promise.reject(error);
-            }
-        });
-
+        return Parse.Object.saveAll(results);
     });
-    return promise;
 }
