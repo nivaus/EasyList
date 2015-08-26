@@ -10,11 +10,11 @@ function onDeviceReady() {
 }
 
 function onBackKeyDown(e) {
-    if( $(".ui-panel").hasClass("ui-panel-open") == true ){
+    if ($(".ui-panel").hasClass("ui-panel-open") == true) {
         e.preventDefault();
-        $( ".ui-panel" ).panel( "close" );
+        $(".ui-panel").panel("close");
     }
-    else{
+    else {
         navigator.app.exitApp();
     }
 }
@@ -48,12 +48,11 @@ userListsApp.controller('UserListsAppController', function ($scope) {
         $scope.listNameInput = "";
 
 
-
-        var getUserLists = function() {
+        var getUserLists = function () {
             var lists = Parse.Object.extend("Lists");
             var query = new Parse.Query(lists);
 
-            query.containedIn("sharedUsers",[$scope.username]);
+            query.containedIn("sharedUsers", [$scope.username]);
             query.descending("createdAt");
             query.find(
                 {
@@ -61,7 +60,7 @@ userListsApp.controller('UserListsAppController', function ($scope) {
                         addListsFromParse(results);
                         var userListsIds = getListsIdsForSubscription();
 
-                        Parse.Cloud.run('subscribeToAllSharedLists', {userListsIds:  userListsIds}, {
+                        Parse.Cloud.run('subscribeToAllSharedLists', {userListsIds: userListsIds}, {
                             success: function (result) {
                                 console.log(result);
                             },
@@ -80,8 +79,7 @@ userListsApp.controller('UserListsAppController', function ($scope) {
         //getUserLists();
 
         // TODO :Check my createdTime doesn't show when adding a list
-        $scope.createNewList = function()
-        {
+        $scope.createNewList = function () {
             Parse.initialize(PARSE_APP_ID, PARSE_JS_ID);
             var Lists = Parse.Object.extend("Lists");
             var parseUserLists = new Lists();
@@ -97,7 +95,7 @@ userListsApp.controller('UserListsAppController', function ($scope) {
                 sharedUsers: sharedUsers,
                 listImage: listImage
             }, {
-                success: function(listObjectFromParse) {
+                success: function (listObjectFromParse) {
                     var newList = createNewListFromParseObject(listObjectFromParse);
                     if ($scope.userLists.hasOwnProperty(newList.createdTime) === false) //if the creation date is already created
                     {
@@ -112,24 +110,22 @@ userListsApp.controller('UserListsAppController', function ($scope) {
                     $("#createNewListPanel").panel("close");
                     console.log('New List created with listId: ' + newList.listId);
                     $scope.$apply();
-                    ParsePushPlugin.subscribe(CHANNEL_PREFIX + newList.listId,function (success)
-                    {
-                        console.log(success);
-                    },
-                    function (error)
-                    {
-                        console.log(error);
-                    });
 
+                    Parse.Cloud.run('subscribeUserToNewCreatedList', {listId: newList.listId}, function (success) {
+                            console.log(success);
+                        },
+                        function (error) {
+                            console.log(error);
+                        }
+                    );
                 },
-                error: function(productFromParse, error) {
+                error: function (productFromParse, error) {
                     console.log('Failed to create new object, with error code: ' + error.message);
                 }
             });
         };
 
-        function createNewListFromParseObject(parseListObject)
-        {
+        function createNewListFromParseObject(parseListObject) {
             var listId = parseListObject.id;
             var adminUser = parseListObject.attributes.adminUser;
             var listName = parseListObject.attributes.listName;
@@ -140,31 +136,26 @@ userListsApp.controller('UserListsAppController', function ($scope) {
             return newList;
         }
 
-        $scope.clearCreateNewListFields = function()
-        {
+        $scope.clearCreateNewListFields = function () {
             $("#listName").val("");
         };
 
-        $scope.navigateToListContentPage = function(listId)
-        {
+        $scope.navigateToListContentPage = function (listId) {
             var list = getListFromListId(listId);
             var listName = list.listName;
             var listAdminUserName = list.adminUser;
 
-            localStorage.setItem("listId",listId);
-            localStorage.setItem("listName",listName);
-            localStorage.setItem("listAdminUserName",listAdminUserName);
+            localStorage.setItem("listId", listId);
+            localStorage.setItem("listName", listName);
+            localStorage.setItem("listAdminUserName", listAdminUserName);
             window.location = "./listContent.html";
         };
 
-        function getListFromListId(listId)
-        {
-            for(var createdDate in $scope.userLists) {
-                for (var listIndex in $scope.userLists[createdDate].lists)
-                {
+        function getListFromListId(listId) {
+            for (var createdDate in $scope.userLists) {
+                for (var listIndex in $scope.userLists[createdDate].lists) {
                     var userList = $scope.userLists[createdDate].lists[listIndex];
-                    if (userList.listId === listId)
-                    {
+                    if (userList.listId === listId) {
                         var list = $scope.userLists[createdDate].lists[listIndex];
                         return list;
                         //var listAdminUserName =  $scope.userLists[createdDate].lists[listIndex].adminUser;
@@ -186,8 +177,7 @@ userListsApp.controller('UserListsAppController', function ($scope) {
             $scope.$apply();
         };
 
-        var getUserListFromParseObject = function(parseObject)
-        {
+        var getUserListFromParseObject = function (parseObject) {
             var listId = parseObject.id;
             var adminUser = parseObject.get("adminUser");
             var listName = parseObject.get("listName");
@@ -195,19 +185,17 @@ userListsApp.controller('UserListsAppController', function ($scope) {
             var listImage = parseObject.get("listImage");
             var createdDate = parseObject.createdAt.toDateString();
 
-            if ($scope.userLists.hasOwnProperty(createdDate) === false)
-            {
+            if ($scope.userLists.hasOwnProperty(createdDate) === false) {
                 $scope.userLists[createdDate] = {
                     createdDate: createdDate,
                     lists: []
                 };
             }
 
-            return new UserList(listId, adminUser, listName, sharedUsers,listImage, createdDate);
+            return new UserList(listId, adminUser, listName, sharedUsers, listImage, createdDate);
         };
 
-        var getListsIdsForSubscription = function()
-        {
+        var getListsIdsForSubscription = function () {
             var listId;
             var channel;
             var subscriptions = [];
@@ -221,4 +209,5 @@ userListsApp.controller('UserListsAppController', function ($scope) {
             return subscriptions;
         };
     }
-);
+)
+;

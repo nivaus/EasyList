@@ -15,8 +15,7 @@ function hideLoadingWidget() {
 }
 
 function logOut() {
-
-    var installationObjectId = localStorage.get("installationObjectId");
+    var installationObjectId = localStorage.getItem("installationObjectId");
     facebookConnectPlugin.logout(function (success) {
             console.log("User logged out from facebook.");
         },

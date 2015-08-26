@@ -1,8 +1,8 @@
 var _ = require('underscore');
 
-//=================================================================================================================================================================================================================================================================================================================================================================================
+//======================================================================================================================
 // IDAN - updateSharesSubscribeAndSendPushNotification
-//=================================================================================================================================================================================================================================================================================================================================================================================
+//======================================================================================================================
 
 Parse.Cloud.define("updateSharesSubscribeAndSendPushNotification", function (request, response) {
     var listId = request.params.listId;
@@ -26,6 +26,8 @@ Parse.Cloud.define("updateSharesSubscribeAndSendPushNotification", function (req
     friendsUserNamesInParseToRemove = createArrayOfParseUserNames(removedSharedFacebookFriends, facebookFriendsMap);
     saveSharedFriendsChangesInParse(listId, friendsUserNamesInParseToAdd, friendsUserNamesInParseToRemove).then(function (success) {
         return addUsersToChannelListId(friendsUserNamesInParseToAdd, "ch" + listId);
+    }).then(function (success) {
+        return removeUsersFromChannelListId(friendsUserNamesInParseToRemove, "ch" + listId);
     }).then(function (success) {
         response.success("OK");
     }, function (error) {
@@ -108,9 +110,9 @@ function saveSharedFriendsChangesInParse(listId, friendsUserNamesInParseToAdd, f
     });
 }
 
-//=================================================================================================================================================================================================================================================================================================================================================================================
+//======================================================================================================================
 //NIV - subscribeLoggedInUser
-//=================================================================================================================================================================================================================================================================================================================================================================================
+//======================================================================================================================
 
 Parse.Cloud.define("subscribeLoggedInUser", function (request, response) {
 
@@ -140,9 +142,9 @@ Parse.Cloud.define("subscribeLoggedInUser", function (request, response) {
     });
 });
 
-//=================================================================================================================================================================================================================================================================================================================================================================================
+//======================================================================================================================
 //NIV - subscribeToAllSharedLists
-//=================================================================================================================================================================================================================================================================================================================================================================================
+//======================================================================================================================
 
 Parse.Cloud.define("subscribeToAllSharedLists", function (request, response) {
     var userListsIds = request.params.userListsIds;
@@ -158,15 +160,15 @@ Parse.Cloud.define("subscribeToAllSharedLists", function (request, response) {
 
 });
 
-//=================================================================================================================================================================================================================================================================================================================================================================================
+//======================================================================================================================
 //NIV - clearUserInstallationOnLogout
-//=================================================================================================================================================================================================================================================================================================================================================================================
+//======================================================================================================================
 
 Parse.Cloud.define("clearUserInstallationOnLogout", function (request, response) {
     var username = Parse.User.current().attributes.username;
     var installationObjectId = request.params.installationObjectId;
-    clearUserChannelsFromInstallation(username).then(function (success) {
-        clearUsernameFromInstallation(username).then(function (success) {
+    clearUserChannelsFromInstallation(installationObjectId).then(function (success) {
+        clearUsernameFromInstallation(installationObjectId).then(function (success) {
                 response.success("Successfully Cleared Installation For User");
             },
             function (error) {
@@ -175,10 +177,48 @@ Parse.Cloud.define("clearUserInstallationOnLogout", function (request, response)
     });
 
 });
+//======================================================================================================================
+//NIV - subscribeUserToNewCreatedList
+//======================================================================================================================
 
-//=================================================================================================================================================================================================================================================================================================================================================================================
+Parse.Cloud.define("subscribeUserToNewCreatedList", function (request, response) {
+    var username = Parse.User.current().attributes.username;
+    var listId = request.params.listId;
+    var channelsArray = ["ch" + listId];
+    addChannelsToInstallations(username, channelsArray).then(
+        function (success) {
+            response.success("Successfully subscribed " + username + " to listId: " + listId);
+        },
+        function (error) {
+            response.error("Error subscribe " + username + " to listId: " + listId);
+        });
+});
+//======================================================================================================================
+//NIV - removeCurrentUserFromListId
+//======================================================================================================================
+
+Parse.Cloud.define("removeCurrentUserFromListId", function (request, response) {
+    var username = Parse.User.current().attributes.username;
+    var listId =  rquest.params.listId;
+    removeUsersFromChannelListId([username],"ch" + listId).then(
+        function(success)
+        {
+            response.success(success);
+        },
+        function(error)
+        {
+            response.error(error);
+        }
+    )
+});
+
+//======================================================================================================================
 //Global Functions
-//=================================================================================================================================================================================================================================================================================================================================================================================
+//======================================================================================================================
+
+//======================================================================================================================
+//Subscribe
+//======================================================================================================================
 function addChannelsToInstallations(username, channelsArray) {
     console.log("addChannelsToInstallations");
     Parse.Cloud.useMasterKey();
@@ -225,18 +265,37 @@ function addUsersToChannelListId(usernames, channelListId) {
     });
 }
 
+//======================================================================================================================
+//Un-Subscribe
+//======================================================================================================================
+function removeUsersFromChannelListId(usernames, channelListId) {
+    console.log("removeUsersFromChannelListId");
+    Parse.Cloud.useMasterKey();
+    var query = new Parse.Query(Parse.Installation);
+    query.containedIn("username", usernames);
+    console.log(usernames);
+    return query.find().then(function (results) {
+        // results is an array of Parse.Object.
+        var newChannels;
+        for (var index in results) {
+            newChannels = results[index].get("channels");
+            newChannels = _.difference(newChannels, [channelListId]);
+            results[index].set("channels", newChannels);
+        }
+        return Parse.Object.saveAll(results);
+    });
+}
 
-function clearUserChannelsFromInstallation(username) {
+function clearUserChannelsFromInstallation(installationObjectId) {
     console.log("clearUserChannelsFromInstallation");
     Parse.Cloud.useMasterKey();
 
     var query = new Parse.Query(Parse.Installation);
-    query.equalTo("username", username);
+    query.equalTo("objectId", installationObjectId);
 
     return query.find().then(function (results) {
         // results is an array of Parse.Object.
         console.log(results);
-        var newChannels;
         for (var index in results) {
             results[index].set("channels", []);
         }
@@ -244,12 +303,11 @@ function clearUserChannelsFromInstallation(username) {
     });
 }
 
-function clearUsernameFromInstallation (username)
-{
+function clearUsernameFromInstallation(installationObjectId) {
     console.log("clearUsernameFromInstallation");
     Parse.Cloud.useMasterKey();
     var query = new Parse.Query(Parse.Installation);
-    query.equalTo("username", username);
+    query.equalTo("objectId", installationObjectId);
     return query.find().then(function (results) {
         // results is an array of Parse.Object.
         console.log(results);
