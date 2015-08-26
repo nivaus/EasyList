@@ -199,7 +199,7 @@ Parse.Cloud.define("subscribeUserToNewCreatedList", function (request, response)
 
 Parse.Cloud.define("removeCurrentUserFromListId", function (request, response) {
     var username = Parse.User.current().attributes.username;
-    var listId =  rquest.params.listId;
+    var listId =  request.params.listId;
     removeUsersFromChannelListId([username],"ch" + listId).then(
         function(success)
         {
