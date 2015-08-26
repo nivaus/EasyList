@@ -88,8 +88,6 @@ function registerDeviceInParse (callback)
         }, //will trigger receivePN[pnObj.myEventKey]
         function () {
             console.log('successfully registered device!');
-            //TODO : replace with cloud code
-            //subscribeUsernameToParse(callback); Cloud code
             ParsePushPlugin.getInstallationObjectId(
                 function (installationObjectId){
                     localStorage.setItem("installationObjectId",installationObjectId);

@@ -6,6 +6,7 @@ var _ = require('underscore');
 
 Parse.Cloud.define("updateSharesSubscribeAndSendPushNotification", function (request, response) {
     var listId = request.params.listId;
+    var listName = request.params.listName;
     var sharedFacebookFriends = request.params.sharedFacebookFriends;
     var originalSharedFacebookFriends = request.params.originalSharedFacebookFriends;
     var facebookFriendsMap = request.params.facebookFriendsMap;
@@ -29,6 +30,7 @@ Parse.Cloud.define("updateSharesSubscribeAndSendPushNotification", function (req
     }).then(function (success) {
         return removeUsersFromChannelListId(friendsUserNamesInParseToRemove, "ch" + listId);
     }).then(function (success) {
+        sendPushNotificationToSharedFriendsInList(friendsUserNamesInParseToAdd,listName);
         response.success("OK");
     }, function (error) {
         response.error("Error");
@@ -211,6 +213,30 @@ Parse.Cloud.define("removeCurrentUserFromListId", function (request, response) {
         }
     )
 });
+//======================================================================================================================
+//NIV - sendNotifyPushMessage
+//======================================================================================================================
+Parse.Cloud.define("sendNotifyPushMessage", function (request, response) {
+    var username = Parse.User.current().attributes.username;
+    var fullName = Parse.User.current().attributes.fullName;
+    var listId = request.params.listId;
+    var message = request.params.message;
+    var listIdQuery = new Parse.Query(Parse.Installation);
+    var pushQuery = new Parse.Query(Parse.Installation);
+    var userPushChannel = "ch" + username;
+    var listPushChannel = "ch" + listId;
+
+    listIdQuery.equalTo('channels', listPushChannel);
+    pushQuery.notEqualTo('channels', userPushChannel);
+    pushQuery.matchesKeyInQuery("channels", "channels", listIdQuery);
+    Parse.Push.send({
+        where: pushQuery, // Set our Installation query
+        data: {
+            alert: fullName + ": " + message
+        }
+    });
+    response.success("OK");
+});
 
 //======================================================================================================================
 //Global Functions
@@ -316,5 +342,25 @@ function clearUsernameFromInstallation(installationObjectId) {
             results[index].set("username", "");
         }
         return Parse.Object.saveAll(results);
+    });
+}
+
+//======================================================================================================================
+//Push
+//======================================================================================================================
+function sendPushNotificationToSharedFriendsInList(friendsArray, listName) {
+    Parse.Cloud.useMasterKey();
+    var username = Parse.User.current().attributes.username;
+    var query = new Parse.Query(Parse.Installation);
+    var fullName = Parse.User.current().attributes.fullName;
+
+    query.containedIn("username",friendsArray);
+    Parse.Push.send({
+        where: query, // Set our Installation query
+        data: {
+            name: "Vaughn",
+            newsItem: "Man bites dog",
+            alert: fullName + " shared the list " + listName + " with you."
+        }
     });
 }

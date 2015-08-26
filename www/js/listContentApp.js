@@ -300,29 +300,30 @@ listContentApp.controller('ShoppingListController', function ($scope) {
             if ($scope.notifyText === "") {
                 $scope.notifyText = "I'm on my way to the supermarket. Last chance for changes!";
             }
-            sendNotifyPushMessage(listId, $scope.notifyText);
+            //sendNotifyPushMessage(listId, $scope.notifyText);
+            Parse.Cloud.run('sendNotifyPushMessage', {listId: listId, message: $scope.notifyText});
             $("#notifyFriendsPopUp").popup("close");
             $scope.clearNotifyFriendsFields();
         };
 
-        function sendNotifyPushMessage(channel, message) {
-            var listPushChannel = CHANNEL_PREFIX + channel;
-            var userPushChannel = CHANNEL_PREFIX + userName;
-            console.log(listPushChannel);
-            console.log(message);
-
-            var listIdQuery = new Parse.Query(Parse.Installation);
-            var pushQuery = new Parse.Query(Parse.Installation);
-            listIdQuery.equalTo('channels', listPushChannel);
-            pushQuery.notEqualTo('channels', userPushChannel);
-            pushQuery.matchesKeyInQuery("channels", "channels", listIdQuery);
-            Parse.Push.send({
-                where: pushQuery, // Set our Installation query
-                data: {
-                    alert: fullName + ": " + message
-                }
-            });
-        }
+        //function sendNotifyPushMessage(channel, message) {
+        //    var listPushChannel = CHANNEL_PREFIX + channel;
+        //    var userPushChannel = CHANNEL_PREFIX + userName;
+        //    console.log(listPushChannel);
+        //    console.log(message);
+        //
+        //    var listIdQuery = new Parse.Query(Parse.Installation);
+        //    var pushQuery = new Parse.Query(Parse.Installation);
+        //    listIdQuery.equalTo('channels', listPushChannel);
+        //    pushQuery.notEqualTo('channels', userPushChannel);
+        //    pushQuery.matchesKeyInQuery("channels", "channels", listIdQuery);
+        //    Parse.Push.send({
+        //        where: pushQuery, // Set our Installation query
+        //        data: {
+        //            alert: fullName + ": " + message
+        //        }
+        //    });
+        //}
 
         $scope.clearNotifyFriendsFields = function () {
             $scope.notifyText = "";
@@ -484,6 +485,7 @@ listContentApp.controller('ShoppingListController', function ($scope) {
 
             var request = {
                 listId: listId,
+                listName:  $scope.listName,
                 sharedFacebookFriends: $scope.sharedFacebookFriends,
                 originalSharedFacebookFriends: originalSharedFacebookFriends,
                 facebookFriendsMap: facebookFriendsMap
