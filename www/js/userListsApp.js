@@ -322,24 +322,24 @@ userListsApp.controller('UserListsAppController', function ($scope) {
             // Deleting the list from Parse
             console.log(list);
             listId = list.id;
-            list.destroy({}).then(function () {
+            return list.destroy({}).then(function () {
                 console.log('List with listId ' + list.id + ' deleted successfully.');
 
                 var ListContent = Parse.Object.extend("ListContent");
                 var query = new Parse.Query(ListContent);
                 query.equalTo("listId", listId);
-                query.each(function (result) {
-                    console.log(result);
-                    result.destroy().then(
-                        function (success) {
-                            //removeListIdChannel(listId);
-                        },
-                        function (error) {
-                            console.log(error);
-                        }
-                    );
-                });
+                return query.find().then(function (results) {
+                    console.log(results);
+
+                    return Parse.Object.destroyAll(results);
+                }).then();
             });
+        }).then(function (success) {
+            removeListIdChannel(listsIds);
+            console.log(success);
+
+        }, function (error) {
+            console.log(error);
         });
 
         //for (var listIndex in listsToRemove) {
@@ -370,11 +370,13 @@ userListsApp.controller('UserListsAppController', function ($scope) {
         //        }
         //    });
         //}
-        listsToRemove = [];
+
     }
 
-    function removeListIdChannel(listId) {
-        Parse.Cloud.run('removeListIdChannel', {listId: listId}, function (success) {
+    function removeListIdChannel(listsIds) {
+        console.log("removeListsIdsChannel:");
+        console.log(listsIds);
+        Parse.Cloud.run('removeListsIdsChannel', {listsIds: listsIds}, function (success) {
                 console.log(success);
             },
             function (error) {
