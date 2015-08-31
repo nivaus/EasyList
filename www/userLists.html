@@ -14,7 +14,7 @@
     <script src="./Parse/parse-1.4.2.min.js"></script>
     <script src="js/userListsApp.js"></script>
     <script src="js/easyList.js"></script>
-
+    <script src="js/underscore.js"></script>
     <!--
     CSS
     -->
@@ -37,7 +37,7 @@
 
         <ul data-role="listview" data-theme="d" data-divider-theme="a" style="margin-top:-16px;" class="nav-search">
             <li ng-show=inEditMode>
-                <a id="saveListsButton" ng-click="saveLists()">
+                <a id="saveListsButton" ng-click="saveListsChanges()">
                     Save List
                 </a>
             </li>
@@ -74,18 +74,22 @@
         </form>
     </div>
 
+    <!--
+     Header
+    -->
     <div data-role="header" data-theme="a">
-        <a href="#menuPanel" data-icon="bars">Menu</a>
+        <a id="menuButton" href="#menuPanel" data-icon="bars">Menu</a>
 
         <h1>Easy List</h1>
-        <a href="#createNewListPanel" data-icon="plus">New List</a>
+        <a id="createNewListButton" href="#createNewListPanel" data-icon="plus">New List</a>
     </div>
 
     <div data-role="main" class="ui-content">
+
         <!--
-        User Lists
+        User Lists - Not In Edit Mode
         -->
-        <div ng-repeat="date in userLists">
+        <div ng-repeat="date in userLists" ng-show="!inEditMode">
             <ul data-role="listview" data-inset="true">
                 <!-- Divider -->
                 <li data-role="list-divider" data-theme="b">
@@ -93,66 +97,77 @@
                     <span class="ui-li-count">{{date.lists.length}}</span>
                 </li>
                 <!-- List -->
-                <!-- Not In Edit Mode -->
-                <li data-icon="carat-r" ng-show="!inEditMode" ng-repeat="list in date.lists" >
+                <li data-icon="carat-r" ng-repeat="list in date.lists">
                     <a ng-click="navigateToListContentPage(list.listId)">
                         <img src="{{list.listImage}}">
+
                         <h2>{{list.listName}}</h2>
+
                         <p>List Admin: {{list.adminName}}
                             <br>
                             Shared users: {{list.sharedUsers.length-1}}
                         </p>
                     </a>
 
-                    <a ng-click="navigateToListContentPage(list.listId)"  data-theme="b">
+                    <a ng-click="navigateToListContentPage(list.listId)" data-theme="b">
                     </a>
                 </li>
+            </ul>
+        </div>
 
-                <!-- In Edit Mode -->
-                <li data-icon="{{(list.adminUser===username) ? 'delete' : 'carat-r'}}" ng-repeat="list in date.lists"
-                    ng-show="inEditMode">
+        <!--
+        User Lists - In Edit Mode
+        -->
+        <div ng-repeat="date in userLists" ng-show="inEditMode">
+            <ul data-role="listview" data-inset="true">
+                <!-- Divider -->
+                <li data-role="list-divider" data-theme="b">
+                    Created At: {{date.createdDate}}
+                    <span class="ui-li-count">{{date.lists.length}}</span>
+                </li>
+
+                <!-- List -->
+                <li data-icon="{{(list.adminUser===username) ? 'delete' : 'carat-r'}}" ng-repeat="list in date.lists">
                     <a ng-click="updateSelectedList(list)">
                         <img src="{{list.listImage}}">
 
                         <h2>{{list.listName}}</h2>
+
                         <p>List Admin: {{list.adminName}}
                             <br>
                             Shared users: {{list.sharedUsers.length-1}}
                         </p>
                     </a>
                     <!-- List Admin -->
-                    <a class="listOptionsPopup"
-                       href="#confirmListDeletePopUp"
-                       data-rel="popup"
-                       data-position-to="window" data-transition="pop" data-theme="{{getTheme(list)}}"
-                       ng-click="updateSelectedList(list)" >
-                    </a>
-                     <!--Not List Admin-->
-                    <!--<a data-theme="{{getTheme(list)}}" ng-show="{{!isListAdmin(list)}}">-->
-                    <!--</a>-->
+                    <a data-theme="{{getTheme(list)}}" ng-click="listAction(list)"></a>
                 </li>
             </ul>
         </div>
     </div>
 
     <!--
-    Confirm List Delete
+    Footer - Only When In Edit Mode
     -->
-    <div data-role="popup" id="confirmListDeletePopUp" data-overlay-theme="b" data-theme="b" data-corners="true">
-        <a href="#" data-rel="back"
-           class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>
-
-        <h3>Are you sure you want to delete the list ?</h3>
-        <a href="#" data-rel="back"
-           class="ui-shadow ui-btn ui-corner-all ui-btn-b ui-icon-check ui-btn-icon-left ui-btn-inline ui-mini"
-           ng-click="removeSelectedList()">
-            Yes
-        </a>
-        <a href="#" data-rel="back"
-           class="ui-shadow ui-btn ui-corner-all ui-btn-b ui-icon-check ui-btn-icon-left ui-btn-inline ui-mini">
-            No
-        </a>
+    <div data-role="footer" data-position="fixed" data-theme="a" ng-show="inEditMode">
+        <div data-role="navbar">
+            <ul>
+                <li>
+                    <a id="saveListsChangesButton" data-icon="check" ng-click="saveListsChanges()">
+                        Save List
+                    </a>
+                </li>
+                <li>
+                    <a id="cancelEditListChangesButton" data-icon="delete" ng-click="cancelEditListsChanges()">
+                        Cancel
+                    </a>
+                </li>
+            </ul>
+        </div>
     </div>
+
+
+</div>
+
 
 </div>
 

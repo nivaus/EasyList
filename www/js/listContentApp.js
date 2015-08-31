@@ -54,21 +54,6 @@ listContentApp.controller('ShoppingListController', function ($scope) {
         $scope.isListAdmin = (userName === listAdminUserName) ? true : false;
         $scope.facebookFriends = [];
         $scope.sharedFacebookFriends = [];
-        //$scope.sharedFacebookFriends = [{
-        //    "facebookFriendId": "10152853548977364",
-        //    "facebookFriendName": "Niv Auslender",
-        //    "facebookFriendPicture": "https://fbcdn-profile-a.akamaihd.net/hprofile-ak-xpt1/v/t1.0-1/p160x160/112…cd4dfe36f4&oe=56726438&__gda__=1450988468_a94542f0cb957e4fcdfb74d13fecdb00"
-        //}, {
-        //    "facebookFriendId": "104191196601860",
-        //    "facebookFriendName": "Eas List",
-        //    "facebookFriendPicture": "https://fbcdn-profile-a.akamaihd.net/hprofile-ak-xfp1/v/t1.0-1/p160x160/118…e5e0644f03&oe=567DDACE&__gda__=1450396837_06a77902830c7970a257cc6ee57dd064"
-        //}];
-        //$scope.notSharedFacebookFriends = [{
-        //    "facebookFriendId": "729690643826959",
-        //    "facebookFriendName": "Desig Patter",
-        //    "facebookFriendPicture": "https://fbcdn-profile-a.akamaihd.net/hprofile-ak-prn2/v/t1.0-1/c27.0.160.16…501dd5b39f&oe=563BE84F&__gda__=1451518196_9089f84bfbadde13dacf56a7f51f0a02"
-        //}];
-
         $scope.notSharedFacebookFriends = [];
         $scope.productCategory = "";
         $scope.productName = "";
