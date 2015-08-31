@@ -42,13 +42,12 @@ function UserList(listId, adminUser, adminName, listName, sharedUsers, listImage
 
 var userListsApp = angular.module('UserListsApp', []);
 userListsApp.controller('UserListsAppController', function ($scope) {
-    $scope.username = Parse.User.current().attributes.username;
+    //$scope.username = Parse.User.current().attributes.username;
     $scope.userLists = {};
-    //$scope.username = "I8OECfZ0Zt2d4MCUUmNP1HV4E";
+    $scope.username = "I8OECfZ0Zt2d4MCUUmNP1HV4E";
     $scope.defaultListImage = "http://files.parsetfss.com/78e798b2-27ce-4608-a903-5f5baf8a0899/tfss-02790cd8-92cb-4d01-ab48-e0372541c24a-checklist.png";
     $scope.listNameInput = "";
     $scope.inEditMode = false;
-    $scope.selectedList = null;
 
 
     var listsToRemove = [];
@@ -82,7 +81,7 @@ userListsApp.controller('UserListsAppController', function ($scope) {
     };
     subscribe = getUserLists;
 
-    //getUserLists();
+    getUserLists();
 
     // TODO :Check my createdTime doesn't show when adding a list
     $scope.createNewList = function () {
@@ -221,21 +220,50 @@ userListsApp.controller('UserListsAppController', function ($scope) {
     $scope.editLists = function () {
         localStorage.setItem("userLists", JSON.stringify($scope.userLists));
         $("#menuButton").hide();
+        $("#createNewListButton").hide();
+        removeNotAdminLists();
         $("#menuPanel").panel("close");
         $scope.inEditMode = !$scope.inEditMode;
     };
 
-    $scope.saveLists = function () {
+    function removeNotAdminLists ()
+    {
+        var userListsInDate;
+        var userList;
+        var listIndex;
+        var createdDate;
+        var notAdminListsToRemove;
+        for (createdDate in $scope.userLists) {
+            notAdminListsToRemove= [];
+            userListsInDate = $scope.userLists[createdDate].lists;
+            for (listIndex in userListsInDate) {
+
+                userList = userListsInDate[listIndex];
+                if (userList.adminUser !== $scope.username) {
+                    notAdminListsToRemove.push(userList);
+                    console.log("FOUND NOT ADMIN");
+                    //$scope.userLists[createdDate].lists.splice(listIndex, 1);
+                }
+            }
+            console.log($scope.userLists[createdDate].lists);
+            console.log(notAdminListsToRemove);
+            $scope.userLists[createdDate].lists = _.difference($scope.userLists[createdDate].lists, notAdminListsToRemove);
+            if ($scope.userLists[createdDate].lists.length === 0) {
+                delete $scope.userLists[createdDate];
+            }
+        }
+    }
+
+    $scope.saveListsChanges = function () {
         $("#menuButton").show();
-        //console.log("saveList " + $scope.productsToRemove);
-        removeDeletedListsInParse(listsToRemove);
+        removeDeletedListsInParse();
         localStorage.removeItem("userLists");
         console.log("Lists Changes Saved.");
         $("#menuPanel").panel("close");
         $scope.inEditMode = !$scope.inEditMode;
     };
 
-    $scope.cancelEditListChanges = function () {
+    $scope.cancelEditListsChanges = function () {
         var oldContent = localStorage.getItem("userLists");
         $scope.userLists = JSON.parse(oldContent);
         localStorage.removeItem("userLists");
@@ -246,6 +274,7 @@ userListsApp.controller('UserListsAppController', function ($scope) {
     };
 
     $scope.getTheme = function (list) {
+        console.log("list");
         if ($scope.inEditMode === false) {
             return "b";
         }
@@ -269,16 +298,25 @@ userListsApp.controller('UserListsAppController', function ($scope) {
         }
     };
 
-    $scope.updateSelectedList = function (list) {
-        $scope.selectedList = list;
-    };
-
     $scope.isListAdmin = function (list) {
         return ((list.adminUser === $scope.username) ? true : false);
     };
 
+    $scope.listAction = function (list)
+    {
+        if (list.adminUser === $scope.username)
+        {
+            console.log("List Admin");
+            $scope.removeSelectedList(list);
+        }
+        else
+        {
+            console.log("Not List Admin");
+        }
+    };
+
     // TODO : FINISH
-    $scope.removeSelectedList = function () {
+    $scope.removeSelectedList = function (selectedList) {
         var userListsInDate;
         var userList;
         var foundList = false;
@@ -288,7 +326,7 @@ userListsApp.controller('UserListsAppController', function ($scope) {
             userListsInDate = $scope.userLists[createdDate].lists;
             for (listIndex in userListsInDate) {
                 userList = userListsInDate[listIndex];
-                if (userList.listId === $scope.selectedList.listId) {
+                if (userList.listId === selectedList.listId) {
                     foundList = true;
                     listsToRemove.push(userList);
                     $scope.userLists[createdDate].lists.splice(listIndex, 1);
@@ -304,7 +342,7 @@ userListsApp.controller('UserListsAppController', function ($scope) {
         }
     };
 
-    function removeDeletedListsInParse(listsToRemove) {
+    function removeDeletedListsInParse() {
         Parse.initialize(PARSE_APP_ID, PARSE_JS_ID);
         console.log(listsToRemove);
         var Lists = Parse.Object.extend("Lists");
