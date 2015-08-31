@@ -82,7 +82,7 @@ userListsApp.controller('UserListsAppController', function ($scope) {
     };
     subscribe = getUserLists;
 
-        //getUserLists();
+    //getUserLists();
 
     // TODO :Check my createdTime doesn't show when adding a list
     $scope.createNewList = function () {
@@ -310,34 +310,75 @@ userListsApp.controller('UserListsAppController', function ($scope) {
         var Lists = Parse.Object.extend("Lists");
         var listId;
         var sharedUsers;
-        for (var listIndex in listsToRemove) {
-            listId = listsToRemove[listIndex].listId;
-            sharedUsers = listsToRemove[listIndex].sharedUsers;
-            var query = new Parse.Query(Lists);
-            query.get(listId, {
-                success: function (list) {
-                    // Deleting the list from Parse
-                    list.destroy({}).then(function () {
-                        console.log('List with listId ' + list.id + ' deleted successfully.');
+        var query = new Parse.Query(Lists);
+        var listsIds = [];
 
-                        var ListContent = Parse.Object.extend("ListContent");
-                        var query = new Parse.Query(ListContent);
-                        query.equalTo("listId", listId);
-                        query.each(function (result) {
-                            return result.destroy();
-                        }).then(function (success) {
-                                // TODO : Unsubscribe
-                            },
-                            function (error) {
-
-                            });
-                    });
-                },
-                error: function (list, error) {
-                    console.log('Failed to delete object, with error code: ' + error.message);
-                }
-            });
+        for (var list in listsToRemove) {
+            listsIds.push(listsToRemove[list].listId);
         }
+
+        query.containedIn("objectId", listsIds);
+        query.each(function (list) {
+            // Deleting the list from Parse
+            console.log(list);
+            listId = list.id;
+            list.destroy({}).then(function () {
+                console.log('List with listId ' + list.id + ' deleted successfully.');
+
+                var ListContent = Parse.Object.extend("ListContent");
+                var query = new Parse.Query(ListContent);
+                query.equalTo("listId", listId);
+                query.each(function (result) {
+                    console.log(result);
+                    result.destroy().then(
+                        function (success) {
+                            //removeListIdChannel(listId);
+                        },
+                        function (error) {
+                            console.log(error);
+                        }
+                    );
+                });
+            });
+        });
+
+        //for (var listIndex in listsToRemove) {
+        //    listId = listsToRemove[listIndex].listId;
+        //    sharedUsers = listsToRemove[listIndex].sharedUsers;
+        //    var query = new Parse.Query(Lists);
+        //    query.get(listId, {
+        //        success: function (list) {
+        //            // Deleting the list from Parse
+        //            list.destroy({}).then(function () {
+        //                console.log('List with listId ' + list.id + ' deleted successfully.');
+        //
+        //                var ListContent = Parse.Object.extend("ListContent");
+        //                var query = new Parse.Query(ListContent);
+        //                query.equalTo("listId", listId);
+        //                query.each(function (result) {
+        //                    return result.destroy();
+        //                }).then(function (success) {
+        //                        //removeListIdChannel(listId);
+        //                    },
+        //                    function (error) {
+        //                        console.log(error);
+        //                    });
+        //            });
+        //        },
+        //        error: function (list, error) {
+        //            console.log('Failed to delete object, with error code: ' + error.message);
+        //        }
+        //    });
+        //}
         listsToRemove = [];
+    }
+
+    function removeListIdChannel(listId) {
+        Parse.Cloud.run('removeListIdChannel', {listId: listId}, function (success) {
+                console.log(success);
+            },
+            function (error) {
+                console.log(error);
+            });
     }
 });

@@ -1,4 +1,5 @@
 var _ = require('underscore');
+var CHANNEL_PREFIX = "ch";
 
 //======================================================================================================================
 // IDAN - updateSharesSubscribeAndSendPushNotification
@@ -26,9 +27,9 @@ Parse.Cloud.define("updateSharesSubscribeAndSendPushNotification", function (req
     friendsUserNamesInParseToAdd = createArrayOfParseUserNames(addedSharedFacebookFriendsIds, facebookFriendsMap);
     friendsUserNamesInParseToRemove = createArrayOfParseUserNames(removedSharedFacebookFriends, facebookFriendsMap);
     saveSharedFriendsChangesInParse(listId, friendsUserNamesInParseToAdd, friendsUserNamesInParseToRemove).then(function (success) {
-        return addUsersToChannelListId(friendsUserNamesInParseToAdd, "ch" + listId);
+        return addUsersToChannelListId(friendsUserNamesInParseToAdd, CHANNEL_PREFIX + listId);
     }).then(function (success) {
-        return removeUsersFromChannelListId(friendsUserNamesInParseToRemove, "ch" + listId);
+        return removeUsersFromChannelListId(friendsUserNamesInParseToRemove, CHANNEL_PREFIX + listId);
     }).then(function (success) {
         sendPushNotificationToSharedFriendsInList(friendsUserNamesInParseToAdd,listName);
         response.success("OK");
@@ -129,7 +130,7 @@ Parse.Cloud.define("subscribeLoggedInUser", function (request, response) {
             // object is an instance of Parse.Object.
             installation.set("username", username);
             installation.save().then(function (success) {
-                addChannelsToInstallations(username, ["ch" + username]).then(function (success) {
+                addChannelsToInstallations(username, [CHANNEL_PREFIX + username]).then(function (success) {
                     response.success("OK");
                 });
             });
@@ -186,7 +187,7 @@ Parse.Cloud.define("clearUserInstallationOnLogout", function (request, response)
 Parse.Cloud.define("subscribeUserToNewCreatedList", function (request, response) {
     var username = Parse.User.current().attributes.username;
     var listId = request.params.listId;
-    var channelsArray = ["ch" + listId];
+    var channelsArray = [CHANNEL_PREFIX + listId];
     addChannelsToInstallations(username, channelsArray).then(
         function (success) {
             response.success("Successfully subscribed " + username + " to listId: " + listId);
@@ -202,10 +203,27 @@ Parse.Cloud.define("subscribeUserToNewCreatedList", function (request, response)
 Parse.Cloud.define("removeCurrentUserFromListId", function (request, response) {
     var username = Parse.User.current().attributes.username;
     var listId =  request.params.listId;
-    removeUsersFromChannelListId([username],"ch" + listId).then(
+    removeUsersFromChannelListId([username],CHANNEL_PREFIX + listId).then(
         function(success)
         {
             response.success(success);
+        },
+        function(error)
+        {
+            response.error(error);
+        }
+    )
+});
+//======================================================================================================================
+//NIV - removeListIdChannel
+//======================================================================================================================
+
+Parse.Cloud.define("removeListIdChannel", function (request, response) {
+    var listId =  request.params.listId;
+    removeChannelFromAllUsers(CHANNEL_PREFIX + listId).then(
+        function(success)
+        {
+            response.success("Channel " + CHANNEL_PREFIX + listId + " cleared removed from parse.");
         },
         function(error)
         {
@@ -223,8 +241,8 @@ Parse.Cloud.define("sendNotifyPushMessage", function (request, response) {
     var message = request.params.message;
     var listIdQuery = new Parse.Query(Parse.Installation);
     var pushQuery = new Parse.Query(Parse.Installation);
-    var userPushChannel = "ch" + username;
-    var listPushChannel = "ch" + listId;
+    var userPushChannel = CHANNEL_PREFIX + username;
+    var listPushChannel = CHANNEL_PREFIX + listId;
 
     listIdQuery.equalTo('channels', listPushChannel);
     pushQuery.notEqualTo('channels', userPushChannel);
@@ -345,6 +363,28 @@ function clearUsernameFromInstallation(installationObjectId) {
     });
 }
 
+function removeChannelFromAllUsers (channel)
+{
+    console.log("removeChannelFromAllUsers");
+    Parse.Cloud.useMasterKey();
+
+    var query = new Parse.Query(Parse.Installation);
+    query.containedIn("channels", [channel]);
+
+    return query.find().then(function (results) {
+        // results is an array of Parse.Object.
+        console.log(results);
+        var channels;
+        for (var index in results) {
+            channels = results[index].get("channels");
+            channels = _.difference(channels, [channel]);
+            results[index].set("channels", channels);
+
+        }
+        return Parse.Object.saveAll(results);
+    });
+}
+
 //======================================================================================================================
 //Push
 //======================================================================================================================
@@ -358,8 +398,6 @@ function sendPushNotificationToSharedFriendsInList(friendsArray, listName) {
     Parse.Push.send({
         where: query, // Set our Installation query
         data: {
-            name: "Vaughn",
-            newsItem: "Man bites dog",
             alert: fullName + " shared the list " + listName + " with you."
         }
     });
