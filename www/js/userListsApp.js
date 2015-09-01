@@ -42,8 +42,8 @@ function UserList(listId, adminUser, adminName, listName, sharedUsers, listImage
 
 var userListsApp = angular.module('UserListsApp', []);
 userListsApp.controller('UserListsAppController', function ($scope) {
-    $scope.username = Parse.User.current().attributes.username;
-    //$scope.username = "I8OECfZ0Zt2d4MCUUmNP1HV4E";
+    //$scope.username = Parse.User.current().attributes.username;
+    $scope.username = "I8OECfZ0Zt2d4MCUUmNP1HV4E";
     $scope.userLists = {};
     $scope.defaultListImage = "http://files.parsetfss.com/78e798b2-27ce-4608-a903-5f5baf8a0899/tfss-02790cd8-92cb-4d01-ab48-e0372541c24a-checklist.png";
     $scope.listNameInput = "";
@@ -51,7 +51,7 @@ userListsApp.controller('UserListsAppController', function ($scope) {
 
 
     var listsToRemove = [];
-
+    var temporaryUserLists = {};
 
     var getUserLists = function () {
         var lists = Parse.Object.extend("Lists");
@@ -81,7 +81,7 @@ userListsApp.controller('UserListsAppController', function ($scope) {
     };
     subscribe = getUserLists;
 
-    //getUserLists();
+    getUserLists();
 
     // TODO :Check my createdTime doesn't show when adding a list
     $scope.createNewList = function () {
@@ -226,40 +226,62 @@ userListsApp.controller('UserListsAppController', function ($scope) {
         $scope.inEditMode = !$scope.inEditMode;
     };
 
-    function removeNotAdminLists ()
-    {
+    function removeNotAdminLists() {
         var userListsInDate;
         var userList;
         var listIndex;
         var createdDate;
         var notAdminListsToRemove;
+        temporaryUserLists = {};
         for (createdDate in $scope.userLists) {
-            notAdminListsToRemove= [];
+            notAdminListsToRemove = [];
             userListsInDate = $scope.userLists[createdDate].lists;
             for (listIndex in userListsInDate) {
-
                 userList = userListsInDate[listIndex];
                 if (userList.adminUser !== $scope.username) {
                     notAdminListsToRemove.push(userList);
-                    console.log("FOUND NOT ADMIN");
-                    //$scope.userLists[createdDate].lists.splice(listIndex, 1);
                 }
             }
-            console.log($scope.userLists[createdDate].lists);
-            console.log(notAdminListsToRemove);
+            if (notAdminListsToRemove.length !== 0) {
+                temporaryUserLists[createdDate] = {
+                    createdDated: createdDate,
+                    lists: notAdminListsToRemove
+                };
+            }
+
             $scope.userLists[createdDate].lists = _.difference($scope.userLists[createdDate].lists, notAdminListsToRemove);
             if ($scope.userLists[createdDate].lists.length === 0) {
                 delete $scope.userLists[createdDate];
             }
+        }
+        console.log(JSON.stringify(temporaryUserLists));
+    }
+
+    function retrieveRemovedNotAdminLists() {
+        var userListsInDate;
+        var createdDate;
+        for (createdDate in temporaryUserLists) {
+            userListsInDate = temporaryUserLists[createdDate].lists;
+            if ($scope.userLists.hasOwnProperty(createdDate) === false) //if the creation date is not exists
+            {
+                $scope.userLists[createdDate] = {
+                    createdDate: createdDate,
+                    lists: []
+                };
+            }
+            $scope.userLists[createdDate].lists = userListsInDate;
         }
     }
 
     $scope.saveListsChanges = function () {
         $("#menuButton").show();
         removeDeletedListsInParse();
+        retrieveRemovedNotAdminLists();
         localStorage.removeItem("userLists");
         console.log("Lists Changes Saved.");
         $("#menuPanel").panel("close");
+        $("#menuButton").show();
+        $("#createNewListButton").show();
         $scope.inEditMode = !$scope.inEditMode;
     };
 
@@ -269,6 +291,7 @@ userListsApp.controller('UserListsAppController', function ($scope) {
         localStorage.removeItem("userLists");
         listsToRemove = [];
         $("#menuButton").show();
+        $("#createNewListButton").show();
         this.inEditMode = !this.inEditMode;
         console.log("Lists Changes Canceled.");
     };
@@ -302,15 +325,12 @@ userListsApp.controller('UserListsAppController', function ($scope) {
         return ((list.adminUser === $scope.username) ? true : false);
     };
 
-    $scope.listAction = function (list)
-    {
-        if (list.adminUser === $scope.username)
-        {
+    $scope.listAction = function (list) {
+        if (list.adminUser === $scope.username) {
             console.log("List Admin");
             $scope.removeSelectedList(list);
         }
-        else
-        {
+        else {
             console.log("Not List Admin");
         }
     };
@@ -347,7 +367,6 @@ userListsApp.controller('UserListsAppController', function ($scope) {
         console.log(listsToRemove);
         var Lists = Parse.Object.extend("Lists");
         var listId;
-        var sharedUsers;
         var query = new Parse.Query(Lists);
         var listsIds = [];
 
@@ -379,36 +398,6 @@ userListsApp.controller('UserListsAppController', function ($scope) {
         }, function (error) {
             console.log(error);
         });
-
-        //for (var listIndex in listsToRemove) {
-        //    listId = listsToRemove[listIndex].listId;
-        //    sharedUsers = listsToRemove[listIndex].sharedUsers;
-        //    var query = new Parse.Query(Lists);
-        //    query.get(listId, {
-        //        success: function (list) {
-        //            // Deleting the list from Parse
-        //            list.destroy({}).then(function () {
-        //                console.log('List with listId ' + list.id + ' deleted successfully.');
-        //
-        //                var ListContent = Parse.Object.extend("ListContent");
-        //                var query = new Parse.Query(ListContent);
-        //                query.equalTo("listId", listId);
-        //                query.each(function (result) {
-        //                    return result.destroy();
-        //                }).then(function (success) {
-        //                        //removeListIdChannel(listId);
-        //                    },
-        //                    function (error) {
-        //                        console.log(error);
-        //                    });
-        //            });
-        //        },
-        //        error: function (list, error) {
-        //            console.log('Failed to delete object, with error code: ' + error.message);
-        //        }
-        //    });
-        //}
-
     }
 
     function removeListIdChannel(listsIds) {
