@@ -41,7 +41,7 @@ listContentApp.controller('ShoppingListController', function ($scope) {
 
         // Constants
         var CHANNEL_PREFIX = "ch";
-        var DEFAULT_PRODUCT_IMAGE = "http://files.parsetfss.com/64d6988d-576e-4edc-b686-e7a05d6ed73b/tfss-c2486cd8-6833-4ef0-b569-7d1445ebee99-shopping-cart.png";
+        var DEFAULT_PRODUCT_IMAGE = "http://files.parsetfss.com/78e798b2-27ce-4608-a903-5f5baf8a0899/tfss-f9c4341c-de01-4d07-9419-3cbc0ef120f0-shopping-cart.png";
         var PHOTO_LIBRARY = 0;
         var PHOTO_CAMERA = 1;
         var facebookFriendsMap = {};

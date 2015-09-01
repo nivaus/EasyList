@@ -45,7 +45,7 @@ userListsApp.controller('UserListsAppController', function ($scope) {
     //$scope.username = Parse.User.current().attributes.username;
     $scope.username = "I8OECfZ0Zt2d4MCUUmNP1HV4E";
     $scope.userLists = {};
-    $scope.defaultListImage = "http://files.parsetfss.com/78e798b2-27ce-4608-a903-5f5baf8a0899/tfss-02790cd8-92cb-4d01-ab48-e0372541c24a-checklist.png";
+    $scope.defaultListImage = "http://files.parsetfss.com/78e798b2-27ce-4608-a903-5f5baf8a0899/tfss-175847af-a54e-456a-a078-a71198b96403-list-image.png";
     $scope.listNameInput = "";
     $scope.inEditMode = false;
 
