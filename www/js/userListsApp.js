@@ -40,7 +40,16 @@ function UserList(listId, adminUser, adminName, listName, sharedUsers, listImage
     this.createdTime = createdTime;
 }
 
-var userListsApp = angular.module('UserListsApp', []);
+var userListsApp = angular.module('UserListsApp', []).filter('object2Array', function() {
+    return function(input) {
+        var out = [];
+        for(var i in input){
+            out.push(input[i]);
+        }
+        return out;
+    }
+});
+
 userListsApp.controller('UserListsAppController', function ($scope) {
     //$scope.username = Parse.User.current().attributes.username;
     $scope.username = "I8OECfZ0Zt2d4MCUUmNP1HV4E";

@@ -89,7 +89,7 @@
         <!--
         User Lists - Not In Edit Mode
         -->
-        <div ng-repeat="date in userLists" ng-show="!inEditMode">
+        <div ng-repeat="date in userLists | object2Array | orderBy : date.createdDate" ng-show="!inEditMode">
             <ul data-role="listview" data-inset="true">
                 <!-- Divider -->
                 <li data-role="list-divider" data-theme="b">
@@ -118,7 +118,7 @@
         <!--
         User Lists - In Edit Mode
         -->
-        <div ng-repeat="date in userLists" ng-show="inEditMode">
+        <div ng-repeat="date in userLists | object2Array | orderBy : date.createdDate" ng-show="inEditMode">
             <ul data-role="listview" data-inset="true">
                 <!-- Divider -->
                 <li data-role="list-divider" data-theme="b">
