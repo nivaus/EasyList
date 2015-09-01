@@ -215,15 +215,23 @@ Parse.Cloud.define("removeCurrentUserFromListId", function (request, response) {
     )
 });
 //======================================================================================================================
-//NIV - removeListIdChannel
+//NIV - removeListIdsChannel
 //======================================================================================================================
 
-Parse.Cloud.define("removeListIdChannel", function (request, response) {
-    var listId =  request.params.listId;
-    removeChannelFromAllUsers(CHANNEL_PREFIX + listId).then(
+Parse.Cloud.define("removeListsIdsChannel", function (request, response) {
+    console.log("removeListsIdsChannel");
+    var listsIds =  request.params.listsIds;
+    var channelsListsIds = [];
+
+    for (var id in listsIds)
+    {
+        channelsListsIds.push(CHANNEL_PREFIX + listsIds[id]);
+    }
+
+    removeChannelsFromAllUsers(channelsListsIds).then(
         function(success)
         {
-            response.success("Channel " + CHANNEL_PREFIX + listId + " cleared removed from parse.");
+            response.success("Channels removed from parse successfully.");
         },
         function(error)
         {
@@ -363,21 +371,25 @@ function clearUsernameFromInstallation(installationObjectId) {
     });
 }
 
-function removeChannelFromAllUsers (channel)
+function removeChannelsFromAllUsers (channelsToRemove)
 {
-    console.log("removeChannelFromAllUsers");
+    console.log("removeChannelsFromAllUsers");
     Parse.Cloud.useMasterKey();
 
     var query = new Parse.Query(Parse.Installation);
-    query.containedIn("channels", [channel]);
-
+    query.containedIn("channels", channelsToRemove);
+    console.log(channelsToRemove);
     return query.find().then(function (results) {
         // results is an array of Parse.Object.
         console.log(results);
         var channels;
         for (var index in results) {
             channels = results[index].get("channels");
-            channels = _.difference(channels, [channel]);
+            console.log("Before:");
+            console.log(channels);
+            channels = _.difference(channels, channelsToRemove);
+            console.log("After:");
+            console.log(channels);
             results[index].set("channels", channels);
 
         }
