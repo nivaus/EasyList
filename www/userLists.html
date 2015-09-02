@@ -19,7 +19,7 @@
     <!--
     CSS
     -->
-    <link rel="stylesheet" href="./bootstrap/bootstrap.min.css"/>
+    <link rel="stylesheet" href="./bootstrap/bootstrap.css"/>
     <link rel="stylesheet" href="./JQuery/jquery.mobile-1.4.5.min.css"/>
     <link rel="stylesheet" href="./JQuery/jquery.mobile.theme-1.4.5.min.css"/>
 
@@ -70,7 +70,8 @@
             <label for="listName">List Name:</label>
             <input type="text" name="listName" id="listName" data-clear-btn="true" placeholder="List Name..."
                    required="true" ng-model="listNameInput">
-
+            <label for="invertedListValue">Inverted List : </label>
+            <input type="checkbox" data-role="flipswitch" name="invertedListValue" id="invertedListValue">
             <button type="submit" data-theme="b">Create List</button>
         </form>
     </div>

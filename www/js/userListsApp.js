@@ -118,8 +118,7 @@ userListsApp.controller('UserListsAppController', function ($scope) {
         var adminName = localStorage.getItem("fullName");
         var sharedUsers = [$scope.username];
         var listImage = $scope.defaultListImage;
-        // TODO : Get valid data from user
-        var invertedList = true;
+        var invertedList = $("#invertedListValue").is(":checked");
 
         parseUserLists.save({
             listName: listName,
@@ -221,10 +220,8 @@ userListsApp.controller('UserListsAppController', function ($scope) {
         var listName = parseObject.get("listName");
         var sharedUsers = parseObject.get("sharedUsers");
         var listImage = parseObject.get("listImage");
-        var createdDate = parseObject.createdAt.toDateString();
         var invertedList = parseObject.get("invertedList");
-
-        console.log(parseObject);
+        var createdDate = parseObject.createdAt.toDateString();
 
         if ($scope.userLists.hasOwnProperty(createdDate) === false) {
             $scope.userLists[createdDate] = {
