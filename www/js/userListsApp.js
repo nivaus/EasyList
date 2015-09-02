@@ -30,7 +30,7 @@ var CHANNEL_PREFIX = "ch";
 Parse.initialize(PARSE_APP_ID, PARSE_JS_ID);
 
 //Class UserList
-function UserList(listId, adminUser, adminName, listName, sharedUsers, listImage, createdTime) {
+function UserList(listId, adminUser, adminName, listName, sharedUsers, listImage, createdTime, invertedList) {
     this.listId = listId;
     this.adminUser = adminUser;
     this.adminName = adminName;
@@ -38,6 +38,7 @@ function UserList(listId, adminUser, adminName, listName, sharedUsers, listImage
     this.sharedUsers = sharedUsers;
     this.listImage = listImage;
     this.createdTime = createdTime;
+    this.invertedList = invertedList;
 }
 
 var userListsApp = angular.module('UserListsApp', []).filter('object2Array', function () {
@@ -107,7 +108,6 @@ userListsApp.controller('UserListsAppController', function ($scope) {
         }
     }
 
-    // TODO :Check my createdTime doesn't show when adding a list
     $scope.createNewList = function () {
         Parse.initialize(PARSE_APP_ID, PARSE_JS_ID);
         var Lists = Parse.Object.extend("Lists");
@@ -118,13 +118,16 @@ userListsApp.controller('UserListsAppController', function ($scope) {
         var adminName = localStorage.getItem("fullName");
         var sharedUsers = [$scope.username];
         var listImage = $scope.defaultListImage;
+        // TODO : Get valid data from user
+        var invertedList = true;
 
         parseUserLists.save({
             listName: listName,
             adminUser: adminUser,
             adminName: adminName,
             sharedUsers: sharedUsers,
-            listImage: listImage
+            listImage: listImage,
+            invertedList : invertedList
         }, {
             success: function (listObjectFromParse) {
                 var newList = createNewListFromParseObject(listObjectFromParse);
@@ -219,6 +222,9 @@ userListsApp.controller('UserListsAppController', function ($scope) {
         var sharedUsers = parseObject.get("sharedUsers");
         var listImage = parseObject.get("listImage");
         var createdDate = parseObject.createdAt.toDateString();
+        var invertedList = parseObject.get("invertedList");
+
+        console.log(parseObject);
 
         if ($scope.userLists.hasOwnProperty(createdDate) === false) {
             $scope.userLists[createdDate] = {
@@ -227,7 +233,7 @@ userListsApp.controller('UserListsAppController', function ($scope) {
             };
         }
 
-        return new UserList(listId, adminUser, adminName, listName, sharedUsers, listImage, createdDate);
+        return new UserList(listId, adminUser, adminName, listName, sharedUsers, listImage, createdDate, invertedList);
     };
 
     var getListsIdsForSubscription = function () {
