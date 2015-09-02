@@ -16,6 +16,7 @@ function Product(objectId, categoryName, productName, productQuantity, productIm
 }
 
 var getList = function ($scope, listId) {
+
     Parse.initialize(PARSE_APP_ID, PARSE_JS_ID);
     var ListContent = Parse.Object.extend("ListContent");
     var query = new Parse.Query(ListContent);
@@ -40,14 +41,14 @@ var getList = function ($scope, listId) {
                     }
                     var newProduct = new Product(objectId, categoryName, productName, productQuantity, productImage, productChecked, listId);
                     $scope.listContent[categoryName].products.push(newProduct);
-                    $scope.$apply();
                     console.log("New Product added with objectId: " + objectId);
                 }
+                hideLoadingWidget();
+                $scope.$apply();
             },
             error: function (error) {
                 console.log(error);
             }
-
         }
     );
 };
@@ -69,6 +70,7 @@ var addNewProductToParse = function ($scope, newProduct) {
             var productCategory = newProduct.categoryName;
             newProduct.objectId = productFromParse.id;
             $scope.listContent[productCategory].products.push(newProduct);
+            hideLoadingWidget();
             $scope.$apply();
             console.log('New Product created with objectId: ' + productFromParse.id);
         },
@@ -115,7 +117,7 @@ var updateProductQuantityInParse = function ($scope, productToUpdate, newProduct
             productFromParse.save().then(function () {
                 // Update the new quantity in the listContent
                 productToUpdate.productQuantity = newProductQuantity;
-
+                hideLoadingWidget();
                 $scope.$apply();
                 console.log('Product with objectId ' + productFromParse.id + ' quantity updated successfully.');
             });
@@ -197,6 +199,7 @@ var removeDeletedProductsInParse = function ($scope, productsToRemove) {
                 // Deleting the product from Parse
                 product.destroy({}).then(function () {
                     console.log('Product with objectId ' + product.id + ' deleted successfully.');
+                    hideLoadingWidget();
                 });
             },
             error: function (product, error) {

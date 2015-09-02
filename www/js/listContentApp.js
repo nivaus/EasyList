@@ -32,6 +32,8 @@ function FacebookFriend(facebookFriendId, facebookFriendName, facebookFriendPict
 var listContentApp = angular.module('SmartShoppingList', []);
 
 listContentApp.controller('ShoppingListController', function ($scope) {
+        showLoadingWidget("Loading...");
+
         // Local Storage
         var userName = localStorage.getItem("userName");
         var fullName = localStorage.getItem("fullName");
@@ -65,6 +67,7 @@ listContentApp.controller('ShoppingListController', function ($scope) {
         getList($scope, listId);
 
         this.addProduct = function (productCategory, productName, productQuantity) {
+            showLoadingWidget("Saving product...");
             productQuantity = parseInt(productQuantity);
 
             if ($scope.listContent.hasOwnProperty(productCategory) === true) //if a category is already created
@@ -173,6 +176,7 @@ listContentApp.controller('ShoppingListController', function ($scope) {
         };
 
         this.saveList = function () {
+            showLoadingWidget("Saving Changes...");
             $("#addProductButton").show();
             $("#menuButton").show();
             this.updateProductsQuantity();
@@ -315,6 +319,7 @@ listContentApp.controller('ShoppingListController', function ($scope) {
         };
 
         $scope.getFacebookFriendsDetails = function () {
+            showLoadingWidget("Loading...");
             $scope.facebookFriends = [];
             facebookConnectPlugin.api("/me?fields=friends{name,id,picture.width(150).height(150)}", [],
                 function (results) {
@@ -374,7 +379,7 @@ listContentApp.controller('ShoppingListController', function ($scope) {
                                         $("#showSharedUsersPopUp").popup("open");
                                     }
                                     $("#menuPanel").panel("close");
-
+                                    hideLoadingWidget();
                                 },
                                 error: function (error) {
                                     console.log(error);

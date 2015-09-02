@@ -51,6 +51,8 @@ var userListsApp = angular.module('UserListsApp', []).filter('object2Array', fun
 });
 
 userListsApp.controller('UserListsAppController', function ($scope) {
+    showLoadingWidget("Loading...");
+
     //$scope.username = Parse.User.current().attributes.username;
     $scope.username = "I8OECfZ0Zt2d4MCUUmNP1HV4E";
     $scope.userLists = {};
@@ -91,6 +93,11 @@ userListsApp.controller('UserListsAppController', function ($scope) {
     subscribe = getUserLists;
 
     getUserLists();
+
+    $scope.isEmptyUserLists = function()
+    {
+        return (_.keys($scope.userLists).length === 0);
+    };
 
     // TODO :Check my createdTime doesn't show when adding a list
     $scope.createNewList = function () {
@@ -190,6 +197,7 @@ userListsApp.controller('UserListsAppController', function ($scope) {
             $scope.userLists[createdDate].lists.push(userList);
             console.log("ListId " + userList.listId + " added.");
         }
+        hideLoadingWidget();
         $scope.$apply();
     };
 
@@ -283,7 +291,7 @@ userListsApp.controller('UserListsAppController', function ($scope) {
     }
 
     $scope.saveListsChanges = function () {
-        $("#menuButton").show();
+        showLoadingWidget("Saving changes...");
         removeDeletedListsInParse();
         retrieveRemovedNotAdminLists();
         localStorage.removeItem("userLists");
@@ -402,6 +410,7 @@ userListsApp.controller('UserListsAppController', function ($scope) {
             });
         }).then(function (success) {
             removeListIdChannel(listsIds);
+            hideLoadingWidget();
             console.log(success);
 
         }, function (error) {

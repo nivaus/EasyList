@@ -7,20 +7,21 @@
     <!--
     Scripts
     -->
+
     <script src="./JQuery/jquery-2.1.4.min.js"></script>
     <script src="./JQuery/jquery.mobile-1.4.5.min.js"></script>
     <script src="./angular/angular.min.js"></script>
     <script src="./js/energize-min.js"></script>
     <script src="./Parse/parse-1.4.2.min.js"></script>
-    <script src="js/userListsApp.js"></script>
     <script src="js/easyList.js"></script>
     <script src="js/underscore.js"></script>
+    <script src="js/userListsApp.js"></script>
     <!--
     CSS
     -->
+    <link rel="stylesheet" href="./bootstrap/bootstrap.min.css"/>
     <link rel="stylesheet" href="./JQuery/jquery.mobile-1.4.5.min.css"/>
     <link rel="stylesheet" href="./JQuery/jquery.mobile.theme-1.4.5.min.css"/>
-
 
 </head>
 <body id="userLists" ng-controller="UserListsAppController as userLists">
@@ -84,6 +85,8 @@
         <a id="createNewListButton" href="#createNewListPanel" data-icon="plus">New List</a>
     </div>
 
+
+
     <div data-role="main" class="ui-content">
 
         <!--
@@ -143,6 +146,7 @@
                 </li>
             </ul>
         </div>
+        <div class="alert alert-info" role="alert" ng-show="isEmptyUserLists()"><strong> No Lists In Here!</strong></div>
     </div>
 
     <!--

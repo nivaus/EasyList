@@ -2,6 +2,7 @@
  * Created by Idan on 13/08/2015.
  */
 function showLoadingWidget(text) {
+    console.log("Loading Widget");
     $.mobile.loading('show', {
         text: text,
         textVisible: true,
