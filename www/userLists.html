@@ -70,8 +70,13 @@
             <label for="listName">List Name:</label>
             <input type="text" name="listName" id="listName" data-clear-btn="true" placeholder="List Name..."
                    required="true" ng-model="listNameInput">
-            <label for="invertedListValue">Inverted List : </label>
-            <input type="checkbox" data-role="flipswitch" name="invertedListValue" id="invertedListValue">
+            <div class="ui-field-contain">
+                <label style="width: 57%" for="invertedListValue"><strong>Inverted List:</strong></label>
+                <select name="invertedListValue" id="invertedListValue" data-mini="false" data-role="flipswitch">
+                    <option value="false">Off</option>
+                    <option value="true">On</option>
+                </select>
+            </div>
             <button type="submit" data-theme="b">Create List</button>
         </form>
     </div>
@@ -85,7 +90,6 @@
         <h1>Easy List</h1>
         <a id="createNewListButton" href="#createNewListPanel" data-icon="plus">New List</a>
     </div>
-
 
 
     <div data-role="main" class="ui-content">
@@ -147,7 +151,8 @@
                 </li>
             </ul>
         </div>
-        <div id="emptyListItem" class="alert alert-info" role="alert" hidden style="text-align: center"><strong> No Lists In Here!</strong></div>
+        <div id="emptyListItem" class="alert alert-info" role="alert" hidden style="text-align: center"><strong> No
+            Lists In Here!</strong></div>
     </div>
 
     <!--

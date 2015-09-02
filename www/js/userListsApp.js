@@ -54,8 +54,8 @@ var userListsApp = angular.module('UserListsApp', []).filter('object2Array', fun
 userListsApp.controller('UserListsAppController', function ($scope) {
     showLoadingWidget("Loading...");
 
-    //$scope.username = Parse.User.current().attributes.username;
-    $scope.username = "I8OECfZ0Zt2d4MCUUmNP1HV4E";
+    $scope.username = Parse.User.current().attributes.username;
+    //$scope.username = "I8OECfZ0Zt2d4MCUUmNP1HV4E";
     $scope.userLists = {};
     $scope.defaultListImage = "http://files.parsetfss.com/78e798b2-27ce-4608-a903-5f5baf8a0899/tfss-175847af-a54e-456a-a078-a71198b96403-list-image.png";
     $scope.listNameInput = "";
@@ -93,7 +93,7 @@ userListsApp.controller('UserListsAppController', function ($scope) {
     };
     subscribe = getUserLists;
 
-    getUserLists();
+    //getUserLists();
 
     function isEmptyUserLists() {
         return (_.keys($scope.userLists).length === 0);
@@ -178,9 +178,11 @@ userListsApp.controller('UserListsAppController', function ($scope) {
         var list = getListFromListId(listId);
         var listName = list.listName;
         var listAdminUserName = list.adminUser;
+        var invertedList = list.invertedList;
 
         localStorage.setItem("listId", listId);
         localStorage.setItem("listName", listName);
+        localStorage.setItem("invertedList", invertedList);
         localStorage.setItem("listAdminUserName", listAdminUserName);
         window.location = "./listContent.html";
     };
@@ -420,7 +422,7 @@ userListsApp.controller('UserListsAppController', function ($scope) {
                     console.log(results);
 
                     return Parse.Object.destroyAll(results);
-                }).then();
+                });
             });
         }).then(function (success) {
             hideOrShowEmptyUserListsNotification();

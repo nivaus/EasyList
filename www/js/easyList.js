@@ -36,6 +36,16 @@ function logOut() {
     });
 }
 
+function clearSavedLocalStorageOfList() {
+    localStorage.removeItem("listId");
+    localStorage.removeItem("listName");
+    localStorage.removeItem("listAdminUserName");
+    localStorage.removeItem("sharedFacebookFriends");
+    localStorage.removeItem("notSharedFacebookFriends");
+    localStorage.removeItem("listContent");
+    localStorage.removeItem("invertedList");
+}
+
 function exitApp() {
     navigator.app.exitApp();
 }

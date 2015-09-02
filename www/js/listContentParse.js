@@ -45,6 +45,7 @@ var getList = function ($scope, listId) {
                 }
                 $scope.hideOrShowEmptyListNotification();
                 hideLoadingWidget();
+                $scope.changeEmptyListValue();
                 $scope.$apply();
             },
             error: function (error) {

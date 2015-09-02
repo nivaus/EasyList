@@ -10,11 +10,30 @@ function onDeviceReady() {
 }
 
 function onBackKeyDown(e) {
-    if ($(".ui-panel").hasClass("ui-panel-open") == true) {
+    var scope = angular.element("#shoppingListController").scope();
+
+    // In Edit Mode
+    if (scope.list.inEditMode === true)
+    {
+        e.preventDefault();
+        scope.list.cancelEditListChanges();
+    }
+    //Panel Is Opened
+    else if ($(".ui-panel").hasClass("ui-panel-open") == true) {
         e.preventDefault();
         $(".ui-panel").panel("close");
     }
+    // No Popup Is Opened
+    else if ($(".ui-popup-container").hasClass("ui-popup-active") == false) {
+        clearSavedLocalStorageOfList();
+        navigator.app.backHistory();
+    }
+
+    // Popup Is Open
     else {
+        localStorage.removeItem("sharedFacebookFriends");
+        localStorage.removeItem("notSharedFacebookFriends");
+        localStorage.removeItem("listContent");
         navigator.app.backHistory();
     }
 }
@@ -71,10 +90,10 @@ listContentApp.controller('ShoppingListController', function ($scope) {
             return (_.keys($scope.listContent).length === 0);
         }
 
-        function changeEmptyListValue ()
+        $scope.changeEmptyListValue = function ()
         {
             $scope.emptyList = isEmptyListContent();
-        }
+        };
 
         $scope.hideOrShowEmptyListNotification = function() {
             if (isEmptyListContent() === true) {
@@ -97,7 +116,7 @@ listContentApp.controller('ShoppingListController', function ($scope) {
                 this.addNewProductToNewCategory(productCategory, productName, productQuantity);
             }
             $scope.clearAddProductFields();
-            changeEmptyListValue();
+            $scope.changeEmptyListValue();
             $("#emptyListItem").hide();
             $("#addProductPanel").panel("close");
         };
@@ -187,7 +206,7 @@ listContentApp.controller('ShoppingListController', function ($scope) {
             else {
                 this.editList();
             }
-            changeEmptyListValue();
+            $scope.changeEmptyListValue();
             this.inEditMode = !this.inEditMode;
         };
 
@@ -218,8 +237,11 @@ listContentApp.controller('ShoppingListController', function ($scope) {
             $("#addProductButton").show();
             $("#menuButton").show();
             $scope.hideOrShowEmptyListNotification();
+            console.log("inEditMode : " + this.inEditMode);
             this.inEditMode = !this.inEditMode;
+            console.log("inEditMode : " + this.inEditMode);
             console.log("List Changes Canceled.");
+            $scope.$apply();
         };
 
         this.updateProductsQuantity = function () {
@@ -307,6 +329,7 @@ listContentApp.controller('ShoppingListController', function ($scope) {
         };
 
         $scope.navigateToUserLists = function () {
+            clearSavedLocalStorageOfList();
             window.location = "userLists.html";
         };
 
