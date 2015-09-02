@@ -342,7 +342,7 @@
                 <li>
                     <a id="{{list.inEditMode ? 'saveListButton' : 'editListButton'}}"
                        data-icon="{{list.inEditMode ? 'check' : 'edit'}}"
-                       ng-click="list.executeEditOrSaveFunction()">
+                       ng-click="emptyList || list.executeEditOrSaveFunction()">
                         {{list.inEditMode ? 'Save List' : 'Edit List'}}
                     </a>
                 </li>

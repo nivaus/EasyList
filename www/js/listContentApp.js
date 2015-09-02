@@ -63,12 +63,18 @@ listContentApp.controller('ShoppingListController', function ($scope) {
         $scope.notifyText = "";
         $scope.listContent = new Object();
         $scope.productsToRemove = [];
+        $scope.emptyList = isEmptyListContent();
 
         getList($scope, listId);
 
         function isEmptyListContent () {
             return (_.keys($scope.listContent).length === 0);
-        };
+        }
+
+        function changeEmptyListValue ()
+        {
+            $scope.emptyList = isEmptyListContent();
+        }
 
         $scope.hideOrShowEmptyListNotification = function() {
             if (isEmptyListContent() === true) {
@@ -91,6 +97,7 @@ listContentApp.controller('ShoppingListController', function ($scope) {
                 this.addNewProductToNewCategory(productCategory, productName, productQuantity);
             }
             $scope.clearAddProductFields();
+            changeEmptyListValue();
             $("#emptyListItem").hide();
             $("#addProductPanel").panel("close");
         };
@@ -180,6 +187,7 @@ listContentApp.controller('ShoppingListController', function ($scope) {
             else {
                 this.editList();
             }
+            changeEmptyListValue();
             this.inEditMode = !this.inEditMode;
         };
 
