@@ -70,6 +70,15 @@ listContentApp.controller('ShoppingListController', function ($scope) {
             return (_.keys($scope.listContent).length === 0);
         };
 
+        $scope.hideOrShowEmptyListNotification = function() {
+            if (isEmptyListContent() === true) {
+                $("#emptyListItem").show();
+            }
+            else {
+                $("#emptyListItem").hide();
+            }
+        };
+
         this.addProduct = function (productCategory, productName, productQuantity) {
             showLoadingWidget("Saving product...");
             productQuantity = parseInt(productQuantity);
@@ -188,9 +197,7 @@ listContentApp.controller('ShoppingListController', function ($scope) {
             console.log("saveList " + $scope.productsToRemove);
             removeDeletedProductsInParse($scope, $scope.productsToRemove);
             localStorage.removeItem("listContent");
-            if (isEmptyListContent() === true) {
-                $("#emptyListItem").show();
-            }
+            $scope.hideOrShowEmptyListNotification();
             console.log("List Changes Saved.");
         };
 

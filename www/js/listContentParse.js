@@ -43,9 +43,7 @@ var getList = function ($scope, listId) {
                     $scope.listContent[categoryName].products.push(newProduct);
                     console.log("New Product added with objectId: " + objectId);
                 }
-                if (isEmptyListContent() === true){
-                    $("#emptyListItem").show();
-                }
+                $scope.hideOrShowEmptyListNotification();
                 hideLoadingWidget();
                 $scope.$apply();
             },

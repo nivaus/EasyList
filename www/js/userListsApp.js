@@ -94,8 +94,17 @@ userListsApp.controller('UserListsAppController', function ($scope) {
 
     getUserLists();
 
-    function isEmptyUserLists () {
+    function isEmptyUserLists() {
         return (_.keys($scope.userLists).length === 0);
+    }
+
+    function hideOrShowEmptyUserListsNotification() {
+        if (isEmptyUserLists() === true) {
+            $("#emptyListItem").show();
+        }
+        else {
+            $("#emptyListItem").hide();
+        }
     }
 
     // TODO :Check my createdTime doesn't show when adding a list
@@ -198,9 +207,7 @@ userListsApp.controller('UserListsAppController', function ($scope) {
             console.log("ListId " + userList.listId + " added.");
         }
         hideLoadingWidget();
-        if (isEmptyUserLists() === true) {
-            $("#emptyListItem").show();
-        }
+        hideOrShowEmptyUserListsNotification();
         $scope.$apply();
     };
 
@@ -312,18 +319,12 @@ userListsApp.controller('UserListsAppController', function ($scope) {
         listsToRemove = [];
         $("#menuButton").show();
         $("#createNewListButton").show();
-        if (isEmptyUserLists() === true) {
-            $("#emptyListItem").show();
-        }
-        else {
-            $("#emptyListItem").hide();
-        }
+        hideOrShowEmptyUserListsNotification();
         this.inEditMode = !this.inEditMode;
         console.log("Lists Changes Canceled.");
     };
 
     $scope.getTheme = function (list) {
-        console.log("list");
         if ($scope.inEditMode === false) {
             return "b";
         }
@@ -386,9 +387,7 @@ userListsApp.controller('UserListsAppController', function ($scope) {
                 }
             }
         }
-        if (isEmptyUserLists() === true) {
-            $("#emptyListItem").show();
-        }
+        hideOrShowEmptyUserListsNotification();
     };
 
     function removeDeletedListsInParse() {
@@ -421,9 +420,7 @@ userListsApp.controller('UserListsAppController', function ($scope) {
                 }).then();
             });
         }).then(function (success) {
-            if (isEmptyUserLists() === true) {
-                $("#emptyListItem").show();
-            }
+            hideOrShowEmptyUserListsNotification();
             removeListIdChannel(listsIds);
             hideLoadingWidget();
             console.log(success);
