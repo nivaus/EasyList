@@ -40,10 +40,10 @@ function UserList(listId, adminUser, adminName, listName, sharedUsers, listImage
     this.createdTime = createdTime;
 }
 
-var userListsApp = angular.module('UserListsApp', []).filter('object2Array', function() {
-    return function(input) {
+var userListsApp = angular.module('UserListsApp', []).filter('object2Array', function () {
+    return function (input) {
         var out = [];
-        for(var i in input){
+        for (var i in input) {
             out.push(input[i]);
         }
         return out;
@@ -94,10 +94,9 @@ userListsApp.controller('UserListsAppController', function ($scope) {
 
     getUserLists();
 
-    $scope.isEmptyUserLists = function()
-    {
+    function isEmptyUserLists () {
         return (_.keys($scope.userLists).length === 0);
-    };
+    }
 
     // TODO :Check my createdTime doesn't show when adding a list
     $scope.createNewList = function () {
@@ -132,6 +131,7 @@ userListsApp.controller('UserListsAppController', function ($scope) {
                 $scope.clearCreateNewListFields();
                 $("#createNewListPanel").panel("close");
                 console.log('New List created with listId: ' + newList.listId);
+                $("#emptyListItem").hide();
                 $scope.$apply();
                 ParsePushPlugin.subscribe(CHANNEL_PREFIX + newList.listId, function (success) {
                         console.log(success);
@@ -198,6 +198,9 @@ userListsApp.controller('UserListsAppController', function ($scope) {
             console.log("ListId " + userList.listId + " added.");
         }
         hideLoadingWidget();
+        if (isEmptyUserLists() === true) {
+            $("#emptyListItem").show();
+        }
         $scope.$apply();
     };
 
@@ -309,6 +312,12 @@ userListsApp.controller('UserListsAppController', function ($scope) {
         listsToRemove = [];
         $("#menuButton").show();
         $("#createNewListButton").show();
+        if (isEmptyUserLists() === true) {
+            $("#emptyListItem").show();
+        }
+        else {
+            $("#emptyListItem").hide();
+        }
         this.inEditMode = !this.inEditMode;
         console.log("Lists Changes Canceled.");
     };
@@ -377,6 +386,9 @@ userListsApp.controller('UserListsAppController', function ($scope) {
                 }
             }
         }
+        if (isEmptyUserLists() === true) {
+            $("#emptyListItem").show();
+        }
     };
 
     function removeDeletedListsInParse() {
@@ -409,6 +421,9 @@ userListsApp.controller('UserListsAppController', function ($scope) {
                 }).then();
             });
         }).then(function (success) {
+            if (isEmptyUserLists() === true) {
+                $("#emptyListItem").show();
+            }
             removeListIdChannel(listsIds);
             hideLoadingWidget();
             console.log(success);

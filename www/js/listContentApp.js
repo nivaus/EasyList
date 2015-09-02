@@ -66,6 +66,10 @@ listContentApp.controller('ShoppingListController', function ($scope) {
 
         getList($scope, listId);
 
+        function isEmptyListContent () {
+            return (_.keys($scope.listContent).length === 0);
+        };
+
         this.addProduct = function (productCategory, productName, productQuantity) {
             showLoadingWidget("Saving product...");
             productQuantity = parseInt(productQuantity);
@@ -78,6 +82,7 @@ listContentApp.controller('ShoppingListController', function ($scope) {
                 this.addNewProductToNewCategory(productCategory, productName, productQuantity);
             }
             $scope.clearAddProductFields();
+            $("#emptyListItem").hide();
             $("#addProductPanel").panel("close");
         };
 
@@ -183,6 +188,9 @@ listContentApp.controller('ShoppingListController', function ($scope) {
             console.log("saveList " + $scope.productsToRemove);
             removeDeletedProductsInParse($scope, $scope.productsToRemove);
             localStorage.removeItem("listContent");
+            if (isEmptyListContent() === true) {
+                $("#emptyListItem").show();
+            }
             console.log("List Changes Saved.");
         };
 
@@ -475,7 +483,7 @@ listContentApp.controller('ShoppingListController', function ($scope) {
 
             var request = {
                 listId: listId,
-                listName:  $scope.listName,
+                listName: $scope.listName,
                 sharedFacebookFriends: $scope.sharedFacebookFriends,
                 originalSharedFacebookFriends: originalSharedFacebookFriends,
                 facebookFriendsMap: facebookFriendsMap

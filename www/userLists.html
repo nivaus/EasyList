@@ -131,7 +131,7 @@
 
                 <!-- List -->
                 <li data-icon="{{(list.adminUser===username) ? 'delete' : 'carat-r'}}" ng-repeat="list in date.lists">
-                    <a ng-click="updateSelectedList(list)">
+                    <a ng-click="listAction(list)">
                         <img src="{{list.listImage}}">
 
                         <h2>{{list.listName}}</h2>
@@ -146,7 +146,7 @@
                 </li>
             </ul>
         </div>
-        <div class="alert alert-info" role="alert" ng-show="isEmptyUserLists()"><strong> No Lists In Here!</strong></div>
+        <div id="emptyListItem" class="alert alert-info" role="alert" hidden style="text-align: center"><strong> No Lists In Here!</strong></div>
     </div>
 
     <!--
