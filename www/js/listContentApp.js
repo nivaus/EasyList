@@ -154,6 +154,7 @@ listContentApp.controller('ShoppingListController', function ($scope) {
                 $scope.productsToRemove.push(this.selectedProduct);
                 removeProductFromList($scope.listContent, this.selectedProduct);
             }
+            $scope.hideOrShowEmptyListNotification();
         };
 
         function removeProductFromList(listContent, productToRemove) {
@@ -208,6 +209,7 @@ listContentApp.controller('ShoppingListController', function ($scope) {
             $scope.productsToRemove = [];
             $("#addProductButton").show();
             $("#menuButton").show();
+            $scope.hideOrShowEmptyListNotification();
             this.inEditMode = !this.inEditMode;
             console.log("List Changes Canceled.");
         };
