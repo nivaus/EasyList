@@ -30,7 +30,7 @@ var CHANNEL_PREFIX = "ch";
 Parse.initialize(PARSE_APP_ID, PARSE_JS_ID);
 
 //Class UserList
-function UserList(listId, adminUser, adminName, listName, sharedUsers, listImage, createdTime, invertedList) {
+function UserList(listId, adminUser, adminName, listName, sharedUsers, listImage, createdTime, invertedList, adminUserReference) {
     this.listId = listId;
     this.adminUser = adminUser;
     this.adminName = adminName;
@@ -39,6 +39,7 @@ function UserList(listId, adminUser, adminName, listName, sharedUsers, listImage
     this.listImage = listImage;
     this.createdTime = createdTime;
     this.invertedList = invertedList;
+    this.adminUserReference = adminUserReference;
 }
 
 var userListsApp = angular.module('UserListsApp', []).filter('object2Array', function () {
@@ -71,6 +72,7 @@ userListsApp.controller('UserListsAppController', function ($scope) {
 
         query.containedIn("sharedUsers", [$scope.username]);
         query.descending("createdAt");
+        query.include("adminUserReference");
         query.find(
             {
                 success: function (results) {
@@ -119,6 +121,7 @@ userListsApp.controller('UserListsAppController', function ($scope) {
         var sharedUsers = [$scope.username];
         var listImage = $scope.defaultListImage;
         var invertedList = $("#invertedListValue").val() === "true";
+        //var adminUserReference = parseListObject.attributes.adminUserReference;
 
         parseUserLists.save({
             listName: listName,
@@ -126,7 +129,8 @@ userListsApp.controller('UserListsAppController', function ($scope) {
             adminName: adminName,
             sharedUsers: sharedUsers,
             listImage: listImage,
-            invertedList: invertedList
+            invertedList: invertedList,
+            adminUserReference : adminUserReference
         }, {
             success: function (listObjectFromParse) {
                 var newList = createNewListFromParseObject(listObjectFromParse);
@@ -165,8 +169,10 @@ userListsApp.controller('UserListsAppController', function ($scope) {
         var listName = parseListObject.attributes.listName;
         var sharedUsers = parseListObject.attributes.sharedUsers;
         var listImage = parseListObject.attributes.listImage;
+        var adminUserReference = parseListObject.attributes.adminUserReference;
         var createdTime = parseListObject.createdAt.toDateString();
-        return new UserList(listId, adminUser, adminName, listName, sharedUsers, listImage, createdTime);
+
+        return new UserList(listId, adminUser, adminName, listName, sharedUsers, listImage, createdTime, adminUserReference);
     }
 
     $scope.clearCreateNewListFields = function () {
@@ -178,16 +184,16 @@ userListsApp.controller('UserListsAppController', function ($scope) {
         var listName = list.listName;
         var listAdminUserName = list.adminUser;
         var invertedList = list.invertedList;
-
+        console.log(list);
         localStorage.setItem("listId", listId);
         localStorage.setItem("listName", listName);
         localStorage.setItem("invertedList", invertedList);
         localStorage.setItem("listAdminUserName", listAdminUserName);
         if (invertedList === true) {
-            window.location = "./invertedListContent.html";
+            window.location = "invertedListContent.html";
         }
         else {
-            window.location = "./listContent.html";
+            window.location = "listContent.html";
         }
     };
 
@@ -226,6 +232,7 @@ userListsApp.controller('UserListsAppController', function ($scope) {
         var sharedUsers = parseObject.get("sharedUsers");
         var listImage = parseObject.get("listImage");
         var invertedList = parseObject.get("invertedList");
+        var adminUserReference = parseObject.get("adminUserReference");
         var createdDate = parseObject.createdAt.toDateString();
 
         if ($scope.userLists.hasOwnProperty(createdDate) === false) {
@@ -234,7 +241,7 @@ userListsApp.controller('UserListsAppController', function ($scope) {
                 lists: []
             };
         }
-        return new UserList(listId, adminUser, adminName, listName, sharedUsers, listImage, createdDate, invertedList);
+        return new UserList(listId, adminUser, adminName, listName, sharedUsers, listImage, createdDate, invertedList, adminUserReference);
     };
 
     var getListsIdsForSubscription = function () {

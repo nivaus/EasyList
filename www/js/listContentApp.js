@@ -255,7 +255,6 @@ listContentApp.controller('ShoppingListController', function ($scope) {
         };
 
         this.updateProductQuantity = function (productToUpdate) {
-            var productName = productToUpdate.productName;
             productToUpdate.productQuantity = $("#quantity" + objectId + " input").val();
         };
 
@@ -315,13 +314,18 @@ listContentApp.controller('ShoppingListController', function ($scope) {
         };
 
         this.getIcon = function (product) {
-            if (this.inEditMode === true)
-                return 'delete';
+            if ($scope.isOwnerOfProduct(product)) {
+                if (this.inEditMode === true)
+                    return 'delete';
+                else {
+                    if (product.productChecked === true)
+                        return 'check';
+                    else
+                        return 'gear';
+                }
+            }
             else {
-                if (product.productChecked === true)
-                    return 'check';
-                else
-                    return 'gear';
+                return 'carat-r';
             }
         };
 
@@ -608,14 +612,19 @@ listContentApp.controller('ShoppingListController', function ($scope) {
             });
         };
 
-        $scope.changeProductOwner = function (productOwner)
-        {
+        $scope.changeProductOwner = function (productOwner) {
             /* TODO :
-            1. Update listContent with the new owner of the product
-            2. Update product owner in parse
-            3. Send push notification to the new owner
-            */
-            console.log(productOwner);
+             1. Update listContent with the new owner of the product
+             2. Update product owner in parse
+             3. Send push notification to the new owner
+             */
+            console.log(facebookFriendsMap);
+
+        };
+
+        $scope.isOwnerOfProduct = function(product)
+        {
+          return (product.ownerUsername === userName);
         };
     }
 );
