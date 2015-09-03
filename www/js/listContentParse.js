@@ -5,7 +5,7 @@
 var PARSE_APP_ID = "YNiKFOkpulbY1j19E2gcdSREgTKd0AiZZKtzJaeg";
 var PARSE_JS_ID = "Ht7VpNFFhB6KKod4L8gvWlyzjwWt0PEPXjEHVD1H";
 
-function Product(objectId, categoryName, productName, productQuantity, productImage, productChecked, listId) {
+function Product(objectId, categoryName, productName, productQuantity, productImage, productChecked, listId, ownerUsername, ownerFullName) {
     this.objectId = objectId;
     this.categoryName = categoryName;
     this.productName = productName;
@@ -13,6 +13,8 @@ function Product(objectId, categoryName, productName, productQuantity, productIm
     this.productImage = productImage;
     this.productChecked = productChecked;
     this.listId = listId;
+    this.ownerUsername = ownerUsername;
+    this.ownerFullName = ownerFullName;
 }
 
 var getList = function ($scope, listId) {
@@ -24,6 +26,7 @@ var getList = function ($scope, listId) {
     query.find(
         {
             success: function (results) {
+
                 for (var i = 0, len = results.length; i < len; i++) {
                     var objectId = results[i].id;
                     var categoryName = results[i].get("categoryName");
@@ -32,14 +35,15 @@ var getList = function ($scope, listId) {
                     var productImage = results[i].get("productImage");
                     var productChecked = results[i].get("productChecked");
                     var listId = results[i].get("listId");
-
+                    var ownerUsername = results[i].get("ownerUsername");
+                    var ownerFullName = results[i].get("ownerFullName");
                     if ($scope.listContent.hasOwnProperty(categoryName) === false) {
                         $scope.listContent[categoryName] = {
                             categoryName: categoryName,
                             products: []
                         };
                     }
-                    var newProduct = new Product(objectId, categoryName, productName, productQuantity, productImage, productChecked, listId);
+                    var newProduct = new Product(objectId, categoryName, productName, productQuantity, productImage, productChecked, listId, ownerUsername, ownerFullName);
                     $scope.listContent[categoryName].products.push(newProduct);
                     console.log("New Product added with objectId: " + objectId);
                 }
@@ -66,7 +70,9 @@ var addNewProductToParse = function ($scope, newProduct) {
         productQuantity: newProduct.productQuantity,
         productImage: newProduct.productImage,
         productChecked: newProduct.productChecked,
-        listId: newProduct.listId
+        listId: newProduct.listId,
+        ownerUsername: newProduct.ownerUsername,
+        ownerFullName: newProduct.ownerFullName
     }, {
         success: function (productFromParse) {
             var productCategory = newProduct.categoryName;

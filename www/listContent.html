@@ -123,6 +123,8 @@
                                 </h2>
 
                                 <p>Quantity: {{product.productQuantity}}</p>
+
+                                <p ng-show=invertedList>Owner Name: {{product.ownerFullName === null ? "No Owner" : product.ownerFullName}}</p>
                             </div>
                             <!-- On Edit Mode-->
                             <div ng-show=list.inEditMode>
