@@ -126,7 +126,7 @@ userListsApp.controller('UserListsAppController', function ($scope) {
             adminName: adminName,
             sharedUsers: sharedUsers,
             listImage: listImage,
-            invertedList : invertedList
+            invertedList: invertedList
         }, {
             success: function (listObjectFromParse) {
                 var newList = createNewListFromParseObject(listObjectFromParse);
@@ -183,7 +183,12 @@ userListsApp.controller('UserListsAppController', function ($scope) {
         localStorage.setItem("listName", listName);
         localStorage.setItem("invertedList", invertedList);
         localStorage.setItem("listAdminUserName", listAdminUserName);
-        window.location = "./listContent.html";
+        if (invertedList === true) {
+            window.location = "./invertedListContent.html";
+        }
+        else {
+            window.location = "./listContent.html";
+        }
     };
 
     function getListFromListId(listId) {

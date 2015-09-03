@@ -123,6 +123,8 @@
 
                                 <p>Quantity: {{product.productQuantity}}</p>
 
+                                <p>Owner Name: {{product.ownerFullName === null ? "No Owner" :
+                                    product.ownerFullName}}</p>
                             </div>
                             <!-- On Edit Mode-->
                             <div ng-show=list.inEditMode>
@@ -136,6 +138,8 @@
                                         <div id="quantity{{product.objectId}}"></div>
                                     </div>
 
+                                    <p>Owner Name: {{product.ownerFullName === null ? "No Owner" :
+                                        product.ownerFullName}}</p>
                                 </h2>
                             </div>
 
@@ -174,6 +178,11 @@
            class="ui-shadow ui-btn ui-corner-all ui-btn-b ui-icon-camera ui-btn-icon-left ui-btn-inline ui-mini"
            ng-click="list.changePhoto(list.selectedProduct, 1)">Take a photo
         </a>
+        <a href="#" id="changeProductOwner" data-rel="back"
+           class="ui-shadow ui-btn ui-corner-all ui-btn-b ui-icon-user ui-btn-icon-left ui-btn-inline ui-mini"
+           ng-click="showChangeProductOwnerOptions()" ng-show=invertedList>Change Owner
+        </a>
+
     </div>
 
     <!--
@@ -286,6 +295,36 @@
         </a>
     </div>
 
+    <!--
+    Change Product Owner Popup
+     -->
+    <div data-role="popup" id="changeProductOwnerPopUp" data-theme="d" data-overlay-theme="d">
+        <a href="#" data-rel="back"
+           class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">
+            Close
+        </a>
+        <ul data-role="listview" data-inset="true">
+            <li data-role="list-divider" data-theme="b">
+                Choose Product Owner
+            </li>
+            <li>
+                <ul data-role="listview" data-split-theme="b" data-inset="true"
+                    ng-repeat="myFacebookFriend in sharedFacebookFriends">
+                    <li data-icon="carat-r">
+                        <a ng-click="changeProductOwner(myFacebookFriend)">
+                            <img src="{{myFacebookFriend.facebookFriendPicture}}"
+                                 alt="{{myFacebookFriend.facebookFriendName}}">
+
+                            <h2>
+                                {{myFacebookFriend.facebookFriendName}}
+                            </h2>
+                        </a>
+                        <a ng-click="changeProductOwner(myFacebookFriend)"></a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
     <!--
     Show Shared Users Popup
      -->
