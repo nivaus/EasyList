@@ -72,7 +72,7 @@ listContentApp.controller('ShoppingListController', function ($scope) {
         this.inEditMode = false;
 
         $scope.listName = localStorage.getItem("listName");
-        $scope.isListAdmin = (userName === listAdminUserName) ? true : false;
+        $scope.isListAdmin = (userName === listAdminUserName);
         $scope.facebookFriends = [];
         $scope.sharedFacebookFriends = [];
         $scope.notSharedFacebookFriends = [];
@@ -80,7 +80,7 @@ listContentApp.controller('ShoppingListController', function ($scope) {
         $scope.productName = "";
         $scope.productQuantity = "";
         $scope.notifyText = "";
-        $scope.listContent = new Object();
+        $scope.listContent = {};
         $scope.productsToRemove = [];
         $scope.emptyList = isEmptyListContent();
 
