@@ -314,15 +314,25 @@ listContentApp.controller('ShoppingListController', function ($scope) {
         };
 
         this.getIcon = function (product) {
-            if ($scope.isOwnerOfProduct(product)) {
-                if (this.inEditMode === true)
-                    return 'delete';
-                else {
-                    if (product.productChecked === true)
-                        return 'check';
-                    else
-                        return 'gear';
-                }
+            if (this.inEditMode === true)
+                return 'delete';
+            else {
+                if (product.productChecked === true)
+                    return 'check';
+                else
+                    return 'gear';
+            }
+        };
+
+        this.getIconInInvertedList = function (product) {
+            if (this.inEditMode === true) {
+                return 'delete';
+            }
+            else if (product.productChecked === true) {
+                return 'check';
+            }
+            else if ($scope.isOwnerOfProduct(product) || $scope.isListAdmin) {
+                return 'gear';
             }
             else {
                 return 'carat-r';
@@ -344,24 +354,29 @@ listContentApp.controller('ShoppingListController', function ($scope) {
             $scope.clearNotifyFriendsFields();
         };
 
-        //function sendNotifyPushMessage(channel, message) {
-        //    var listPushChannel = CHANNEL_PREFIX + channel;
-        //    var userPushChannel = CHANNEL_PREFIX + userName;
-        //    console.log(listPushChannel);
-        //    console.log(message);
-        //
-        //    var listIdQuery = new Parse.Query(Parse.Installation);
-        //    var pushQuery = new Parse.Query(Parse.Installation);
-        //    listIdQuery.equalTo('channels', listPushChannel);
-        //    pushQuery.notEqualTo('channels', userPushChannel);
-        //    pushQuery.matchesKeyInQuery("channels", "channels", listIdQuery);
-        //    Parse.Push.send({
-        //        where: pushQuery, // Set our Installation query
-        //        data: {
-        //            alert: fullName + ": " + message
-        //        }
-        //    });
-        //}
+        $scope.checkIfToShowProductOptions = function (product) {
+            console.log($scope.isListAdmin || $scope.isOwnerOfProduct(product));
+            return ($scope.isListAdmin || $scope.isOwnerOfProduct(product));
+        };
+
+//function sendNotifyPushMessage(channel, message) {
+//    var listPushChannel = CHANNEL_PREFIX + channel;
+//    var userPushChannel = CHANNEL_PREFIX + userName;
+//    console.log(listPushChannel);
+//    console.log(message);
+//
+//    var listIdQuery = new Parse.Query(Parse.Installation);
+//    var pushQuery = new Parse.Query(Parse.Installation);
+//    listIdQuery.equalTo('channels', listPushChannel);
+//    pushQuery.notEqualTo('channels', userPushChannel);
+//    pushQuery.matchesKeyInQuery("channels", "channels", listIdQuery);
+//    Parse.Push.send({
+//        where: pushQuery, // Set our Installation query
+//        data: {
+//            alert: fullName + ": " + message
+//        }
+//    });
+//}
 
         $scope.clearNotifyFriendsFields = function () {
             $scope.notifyText = "";
@@ -449,7 +464,7 @@ listContentApp.controller('ShoppingListController', function ($scope) {
             );
         }
 
-        // Get array of facebook Id's and creates array of FacebookFriend
+// Get array of facebook Id's and creates array of FacebookFriend
         function getSharedFacebookFriends(sharedFriendsIdArray) {
             var sharedFacebookFriends = [];
             for (var index in $scope.facebookFriends) {
@@ -462,7 +477,7 @@ listContentApp.controller('ShoppingListController', function ($scope) {
             return sharedFacebookFriends;
         }
 
-        // Adds the usernames of the users who are not shared in the list to the map
+// Adds the usernames of the users who are not shared in the list to the map
         function addNotSharedFriendsUserNamesToMap() {
             var friendsFacebookIds = createFacebookIdsArrayFromNotSharedFacebookFriends();
             var query = new Parse.Query(Parse.User);
@@ -485,7 +500,7 @@ listContentApp.controller('ShoppingListController', function ($scope) {
             );
         }
 
-        // Gets array of FacebookFriends who are not shared in the list, and created an array of their facebookId
+// Gets array of FacebookFriends who are not shared in the list, and created an array of their facebookId
         function createFacebookIdsArrayFromNotSharedFacebookFriends() {
             var facebookIdsArray = [];
             var facebookId;
@@ -545,65 +560,7 @@ listContentApp.controller('ShoppingListController', function ($scope) {
                     console.log("Error in saving changes.");
                 }
             });
-
-
         };
-
-        // TODO : MOVE TO PARSE CLOUDE CODE
-        //$scope.shareListWithFriend = function (myFacebookFriend) {
-        //    Parse.initialize(PARSE_APP_ID, PARSE_JS_ID);
-        //    // Get the Parse username of the given facebookId
-        //    var friendFacebookUserId = String(myFacebookFriend.facebookFriendId);
-        //    var query = new Parse.Query(Parse.User);
-        //    query.equalTo("facebookId", friendFacebookUserId);
-        //    query.first({
-        //        success: function (success) {
-        //            // Update the username of the selected facebook friend in the sharedUsers in parse
-        //            var friendUserNameInParse = success.attributes.username;
-        //            updateSharedUsersInParse(friendUserNameInParse);
-        //            $("#shareListPopUp").popup("close");
-        //        },
-        //        error: function (error) {
-        //            console.log(error.message);
-        //        }
-        //    });
-        //};
-
-        function updateSharedUsersInParse(friendUsernameInParse) {
-            var Lists = Parse.Object.extend("Lists");
-            var parseUserList = new Lists();
-            parseUserList.id = listId;
-            parseUserList.add("sharedUsers", friendUsernameInParse);
-            parseUserList.save(null, {
-                success: function (result) {
-                    console.log("Username " + friendUsernameInParse + " is now shared in listId " + listId);
-                    sendPushMessageToFriendWhenSharedToList(friendUsernameInParse);
-                },
-                error: function (error) {
-                    console.log(error.message);
-                }
-            });
-        }
-
-        function sendPushMessageToFriendWhenSharedToList(friendUsernameInParse) {
-            var pushChannel = CHANNEL_PREFIX + friendUsernameInParse;
-            var message = fullName + " shared his list with you.";
-            //sendPushMessage(channel,message);
-
-            console.log(pushChannel);
-            console.log(message);
-            var query = new Parse.Query(Parse.Installation);
-            query.equalTo('channels', pushChannel);
-            Parse.Push.send({
-                where: query, // Set our Installation query
-                data: {
-                    alert: message
-                }
-            });
-
-            $("#notifyFriendsPopUp").popup("close");
-            $scope.clearNotifyFriendsFields();
-        }
 
         $scope.showChangeProductOwnerOptions = function () {
             getFacebookFriendsDetails(function () {
@@ -613,6 +570,15 @@ listContentApp.controller('ShoppingListController', function ($scope) {
         };
 
         $scope.changeProductOwner = function (productOwner) {
+            var parseUserName = facebookFriendsMap[productOwner.facebookFriendId].userName;
+            var ownerFullName = productOwner.facebookFriendName;
+            console.log(this.selectedProduct);
+            this.selectedProduct.ownerUsername = parseUserName;
+            this.selectedProduct.ownerFullName = ownerFullName;
+
+            console.log("parseUserName : " + parseUserName);
+            console.log("ownerFullName : " + ownerFullName);
+            $("#changeProductOwnerPopUp").popup("close");
             /* TODO :
              1. Update listContent with the new owner of the product
              2. Update product owner in parse
@@ -622,12 +588,12 @@ listContentApp.controller('ShoppingListController', function ($scope) {
 
         };
 
-        $scope.isOwnerOfProduct = function(product)
-        {
-          return (product.ownerUsername === userName);
+        $scope.isOwnerOfProduct = function (product) {
+            return (product.ownerUsername === userName);
         };
     }
-);
+)
+;
 
 
 function findProductByName(array, productName) {

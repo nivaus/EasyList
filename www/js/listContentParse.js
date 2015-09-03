@@ -200,7 +200,6 @@ var removeDeletedProductsInParse = function ($scope, productsToRemove) {
     var productId;
     for (var productIndex in productsToRemove) {
         productId = productsToRemove[productIndex].objectId;
-        console.log(productId);
         var query = new Parse.Query(ListContent);
         query.get(productId, {
             success: function (product) {

@@ -92,6 +92,7 @@
     <div data-role="header" data-theme="a">
         <a id="menuButton" href="#menuPanel"
            class="ui-btn ui-shadow ui-corner-all ui-btn-inline ui-btn-icon-left ui-icon-bars">Menu</a>
+
         <h1>{{listName}}</h1>
         <a id="addProductButton" href="#addProductPanel" data-icon="plus" ng-show="isListAdmin">Add Item</a>
     </div>
@@ -109,8 +110,49 @@
             <li>
                 <ul data-role="listview" data-split-theme="b" data-inset="true"
                     ng-repeat="product in category.products">
-                    <li class='{{product.productName}} done-{{product.productChecked}}'
-                        data-icon="{{list.getIcon(product)}}">
+
+                    <!-- *************************************************************-->
+                    <li ng-show=!checkIfToShowProductOptions(product) class='{{product.productName}} done-{{product.productChecked}}'
+                        data-icon="{{list.getIconInInvertedList(product)}}">
+                        <a ng-click="!isOwnerOfProduct(product) || list.itemClicked(product)">
+                            <img class="productImage" src="{{product.productImage}}" alt="{{product.productName}}">
+
+                            <!-- If not in edit mode-->
+                            <div ng-show=!list.inEditMode>
+                                <h2>
+                                    {{product.productName}}
+                                </h2>
+
+                                <p>Quantity: {{product.productQuantity}}</p>
+
+                                <p>Owner Name: {{product.ownerFullName === null ? "No Owner" :
+                                    product.ownerFullName}}</p>
+                            </div>
+                            <!-- On Edit Mode-->
+                            <div ng-show=list.inEditMode>
+                                <h2>
+                                    {{product.productName}}
+                                    <p ng-show=product.productChecked>Quantity : {{product.productQuantity}}</p>
+
+                                    <div ng-show=!product.productChecked class="quantity">
+                                        <label for="quantity{{product.objectId}}">Quantity:</label>
+
+                                        <div id="quantity{{product.objectId}}"></div>
+                                    </div>
+
+                                    <p>Owner Name: {{product.ownerFullName === null ? "No Owner" :
+                                        product.ownerFullName}}</p>
+                                </h2>
+                            </div>
+
+                        </a>
+                        <!-- Not Product Owner -->
+                        <a href="#" data-theme="b" ></a>
+                    </li>
+                    <!-- ***********************************************-->
+                    <!-- ***********************************************-->
+                    <li ng-show=checkIfToShowProductOptions(product) class='{{product.productName}} done-{{product.productChecked}}'
+                        data-icon="{{list.getIconInInvertedList(product)}}">
                         <a ng-click="!isOwnerOfProduct(product) || list.itemClicked(product)">
                             <img class="productImage" src="{{product.productImage}}" alt="{{product.productName}}">
 
@@ -144,17 +186,15 @@
 
                         </a>
                         <!-- Product Owner -->
-                        <a class="productOptionsPopup"
-                           href="{{ list.inEditMode ? '#confirmProductDeletePopUp' : '#productOptionsPopup' }}"
-                           data-rel="{{list.inEditMode ? 'popup' : (product.productChecked ?  '' : 'popup')}}"
-                           data-position-to="window" data-transition="pop" data-theme="{{list.getTheme(product)}}"
-                           ng-click="list.updateSelectedProduct(product)">
-                        </a>
 
-                        <!-- Not Product Owner -->
-                        <!--<a href="#" data-theme="b" ng-show=false>-->
-                        <!--</a>-->
+                            <a class="productOptionsPopup"
+                               href="{{ list.inEditMode ? '#confirmProductDeletePopUp' : '#productOptionsPopup' }}"
+                               data-rel="{{list.inEditMode ? 'popup' : (product.productChecked ?  '' : 'popup')}}"
+                               data-position-to="window" data-transition="pop" data-theme="{{list.getTheme(product)}}"
+                               ng-click="list.updateSelectedProduct(product)">
+                            </a>
                     </li>
+                    <!-- ***********************************************-->
                 </ul>
             </li>
         </ul>
@@ -184,7 +224,7 @@
         </a>
         <a href="#" id="changeProductOwner" data-rel="back"
            class="ui-shadow ui-btn ui-corner-all ui-btn-b ui-icon-user ui-btn-icon-left ui-btn-inline ui-mini"
-           ng-click="showChangeProductOwnerOptions()" ng-show=invertedList>Change Owner
+           ng-click="showChangeProductOwnerOptions()" ng-show=isListAdmin>Change Owner
         </a>
 
     </div>
