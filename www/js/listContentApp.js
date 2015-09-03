@@ -83,8 +83,7 @@ listContentApp.controller('ShoppingListController', function ($scope) {
         $scope.listContent = {};
         $scope.productsToRemove = [];
         $scope.emptyList = isEmptyListContent();
-        $scope.invertedList = localStorage.getItem("invertedList");
-
+        $scope.invertedList = (localStorage.getItem("invertedList") === "true");
         getList($scope, listId);
         function isEmptyListContent () {
             return (_.keys($scope.listContent).length === 0);
