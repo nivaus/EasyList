@@ -166,8 +166,7 @@ userListsApp.controller('UserListsAppController', function ($scope) {
         var sharedUsers = parseListObject.attributes.sharedUsers;
         var listImage = parseListObject.attributes.listImage;
         var createdTime = parseListObject.createdAt.toDateString();
-        var newList = new UserList(listId, adminUser, adminName, listName, sharedUsers, listImage, createdTime);
-        return newList;
+        return new UserList(listId, adminUser, adminName, listName, sharedUsers, listImage, createdTime);
     }
 
     $scope.clearCreateNewListFields = function () {
@@ -230,9 +229,8 @@ userListsApp.controller('UserListsAppController', function ($scope) {
                 lists: []
             };
         }
-
         return new UserList(listId, adminUser, adminName, listName, sharedUsers, listImage, createdDate, invertedList);
-    };
+    }
 
     var getListsIdsForSubscription = function () {
         var listId;
