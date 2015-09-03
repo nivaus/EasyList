@@ -440,7 +440,7 @@ listContentApp.controller('ShoppingListController', function ($scope) {
                     }
                 }
             );
-        };
+        }
 
         // Get array of facebook Id's and creates array of FacebookFriend
         function getSharedFacebookFriends(sharedFriendsIdArray) {
