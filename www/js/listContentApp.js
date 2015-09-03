@@ -13,8 +13,7 @@ function onBackKeyDown(e) {
     var scope = angular.element("#shoppingListController").scope();
 
     // In Edit Mode
-    if (scope.list.inEditMode === true)
-    {
+    if (scope.list.inEditMode === true) {
         e.preventDefault();
         scope.list.cancelEditListChanges();
     }
@@ -85,16 +84,15 @@ listContentApp.controller('ShoppingListController', function ($scope) {
         $scope.emptyList = isEmptyListContent();
         $scope.invertedList = (localStorage.getItem("invertedList") === "true");
         getList($scope, listId);
-        function isEmptyListContent () {
+        function isEmptyListContent() {
             return (_.keys($scope.listContent).length === 0);
         }
 
-        $scope.changeEmptyListValue = function ()
-        {
+        $scope.changeEmptyListValue = function () {
             $scope.emptyList = isEmptyListContent();
         };
 
-        $scope.hideOrShowEmptyListNotification = function() {
+        $scope.hideOrShowEmptyListNotification = function () {
             if (isEmptyListContent() === true) {
                 $("#emptyListItem").show();
             }
@@ -365,7 +363,18 @@ listContentApp.controller('ShoppingListController', function ($scope) {
             $scope.notifyText = "";
         };
 
-        $scope.getFacebookFriendsDetails = function () {
+        $scope.shareListOptions = function () {
+            getFacebookFriendsDetails(function () {
+                if ($scope.isListAdmin === true) {
+                    $("#shareListPopUp").popup("open");
+                }
+                else {
+                    $("#showSharedUsersPopUp").popup("open");
+                }
+            });
+        };
+
+        function getFacebookFriendsDetails(callback) {
             showLoadingWidget("Loading...");
             $scope.facebookFriends = [];
             facebookConnectPlugin.api("/me?fields=friends{name,id,picture.width(150).height(150)}", [],
@@ -381,12 +390,12 @@ listContentApp.controller('ShoppingListController', function ($scope) {
                         facebookFriend = new FacebookFriend(facebookFriendId, facebookFriendName, facebookFriendPicture);
                         $scope.facebookFriends.push(facebookFriend);
                     }
-                    getSharedFacebookFriendsDetails();
+                    getSharedFacebookFriendsDetails(callback);
                 }
             );
-        };
+        }
 
-        function getSharedFacebookFriendsDetails() {
+        function getSharedFacebookFriendsDetails(callback) {
             Parse.initialize(PARSE_APP_ID, PARSE_JS_ID);
             var Lists = Parse.Object.extend("Lists");
             var query = new Parse.Query(Lists);
@@ -419,12 +428,7 @@ listContentApp.controller('ShoppingListController', function ($scope) {
                                     localStorage.setItem("sharedFacebookFriends", JSON.stringify($scope.sharedFacebookFriends));
                                     localStorage.setItem("notSharedFacebookFriends", JSON.stringify($scope.notSharedFacebookFriends));
                                     $scope.$apply();
-                                    if ($scope.isListAdmin === true) {
-                                        $("#shareListPopUp").popup("open");
-                                    }
-                                    else {
-                                        $("#showSharedUsersPopUp").popup("open");
-                                    }
+                                    callback();
                                     $("#menuPanel").panel("close");
                                     hideLoadingWidget();
                                 },
@@ -596,6 +600,23 @@ listContentApp.controller('ShoppingListController', function ($scope) {
             $("#notifyFriendsPopUp").popup("close");
             $scope.clearNotifyFriendsFields();
         }
+
+        $scope.showChangeProductOwnerOptions = function () {
+            getFacebookFriendsDetails(function () {
+                $("#productOptionsPopup").popup("close");
+                $("#changeProductOwnerPopUp").popup("open");
+            });
+        };
+
+        $scope.changeProductOwner = function (productOwner)
+        {
+            /* TODO :
+            1. Update listContent with the new owner of the product
+            2. Update product owner in parse
+            3. Send push notification to the new owner
+            */
+            console.log(productOwner);
+        };
     }
 );
 
