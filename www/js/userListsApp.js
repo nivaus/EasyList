@@ -230,7 +230,7 @@ userListsApp.controller('UserListsAppController', function ($scope) {
             };
         }
         return new UserList(listId, adminUser, adminName, listName, sharedUsers, listImage, createdDate, invertedList);
-    }
+    };
 
     var getListsIdsForSubscription = function () {
         var listId;
@@ -360,7 +360,6 @@ userListsApp.controller('UserListsAppController', function ($scope) {
         }
     };
 
-    // TODO : FINISH
     $scope.removeSelectedList = function (selectedList) {
         var userListsInDate;
         var userList;
