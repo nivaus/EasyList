@@ -111,7 +111,7 @@
 
                         <h2>{{list.listName}}</h2>
 
-                        <p>List Admin: {{list.adminName}}
+                        <p>List Admin: {{list.adminUserReference.attributes.fullName}}
                             <br>
                             Shared users: {{list.sharedUsers.length-1}}
                         </p>
@@ -135,13 +135,13 @@
                 </li>
 
                 <!-- List -->
-                <li data-icon="{{(list.adminUser===username) ? 'delete' : 'carat-r'}}" ng-repeat="list in date.lists">
+                <li data-icon="{{(list.adminUserReference.attributes.username===username) ? 'delete' : 'carat-r'}}" ng-repeat="list in date.lists">
                     <a ng-click="listAction(list)">
                         <img src="{{list.listImage}}">
 
                         <h2>{{list.listName}}</h2>
 
-                        <p>List Admin: {{list.adminName}}
+                        <p>List Admin: {{list.adminUserReference.attributes.fullName}}
                             <br>
                             Shared users: {{list.sharedUsers.length-1}}
                         </p>

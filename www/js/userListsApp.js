@@ -30,10 +30,8 @@ var CHANNEL_PREFIX = "ch";
 Parse.initialize(PARSE_APP_ID, PARSE_JS_ID);
 
 //Class UserList
-function UserList(listId, adminUser, adminName, listName, sharedUsers, listImage, createdTime, invertedList, adminUserReference) {
+function UserList(listId, listName, sharedUsers, listImage, createdTime, invertedList, adminUserReference) {
     this.listId = listId;
-    this.adminUser = adminUser;
-    this.adminName = adminName;
     this.listName = listName;
     this.sharedUsers = sharedUsers;
     this.listImage = listImage;
@@ -55,16 +53,16 @@ var userListsApp = angular.module('UserListsApp', []).filter('object2Array', fun
 userListsApp.controller('UserListsAppController', function ($scope) {
     showLoadingWidget("Loading...");
 
-    //$scope.username = Parse.User.current().attributes.username;
-    $scope.username = "I8OECfZ0Zt2d4MCUUmNP1HV4E";
+    $scope.username = Parse.User.current().attributes.username;
+    //$scope.username = "I8OECfZ0Zt2d4MCUUmNP1HV4E";
     $scope.userLists = {};
     $scope.defaultListImage = "http://files.parsetfss.com/78e798b2-27ce-4608-a903-5f5baf8a0899/tfss-175847af-a54e-456a-a078-a71198b96403-list-image.png";
     $scope.listNameInput = "";
     $scope.inEditMode = false;
 
-
+    var userListsBackup = {};
     var listsToRemove = [];
-    var temporaryUserLists = {};
+    var notAdminUserListsToRetrieveBack = {};
 
     var getUserLists = function () {
         var lists = Parse.Object.extend("Lists");
@@ -95,7 +93,7 @@ userListsApp.controller('UserListsAppController', function ($scope) {
     };
     subscribe = getUserLists;
 
-    getUserLists();
+    //getUserLists();
 
     function isEmptyUserLists() {
         return (_.keys($scope.userLists).length === 0);
@@ -116,17 +114,12 @@ userListsApp.controller('UserListsAppController', function ($scope) {
         var parseUserLists = new Lists();
 
         var listName = $scope.listNameInput;
-        var adminUser = $scope.username;
-        var adminName = localStorage.getItem("fullName");
         var sharedUsers = [$scope.username];
         var listImage = $scope.defaultListImage;
         var invertedList = $("#invertedListValue").val() === "true";
-        //var adminUserReference = parseListObject.attributes.adminUserReference;
-
+        var adminUserReference = Parse.User.current();
         parseUserLists.save({
             listName: listName,
-            adminUser: adminUser,
-            adminName: adminName,
             sharedUsers: sharedUsers,
             listImage: listImage,
             invertedList: invertedList,
@@ -141,7 +134,6 @@ userListsApp.controller('UserListsAppController', function ($scope) {
                         lists: []
                     };
                 }
-                console.log(newList.createdTime);
                 $scope.userLists[newList.createdTime].lists.push(newList);
                 $scope.clearCreateNewListFields();
                 $("#createNewListPanel").panel("close");
@@ -164,15 +156,14 @@ userListsApp.controller('UserListsAppController', function ($scope) {
 
     function createNewListFromParseObject(parseListObject) {
         var listId = parseListObject.id;
-        var adminUser = parseListObject.attributes.adminUser;
-        var adminName = parseListObject.attributes.adminName;
         var listName = parseListObject.attributes.listName;
         var sharedUsers = parseListObject.attributes.sharedUsers;
         var listImage = parseListObject.attributes.listImage;
+        var invertedList = parseListObject.attributes.invertedList;
         var adminUserReference = parseListObject.attributes.adminUserReference;
         var createdTime = parseListObject.createdAt.toDateString();
 
-        return new UserList(listId, adminUser, adminName, listName, sharedUsers, listImage, createdTime, adminUserReference);
+        return new UserList(listId, listName, sharedUsers, listImage, createdTime, invertedList, adminUserReference);
     }
 
     $scope.clearCreateNewListFields = function () {
@@ -182,9 +173,8 @@ userListsApp.controller('UserListsAppController', function ($scope) {
     $scope.navigateToListContentPage = function (listId) {
         var list = getListFromListId(listId);
         var listName = list.listName;
-        var listAdminUserName = list.adminUser;
+        var listAdminUserName = list.adminUserReference.attributes.username;
         var invertedList = list.invertedList;
-        console.log(list);
         localStorage.setItem("listId", listId);
         localStorage.setItem("listName", listName);
         localStorage.setItem("invertedList", invertedList);
@@ -203,8 +193,6 @@ userListsApp.controller('UserListsAppController', function ($scope) {
                 var userList = $scope.userLists[createdDate].lists[listIndex];
                 if (userList.listId === listId) {
                     return $scope.userLists[createdDate].lists[listIndex];
-                    //var listAdminUserName =  $scope.userLists[createdDate].lists[listIndex].adminUser;
-                    //return listAdminUserName;
                 }
             }
         }
@@ -226,8 +214,6 @@ userListsApp.controller('UserListsAppController', function ($scope) {
 
     var getUserListFromParseObject = function (parseObject) {
         var listId = parseObject.id;
-        var adminUser = parseObject.get("adminUser");
-        var adminName = parseObject.get("adminName");
         var listName = parseObject.get("listName");
         var sharedUsers = parseObject.get("sharedUsers");
         var listImage = parseObject.get("listImage");
@@ -241,7 +227,7 @@ userListsApp.controller('UserListsAppController', function ($scope) {
                 lists: []
             };
         }
-        return new UserList(listId, adminUser, adminName, listName, sharedUsers, listImage, createdDate, invertedList, adminUserReference);
+        return new UserList(listId, listName, sharedUsers, listImage, createdDate, invertedList, adminUserReference);
     };
 
     var getListsIdsForSubscription = function () {
@@ -259,7 +245,7 @@ userListsApp.controller('UserListsAppController', function ($scope) {
     };
 
     $scope.editLists = function () {
-        localStorage.setItem("userLists", JSON.stringify($scope.userLists));
+        userListsBackup = jQuery.extend(true, {}, $scope.userLists);
         $("#menuButton").hide();
         $("#createNewListButton").hide();
         removeNotAdminLists();
@@ -273,18 +259,18 @@ userListsApp.controller('UserListsAppController', function ($scope) {
         var listIndex;
         var createdDate;
         var notAdminListsToRemove;
-        temporaryUserLists = {};
+        notAdminUserListsToRetrieveBack = {};
         for (createdDate in $scope.userLists) {
             notAdminListsToRemove = [];
             userListsInDate = $scope.userLists[createdDate].lists;
             for (listIndex in userListsInDate) {
                 userList = userListsInDate[listIndex];
-                if (userList.adminUser !== $scope.username) {
+                if (userList.adminUserReference.attributes.username !== $scope.username) {
                     notAdminListsToRemove.push(userList);
                 }
             }
             if (notAdminListsToRemove.length !== 0) {
-                temporaryUserLists[createdDate] = {
+                notAdminUserListsToRetrieveBack[createdDate] = {
                     createdDated: createdDate,
                     lists: notAdminListsToRemove
                 };
@@ -295,14 +281,13 @@ userListsApp.controller('UserListsAppController', function ($scope) {
                 delete $scope.userLists[createdDate];
             }
         }
-        console.log(JSON.stringify(temporaryUserLists));
     }
 
     function retrieveRemovedNotAdminLists() {
         var userListsInDate;
         var createdDate;
-        for (createdDate in temporaryUserLists) {
-            userListsInDate = temporaryUserLists[createdDate].lists;
+        for (createdDate in notAdminUserListsToRetrieveBack) {
+            userListsInDate = notAdminUserListsToRetrieveBack[createdDate].lists;
             if ($scope.userLists.hasOwnProperty(createdDate) === false) //if the creation date is not exists
             {
                 $scope.userLists[createdDate] = {
@@ -310,7 +295,7 @@ userListsApp.controller('UserListsAppController', function ($scope) {
                     lists: []
                 };
             }
-            $scope.userLists[createdDate].lists = userListsInDate;
+            $scope.userLists[createdDate].lists = _.union($scope.userLists[createdDate].lists, userListsInDate);
         }
     }
 
@@ -318,7 +303,7 @@ userListsApp.controller('UserListsAppController', function ($scope) {
         showLoadingWidget("Saving changes...");
         removeDeletedListsInParse();
         retrieveRemovedNotAdminLists();
-        localStorage.removeItem("userLists");
+        userListsBackup = {};
         console.log("Lists Changes Saved.");
         $("#menuPanel").panel("close");
         $("#menuButton").show();
@@ -327,9 +312,7 @@ userListsApp.controller('UserListsAppController', function ($scope) {
     };
 
     $scope.cancelEditListsChanges = function () {
-        var oldContent = localStorage.getItem("userLists");
-        $scope.userLists = JSON.parse(oldContent);
-        localStorage.removeItem("userLists");
+        $scope.userLists = userListsBackup;
         listsToRemove = [];
         $("#menuButton").show();
         $("#createNewListButton").show();
@@ -342,7 +325,7 @@ userListsApp.controller('UserListsAppController', function ($scope) {
         if ($scope.inEditMode === false) {
             return "b";
         }
-        else if (list.adminUser === $scope.username) {
+        else if (list.adminUserReference.attributes.username === $scope.username) {
             return "g";
         }
         else {
@@ -354,7 +337,7 @@ userListsApp.controller('UserListsAppController', function ($scope) {
         if ($scope.inEditMode === false) {
             return 'carat-r';
         }
-        else if (list.adminUser === $scope.username) {
+        else if (list.adminUserReference.attributes.username === $scope.username) {
             return 'delete';
         }
         else {
@@ -363,11 +346,11 @@ userListsApp.controller('UserListsAppController', function ($scope) {
     };
 
     $scope.isListAdmin = function (list) {
-        return (list.adminUser === $scope.username);
+        return (list.adminUserReference.attributes.username === $scope.username);
     };
 
     $scope.listAction = function (list) {
-        if (list.adminUser === $scope.username) {
+        if (list.adminUserReference.attributes.username === $scope.username) {
             $scope.removeSelectedList(list);
         }
     };
@@ -401,7 +384,6 @@ userListsApp.controller('UserListsAppController', function ($scope) {
 
     function removeDeletedListsInParse() {
         Parse.initialize(PARSE_APP_ID, PARSE_JS_ID);
-        console.log(listsToRemove);
         var Lists = Parse.Object.extend("Lists");
         var listId;
         var query = new Parse.Query(Lists);
@@ -414,7 +396,6 @@ userListsApp.controller('UserListsAppController', function ($scope) {
         query.containedIn("objectId", listsIds);
         query.each(function (list) {
             // Deleting the list from Parse
-            console.log(list);
             listId = list.id;
             return list.destroy({}).then(function () {
                 console.log('List with listId ' + list.id + ' deleted successfully.');
@@ -423,8 +404,6 @@ userListsApp.controller('UserListsAppController', function ($scope) {
                 var query = new Parse.Query(ListContent);
                 query.equalTo("listId", listId);
                 return query.find().then(function (results) {
-                    console.log(results);
-
                     return Parse.Object.destroyAll(results);
                 });
             });
@@ -432,7 +411,6 @@ userListsApp.controller('UserListsAppController', function ($scope) {
             hideOrShowEmptyUserListsNotification();
             removeListIdChannel(listsIds);
             hideLoadingWidget();
-            console.log(success);
 
         }, function (error) {
             console.log(error);
@@ -440,10 +418,8 @@ userListsApp.controller('UserListsAppController', function ($scope) {
     }
 
     function removeListIdChannel(listsIds) {
-        console.log("removeListsIdsChannel:");
-        console.log(listsIds);
+        console.log("removeListsIdsChannel:" + listsIds);
         Parse.Cloud.run('removeListsIdsChannel', {listsIds: listsIds}, function (success) {
-                console.log(success);
             },
             function (error) {
                 console.log(error);
