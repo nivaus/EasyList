@@ -192,8 +192,7 @@ userListsApp.controller('UserListsAppController', function ($scope) {
             for (var listIndex in $scope.userLists[createdDate].lists) {
                 var userList = $scope.userLists[createdDate].lists[listIndex];
                 if (userList.listId === listId) {
-                    var list = $scope.userLists[createdDate].lists[listIndex];
-                    return list;
+                    return $scope.userLists[createdDate].lists[listIndex];
                     //var listAdminUserName =  $scope.userLists[createdDate].lists[listIndex].adminUser;
                     //return listAdminUserName;
                 }
@@ -354,7 +353,7 @@ userListsApp.controller('UserListsAppController', function ($scope) {
     };
 
     $scope.isListAdmin = function (list) {
-        return ((list.adminUser === $scope.username) ? true : false);
+        return (list.adminUser === $scope.username);
     };
 
     $scope.listAction = function (list) {
