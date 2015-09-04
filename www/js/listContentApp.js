@@ -38,7 +38,6 @@ function onBackKeyDown(e) {
 }
 
 
-// TODO : Change every this element to $scope
 $.mobile.buttonMarkup.hoverDelay = 0;
 
 
@@ -589,11 +588,6 @@ listContentApp.controller('ShoppingListController', function ($scope) {
                 // TODO : Send push message
             }
             $("#changeProductOwnerPopUp").popup("close");
-            /* TODO :
-             1. Update listContent with the new owner of the product
-             2. Update product owner in parse
-             3. Send push notification to the new owner
-             */
             console.log(facebookFriendsMap);
 
         };
