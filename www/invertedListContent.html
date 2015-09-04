@@ -85,7 +85,6 @@
         </form>
     </div>
 
-
     <!--
      Header
     -->
@@ -112,7 +111,8 @@
                     ng-repeat="product in category.products">
 
                     <!-- *************************************************************-->
-                    <li ng-show=!checkIfToShowProductOptions(product) class='{{product.productName}} done-{{product.productChecked}}'
+                    <li ng-show=!checkIfToShowProductOptions(product)
+                        class='{{product.productName}} done-{{product.productChecked}}'
                         data-icon="{{list.getIconInInvertedList(product)}}">
                         <a ng-click="!isOwnerOfProduct(product) || list.itemClicked(product)">
                             <img class="productImage" src="{{product.productImage}}" alt="{{product.productName}}">
@@ -144,14 +144,14 @@
                                         product.ownerFullName}}</p>
                                 </h2>
                             </div>
-
                         </a>
                         <!-- Not Product Owner -->
-                        <a href="#" data-theme="b" ></a>
+                        <a href="#" data-theme="b"></a>
                     </li>
                     <!-- ***********************************************-->
                     <!-- ***********************************************-->
-                    <li ng-show=checkIfToShowProductOptions(product) class='{{product.productName}} done-{{product.productChecked}}'
+                    <li ng-show=checkIfToShowProductOptions(product)
+                        class='{{product.productName}} done-{{product.productChecked}}'
                         data-icon="{{list.getIconInInvertedList(product)}}">
                         <a ng-click="!isOwnerOfProduct(product) || list.itemClicked(product)">
                             <img class="productImage" src="{{product.productImage}}" alt="{{product.productName}}">
@@ -183,16 +183,15 @@
                                         product.ownerFullName}}</p>
                                 </h2>
                             </div>
-
                         </a>
                         <!-- Product Owner -->
 
-                            <a class="productOptionsPopup"
-                               href="{{ list.inEditMode ? '#confirmProductDeletePopUp' : '#productOptionsPopup' }}"
-                               data-rel="{{list.inEditMode ? 'popup' : (product.productChecked ?  '' : 'popup')}}"
-                               data-position-to="window" data-transition="pop" data-theme="{{list.getTheme(product)}}"
-                               ng-click="list.updateSelectedProduct(product)">
-                            </a>
+                        <a class="productOptionsPopup"
+                           href="{{ list.inEditMode ? '#confirmProductDeletePopUp' : '#productOptionsPopup' }}"
+                           data-rel="{{list.inEditMode ? 'popup' : (product.productChecked ?  '' : 'popup')}}"
+                           data-position-to="window" data-transition="pop" data-theme="{{list.getTheme(product)}}"
+                           ng-click="list.updateSelectedProduct(product)">
+                        </a>
                     </li>
                     <!-- ***********************************************-->
                 </ul>
@@ -355,7 +354,7 @@
                 <ul data-role="listview" data-split-theme="b" data-inset="true"
                     ng-repeat="myFacebookFriend in sharedFacebookFriends">
                     <li data-icon="carat-r">
-                        <a ng-click="changeProductOwner(myFacebookFriend)">
+                        <a ng-click="list.changeProductOwner(myFacebookFriend)">
                             <img src="{{myFacebookFriend.facebookFriendPicture}}"
                                  alt="{{myFacebookFriend.facebookFriendName}}">
 
@@ -363,7 +362,7 @@
                                 {{myFacebookFriend.facebookFriendName}}
                             </h2>
                         </a>
-                        <a ng-click="changeProductOwner(myFacebookFriend)"></a>
+                        <a ng-click="list.changeProductOwner(myFacebookFriend)"></a>
                     </li>
                 </ul>
             </li>

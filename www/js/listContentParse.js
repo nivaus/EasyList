@@ -216,3 +216,25 @@ var removeDeletedProductsInParse = function ($scope, productsToRemove) {
     }
     $scope.productsToRemove = [];
 };
+
+var updateProductOwnerInParse = function ($scope, productToUpdate) {
+    Parse.initialize(PARSE_APP_ID, PARSE_JS_ID);
+    var ListContent = Parse.Object.extend("ListContent");
+    var query = new Parse.Query(ListContent);
+    query.equalTo("objectId", productToUpdate.objectId);
+    query.first({
+        success: function (productFromParse) {
+            // Update the new product owner in parse
+            productFromParse.set("ownerUsername", productToUpdate.ownerUsername);
+            productFromParse.set("ownerFullName", productToUpdate.ownerFullName);
+            productFromParse.save().then(function () {
+                // Update the new quantity in the listContent
+                $scope.$apply();
+                console.log('Product with objectId ' + productFromParse.id + ' owner updated successfully.');
+            });
+        },
+        error: function (product, error) {
+            console.log('Failed to update object, with error code: ' + error.message);
+        }
+    });
+};

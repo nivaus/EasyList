@@ -13,7 +13,7 @@ function onDeviceReady() {
     console.log("Device Ready");
     navigator.splashscreen.hide();
     document.addEventListener("backbutton", onBackKeyDown, false); //Listen to the User clicking on the back button
-    subscribe();
+    //subscribe();
 }
 
 function onBackKeyDown(e) {
@@ -54,6 +54,7 @@ function loginToParse (facebookAuthData, callback)
             localStorage.setItem("userName",user.attributes.username);
             localStorage.setItem("fullName",user.attributes.fullName);
             localStorage.setItem("facebookId",user.attributes.facebookId);
+            localStorage.setItem("facebookProfilePicture",user.attributes.profilePicture);
             console.log("User is logged into Parse.");
         },
 

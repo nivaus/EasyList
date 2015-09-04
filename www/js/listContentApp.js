@@ -56,6 +56,7 @@ listContentApp.controller('ShoppingListController', function ($scope) {
         var userName = localStorage.getItem("userName");
         var fullName = localStorage.getItem("fullName");
         var facebookId = localStorage.getItem("facebookId");
+        var facebookProfilePicture = localStorage.getItem("facebookProfilePicture");
         var listId = localStorage.getItem("listId");
         var listAdminUserName = localStorage.getItem("listAdminUserName");
 
@@ -355,7 +356,6 @@ listContentApp.controller('ShoppingListController', function ($scope) {
         };
 
         $scope.checkIfToShowProductOptions = function (product) {
-            console.log($scope.isListAdmin || $scope.isOwnerOfProduct(product));
             return ($scope.isListAdmin || $scope.isOwnerOfProduct(product));
         };
 
@@ -564,20 +564,30 @@ listContentApp.controller('ShoppingListController', function ($scope) {
 
         $scope.showChangeProductOwnerOptions = function () {
             getFacebookFriendsDetails(function () {
+                // Add myself to the list of optional new product owner
+                var myFacebookUser = new FacebookFriend(facebookId, fullName, facebookProfilePicture);
+                $scope.sharedFacebookFriends.push(myFacebookUser);
+                // Add myself to the facebook map
+                facebookFriendsMap[facebookId] = {
+                    userName: userName
+                };
+                $scope.$apply();
+                // Close opened popup
                 $("#productOptionsPopup").popup("close");
                 $("#changeProductOwnerPopUp").popup("open");
             });
         };
 
-        $scope.changeProductOwner = function (productOwner) {
-            var parseUserName = facebookFriendsMap[productOwner.facebookFriendId].userName;
-            var ownerFullName = productOwner.facebookFriendName;
-            console.log(this.selectedProduct);
-            this.selectedProduct.ownerUsername = parseUserName;
-            this.selectedProduct.ownerFullName = ownerFullName;
-
-            console.log("parseUserName : " + parseUserName);
-            console.log("ownerFullName : " + ownerFullName);
+        this.changeProductOwner = function (productOwner) {
+            var newProductOwnerUsernameInParse = facebookFriendsMap[productOwner.facebookFriendId].userName;
+            var newProductOwnerFullName = productOwner.facebookFriendName;
+            this.selectedProduct.ownerUsername = newProductOwnerUsernameInParse;
+            this.selectedProduct.ownerFullName = newProductOwnerFullName;
+            updateProductOwnerInParse($scope, this.selectedProduct);
+            if (newProductOwnerUsernameInParse !== userName)
+            {
+                // TODO : Send push message
+            }
             $("#changeProductOwnerPopUp").popup("close");
             /* TODO :
              1. Update listContent with the new owner of the product
