@@ -588,8 +588,6 @@ listContentApp.controller('ShoppingListController', function ($scope) {
                 // TODO : Send push message
             }
             $("#changeProductOwnerPopUp").popup("close");
-            console.log(facebookFriendsMap);
-
         };
 
         $scope.isOwnerOfProduct = function (product) {
