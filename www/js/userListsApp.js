@@ -1,3 +1,10 @@
+//Constants
+var PARSE_APP_ID = "YNiKFOkpulbY1j19E2gcdSREgTKd0AiZZKtzJaeg";
+var PARSE_JS_ID = "Ht7VpNFFhB6KKod4L8gvWlyzjwWt0PEPXjEHVD1H";
+var PARSE_CLIENT_KEY = "wV1lOSJJWBlvQhvQYISlKyGlFiolEaXMsbOaMD7I";
+var CHANNEL_PREFIX = "ch";
+var subscribe;
+
 $.mobile.buttonMarkup.hoverDelay = 0;
 
 document.addEventListener("deviceready", onDeviceReady, false);
@@ -7,6 +14,26 @@ function onDeviceReady() {
     navigator.splashscreen.hide();
     document.addEventListener("backbutton", onBackKeyDown, false); //Listen to the User clicking on the back button
     subscribe();
+    registerSilentNotifications();
+}
+
+function registerSilentNotifications() {
+    ParsePushPlugin.register({
+            appId: PARSE_APP_ID, clientKey: PARSE_CLIENT_KEY, eventKey: "myEventKey"
+        },
+        function () {
+            console.log("Registered for silent notification");
+            ParsePushPlugin.on('receivePN', function (pn) {
+                console.log(pn);
+                if (pn.hasOwnProperty("userLists") === true) {
+                    console.log(pn.userLists);
+                    subscribe();
+
+                }
+            });
+        }, function (e) {
+            console.log('error registering device: ' + e);
+        });
 }
 
 function onBackKeyDown(e) {
@@ -18,13 +45,6 @@ function onBackKeyDown(e) {
         exitApp();
     }
 }
-
-var subscribe;
-
-//Constants
-var PARSE_APP_ID = "YNiKFOkpulbY1j19E2gcdSREgTKd0AiZZKtzJaeg";
-var PARSE_JS_ID = "Ht7VpNFFhB6KKod4L8gvWlyzjwWt0PEPXjEHVD1H";
-var CHANNEL_PREFIX = "ch";
 
 //Initializing Parse
 Parse.initialize(PARSE_APP_ID, PARSE_JS_ID);
@@ -68,6 +88,7 @@ userListsApp.controller('UserListsAppController', function ($scope) {
         var lists = Parse.Object.extend("Lists");
         var query = new Parse.Query(lists);
 
+        $scope.userLists = {};
         query.containedIn("sharedUsers", [$scope.username]);
         query.descending("createdAt");
         query.include("adminUserReference");
@@ -392,9 +413,11 @@ userListsApp.controller('UserListsAppController', function ($scope) {
         var listId;
         var query = new Parse.Query(Lists);
         var listsIds = [];
+        var listsNames = [];
 
         for (var list in listsToRemove) {
             listsIds.push(listsToRemove[list].listId);
+            listsNames.push(listsToRemove[list].listName);
         }
 
         query.containedIn("objectId", listsIds);
@@ -413,7 +436,7 @@ userListsApp.controller('UserListsAppController', function ($scope) {
             });
         }).then(function (success) {
             hideOrShowEmptyUserListsNotification();
-            removeListIdChannel(listsIds);
+            removeListIdChannel(listsIds,listsNames);
             hideLoadingWidget();
 
         }, function (error) {
@@ -421,9 +444,10 @@ userListsApp.controller('UserListsAppController', function ($scope) {
         });
     }
 
-    function removeListIdChannel(listsIds) {
-        console.log("removeListsIdsChannel:" + listsIds);
-        Parse.Cloud.run('removeListsIdsChannel', {listsIds: listsIds}, function (success) {
+    function removeListIdChannel(listsIds,listsNames) {
+        console.log("removeListsIdsChannel:");
+        Parse.Cloud.run('removeListsIdsChannel', {listsIds: listsIds, listsNames: listsNames}, function (success) {
+                console.log(success);
             },
             function (error) {
                 console.log(error);

@@ -2,11 +2,47 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+var PARSE_CLIENT_KEY="wV1lOSJJWBlvQhvQYISlKyGlFiolEaXMsbOaMD7I";
+var PARSE_APP_ID="YNiKFOkpulbY1j19E2gcdSREgTKd0AiZZKtzJaeg";
+
 
 document.addEventListener("deviceready", onDeviceReady, false);
 
 function onDeviceReady() {
     document.addEventListener("backbutton", onBackKeyDown, false); //Listen to the User clicking on the back button
+    registerSilentNotifications();
+}
+
+function registerSilentNotifications()
+{
+    ParsePushPlugin.register({
+            appId: PARSE_APP_ID, clientKey: PARSE_CLIENT_KEY, eventKey: "myEventKey"
+        },
+        function () {
+            console.log("registered for silent notifications");
+            ParsePushPlugin.on('receivePN', function(pn){
+                var listId = localStorage.getItem("listId");
+                var userName = localStorage.getItem("userName");
+                if (pn.hasOwnProperty("listContent") === true)
+                {
+                    console.log(pn.listContent);
+                    if (pn.listContent === "unshare" || pn.listContent === "delete")
+                    {
+                        window.location = "userLists.html";
+                    }
+                    else if (pn.senderId !== userName && pn.listId === listId)
+                    {
+                        console.log(pn.senderId);
+                        var scope = angular.element("#shoppingListController").scope();
+                        getList(scope, listId);
+                    }
+                }
+            });
+
+
+        }, function (e) {
+            console.log('error registering device: ' + e);
+        });
 }
 
 function onBackKeyDown(e) {

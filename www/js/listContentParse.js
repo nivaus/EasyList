@@ -4,6 +4,7 @@
 
 var PARSE_APP_ID = "YNiKFOkpulbY1j19E2gcdSREgTKd0AiZZKtzJaeg";
 var PARSE_JS_ID = "Ht7VpNFFhB6KKod4L8gvWlyzjwWt0PEPXjEHVD1H";
+var CHANNEL_PREFIX = "ch";
 
 function Product(objectId, categoryName, productName, productQuantity, productImage, productChecked, listId, ownerUsername, ownerFullName) {
     this.objectId = objectId;
@@ -26,7 +27,7 @@ var getList = function ($scope, listId) {
     query.find(
         {
             success: function (results) {
-
+                $scope.listContent = {};
                 for (var i = 0, len = results.length; i < len; i++) {
                     var objectId = results[i].id;
                     var categoryName = results[i].get("categoryName");
@@ -79,6 +80,7 @@ var addNewProductToParse = function ($scope, newProduct) {
             newProduct.objectId = productFromParse.id;
             $scope.listContent[productCategory].products.push(newProduct);
             hideLoadingWidget();
+            sendUpdateSilentNotification(newProduct.listId);
             $scope.$apply();
             console.log('New Product created with objectId: ' + productFromParse.id);
         },
@@ -104,6 +106,7 @@ var toggleProductCheckedInParse = function ($scope, productToUpdate) {
                     productToUpdate.productChecked = productChecked;
                     $scope.$apply();
                     console.log('Product with objectId ' + productFromParse.id + ' updated successfully.');
+                    sendUpdateSilentNotification(productToUpdate.listId)
                 }
             );
         },
@@ -125,6 +128,7 @@ var updateProductQuantityInParse = function ($scope, productToUpdate, newProduct
             productFromParse.save().then(function () {
                 // Update the new quantity in the listContent
                 productToUpdate.productQuantity = newProductQuantity;
+                sendUpdateSilentNotification(localStorage.getItem("listId"));
                 hideLoadingWidget();
                 $scope.$apply();
                 console.log('Product with objectId ' + productFromParse.id + ' quantity updated successfully.');
@@ -170,6 +174,7 @@ var changeProductPhotoInParse = function ($scope, productToUpdate, imageURI) {
                 productToUpdate.productImage = file.url();
                 $scope.$apply();
                 hideLoadingWidget();
+                sendUpdateSilentNotification(localStorage.getItem("listId"));
             });
         })
     }, function (error) {
@@ -207,6 +212,7 @@ var removeDeletedProductsInParse = function ($scope, productsToRemove) {
                 product.destroy({}).then(function () {
                     console.log('Product with objectId ' + product.id + ' deleted successfully.');
                     hideLoadingWidget();
+                    sendUpdateSilentNotification(localStorage.getItem("listId"));
                 });
             },
             error: function (product, error) {
@@ -238,6 +244,20 @@ var updateProductOwnerInParse = function ($scope, productToUpdate) {
         }
     });
 };
+
+function sendUpdateSilentNotification(listId) {
+    var query = new Parse.Query(Parse.Installation);
+    var channel = CHANNEL_PREFIX + listId;
+    query.equalTo("channels", channel)
+    return Parse.Push.send({
+        where: query,
+        data: {
+            senderId: localStorage.getItem("userName"),
+            listContent: "update",
+            listId: listId
+        }
+    });
+}
 
 function getProductTemplates($scope) {
     Parse.initialize(PARSE_APP_ID, PARSE_JS_ID);
