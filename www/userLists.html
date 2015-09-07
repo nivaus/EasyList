@@ -112,7 +112,7 @@
                     <a ng-click="navigateToListContentPage(list.listId)">
                         <img src="{{list.listImage}}">
 
-                        <h2>{{list.listName}}</h2>
+                        <h2>{{list.listName}} {{(list.invertedList) ? ' (Inverted List)' : ''}}</h2>
 
                         <p>List Admin: {{list.adminUserReference.attributes.fullName}}
                             <br>
@@ -142,7 +142,7 @@
                     <a ng-click="listAction(list)">
                         <img src="{{list.listImage}}">
 
-                        <h2>{{list.listName}}</h2>
+                        <h2>{{list.listName}} {{(list.invertedList) ? ' (Inverted List)' : ''}}</h2>
 
                         <p>List Admin: {{list.adminUserReference.attributes.fullName}}
                             <br>

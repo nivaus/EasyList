@@ -184,15 +184,15 @@ listContentApp.controller('ShoppingListController', function ($scope) {
         };
 
         this.productAction = function (product) {
-            updateSelectedProduct(product);
+            this.updateSelectedProduct(product);
             if (this.inEditMode) {
                 removeSelectedProduct();
             }
         };
 
-        function updateSelectedProduct(product) {
+        this.updateSelectedProduct = function (product) {
             this.selectedProduct = product;
-        }
+        };
 
         function removeSelectedProduct() {
             var categoryName = this.selectedProduct.categoryName;
