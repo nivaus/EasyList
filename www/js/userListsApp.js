@@ -53,8 +53,8 @@ var userListsApp = angular.module('UserListsApp', []).filter('object2Array', fun
 userListsApp.controller('UserListsAppController', function ($scope) {
     showLoadingWidget("Loading...");
 
-    $scope.username = Parse.User.current().attributes.username;
-    //$scope.username = "I8OECfZ0Zt2d4MCUUmNP1HV4E";
+    //$scope.username = Parse.User.current().attributes.username;
+    $scope.username = "I8OECfZ0Zt2d4MCUUmNP1HV4E";
     $scope.userLists = {};
     $scope.defaultListImage = "http://files.parsetfss.com/78e798b2-27ce-4608-a903-5f5baf8a0899/tfss-175847af-a54e-456a-a078-a71198b96403-list-image.png";
     $scope.listNameInput = "";
@@ -93,7 +93,7 @@ userListsApp.controller('UserListsAppController', function ($scope) {
     };
     subscribe = getUserLists;
 
-    //getUserLists();
+    getUserLists();
 
     function isEmptyUserLists() {
         return (_.keys($scope.userLists).length === 0);
@@ -109,49 +109,51 @@ userListsApp.controller('UserListsAppController', function ($scope) {
     }
 
     $scope.createNewList = function () {
-        Parse.initialize(PARSE_APP_ID, PARSE_JS_ID);
-        var Lists = Parse.Object.extend("Lists");
-        var parseUserLists = new Lists();
+        if ($scope.listNameInput === "") {
+            $("#invalidInputMessage").show();
+        }
+        else {
+            Parse.initialize(PARSE_APP_ID, PARSE_JS_ID);
+            var Lists = Parse.Object.extend("Lists");
+            var parseUserLists = new Lists();
 
-        var listName = $scope.listNameInput;
-        var sharedUsers = [$scope.username];
-        var listImage = $scope.defaultListImage;
-        var invertedList = $("#invertedListValue").val() === "true";
-        var adminUserReference = Parse.User.current();
-        parseUserLists.save({
-            listName: listName,
-            sharedUsers: sharedUsers,
-            listImage: listImage,
-            invertedList: invertedList,
-            adminUserReference : adminUserReference
-        }, {
-            success: function (listObjectFromParse) {
-                var newList = createNewListFromParseObject(listObjectFromParse);
-                if ($scope.userLists.hasOwnProperty(newList.createdTime) === false) //if the creation date is already created
-                {
-                    $scope.userLists[newList.createdTime] = {
-                        createdDate: newList.createdTime,
-                        lists: []
-                    };
+            var listName = $scope.listNameInput;
+            var sharedUsers = [$scope.username];
+            var listImage = $scope.defaultListImage;
+            var invertedList = $("#invertedListValue").val() === "true";
+            var adminUserReference = Parse.User.current();
+            parseUserLists.save({
+                listName: listName,
+                sharedUsers: sharedUsers,
+                listImage: listImage,
+                invertedList: invertedList,
+                adminUserReference: adminUserReference
+            }, {
+                success: function (listObjectFromParse) {
+                    var newList = createNewListFromParseObject(listObjectFromParse);
+                    if ($scope.userLists.hasOwnProperty(newList.createdTime) === false) //if the creation date is already created
+                    {
+                        $scope.userLists[newList.createdTime] = {
+                            createdDate: newList.createdTime,
+                            lists: []
+                        };
+                    }
+                    $scope.userLists[newList.createdTime].lists.push(newList);
+                    console.log('New List created with listId: ' + newList.listId);
+                    ParsePushPlugin.subscribe(CHANNEL_PREFIX + newList.listId, function (success) {
+                            console.log(success);
+                            $scope.navigateToListContentPage(newList.listId);
+                        },
+                        function (error) {
+                            console.log(error);
+                        });
+
+                },
+                error: function (productFromParse, error) {
+                    console.log('Failed to create new object, with error code: ' + error.message);
                 }
-                $scope.userLists[newList.createdTime].lists.push(newList);
-                $scope.clearCreateNewListFields();
-                $("#createNewListPanel").panel("close");
-                console.log('New List created with listId: ' + newList.listId);
-                $("#emptyListItem").hide();
-                $scope.$apply();
-                ParsePushPlugin.subscribe(CHANNEL_PREFIX + newList.listId, function (success) {
-                        console.log(success);
-                    },
-                    function (error) {
-                        console.log(error);
-                    });
-
-            },
-            error: function (productFromParse, error) {
-                console.log('Failed to create new object, with error code: ' + error.message);
-            }
-        });
+            });
+        }
     };
 
     function createNewListFromParseObject(parseListObject) {
@@ -167,7 +169,9 @@ userListsApp.controller('UserListsAppController', function ($scope) {
     }
 
     $scope.clearCreateNewListFields = function () {
+        $("#invalidInputMessage").hide();
         $("#listName").val("");
+        $scope.listNameInput = "";
     };
 
     $scope.navigateToListContentPage = function (listId) {
@@ -425,4 +429,8 @@ userListsApp.controller('UserListsAppController', function ($scope) {
                 console.log(error);
             });
     }
+
+    $scope.hideInvalidInputMessage = function () {
+        $("#invalidInputMessage").hide();
+    };
 });

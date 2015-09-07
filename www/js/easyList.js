@@ -44,7 +44,6 @@ function clearSavedLocalStorageOfList() {
     localStorage.removeItem("notSharedFacebookFriends");
     localStorage.removeItem("listContent");
     localStorage.removeItem("invertedList");
-    localStorage.removeItem("facebookProfilePicture");
 }
 
 function exitApp() {
