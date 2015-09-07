@@ -77,7 +77,7 @@ listContentApp.controller('ShoppingListController', function ($scope) {
         $scope.notSharedFacebookFriends = [];
         $scope.productCategory = "";
         $scope.productName = "";
-        $scope.productQuantity = "";
+        $scope.productQuantity = 1;
         $scope.notifyText = "";
         $scope.listContent = {};
         $scope.productsToRemove = [];
@@ -102,20 +102,35 @@ listContentApp.controller('ShoppingListController', function ($scope) {
         };
 
         this.addProduct = function (productCategory, productName, productQuantity) {
-            showLoadingWidget("Saving product...");
-            productQuantity = parseInt(productQuantity);
-
-            if ($scope.listContent.hasOwnProperty(productCategory) === true) //if a category is already created
-            {
-                this.addNewProductToExistingCategory(productCategory, productName, productQuantity);
+            if (productName === "") {
+                $("#invalidInputMessage").text("Product name cannot be empty!");
+                $("#invalidInputMessage").show();
+            }
+            else if (productCategory === "") {
+                $("#invalidInputMessage").text("Product category cannot be empty!");
+                $("#invalidInputMessage").show();
+            }
+            else if (productQuantity < 0 || productQuantity === null) {
+                $("#invalidInputMessage").text("Product quantity cannot be empty!");
+                $("#invalidInputMessage").show();
             }
             else {
-                this.addNewProductToNewCategory(productCategory, productName, productQuantity);
+                showLoadingWidget("Saving product...");
+                productQuantity = parseInt(productQuantity);
+
+                if ($scope.listContent.hasOwnProperty(productCategory) === true) //if a category is already created
+                {
+                    this.addNewProductToExistingCategory(productCategory, productName, productQuantity);
+                }
+                else {
+                    this.addNewProductToNewCategory(productCategory, productName, productQuantity);
+                }
+                $scope.clearAddProductFields();
+                $scope.changeEmptyListValue();
+                $("#invalidInputMessage").hide();
+                $("#emptyListItem").hide();
+                $("#addProductPanel").panel("close");
             }
-            $scope.clearAddProductFields();
-            $scope.changeEmptyListValue();
-            $("#emptyListItem").hide();
-            $("#addProductPanel").panel("close");
         };
 
         this.addNewProductToNewCategory = function (productCategory, productName, productQuantity) {
@@ -144,9 +159,10 @@ listContentApp.controller('ShoppingListController', function ($scope) {
         };
 
         $scope.clearAddProductFields = function () {
+            $("#invalidInputMessage").hide();
             $scope.productCategory = "";
             $scope.productName = "";
-            $scope.productQuantity = "";
+            $scope.productQuantity = 1;
         };
 
         this.itemClicked = function (product) {
@@ -592,6 +608,10 @@ listContentApp.controller('ShoppingListController', function ($scope) {
 
         $scope.isOwnerOfProduct = function (product) {
             return (product.ownerUsername === userName);
+        };
+
+        $scope.hideInvalidInputMessage = function () {
+            $("#invalidInputMessage").hide();
         };
     }
 )

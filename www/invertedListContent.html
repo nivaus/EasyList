@@ -71,17 +71,20 @@
 
             <label for="productName">Product Name:</label>
             <input type="text" name="productName" id="productName" data-clear-btn="true" placeholder="Product Name..."
-                   required="true" ng-model="productName">
+                   ng-model="productName" ng-change="hideInvalidInputMessage()">
 
             <label for="productCategory">Product Category:</label>
             <input type="text" name="productCategory" id="productCategory" data-clear-btn="true"
-                   placeholder="Product Category..." required ng-model="productCategory">
+                   placeholder="Product Category..." ng-model="productCategory" ng-change="hideInvalidInputMessage()">
 
             <label for="productQuantity">Product Quantity:</label>
             <input type="number" name="productQuantity" pattern="[0-9]*" id="productQuantity" data-clear-btn="true"
-                   value="1" required ng-model="productQuantity">
+                   value="1" min="1" ng-model="productQuantity" ng-change="hideInvalidInputMessage()">
 
             <button type="submit" data-theme="b">Add Product</button>
+            <div id="invalidInputMessage" class="alert alert-danger" role="alert" hidden style="text-align: center">
+                <strong> </strong>
+            </div>
         </form>
     </div>
 
