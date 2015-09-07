@@ -31,7 +31,7 @@ Parse.Cloud.define("updateSharesSubscribeAndSendPushNotification", function (req
     }).then(function (success) {
         return removeUsersFromChannelListId(friendsUserNamesInParseToRemove, CHANNEL_PREFIX + listId);
     }).then(function (success) {
-        return sendSilentNotificationsToRemovedFriends(friendsUserNamesInParseToRemove, listName);
+        return sendSilentNotificationsToRemovedFriends(friendsUserNamesInParseToRemove, listName, listId);
     })
         .then(function (success) {
             sendPushNotificationToSharedFriendsInList(friendsUserNamesInParseToAdd,listName);
@@ -225,14 +225,9 @@ Parse.Cloud.define("removeListsIdsChannel", function (request, response) {
     console.log("removeListsIdsChannel");
     var listsIds =  request.params.listsIds;
     var listsNames =  request.params.listsNames;
-    var channelsListsIds = [];
 
-    for (var id in listsIds)
-    {
-        channelsListsIds.push(CHANNEL_PREFIX + listsIds[id]);
-    }
 
-    removeChannelsFromAllUsers(channelsListsIds, listsNames).then(
+    removeChannelsFromAllUsers(listsIds, listsNames).then(
         function(success)
         {
             console.log("Channels removed from parse successfully")
@@ -379,10 +374,16 @@ function clearUsernameFromInstallation(installationObjectId) {
     });
 }
 
-function removeChannelsFromAllUsers (channelsToRemove, listsNames)
+function removeChannelsFromAllUsers (listsIds, listsNames)
 {
     console.log("removeChannelsFromAllUsers");
     Parse.Cloud.useMasterKey();
+    var channelsToRemove = [];
+
+    for (var id in listsIds)
+    {
+        channelsToRemove.push(CHANNEL_PREFIX + listsIds[id]);
+    }
 
     var query = new Parse.Query(Parse.Installation);
     query.containedIn("channels", channelsToRemove);
@@ -398,7 +399,7 @@ function removeChannelsFromAllUsers (channelsToRemove, listsNames)
 
         }
 
-        return Parse.Object.saveAll(results).then(function () { sendSilentNotificationsToAllUsers(objectIds,listsNames)});
+        return Parse.Object.saveAll(results).then(function () { sendSilentNotificationsToAllUsers(objectIds,listsNames,listsIds)});
     });
 }
 
@@ -421,7 +422,7 @@ function sendPushNotificationToSharedFriendsInList(friendsArray, listName) {
     });
 }
 
-function sendSilentNotificationsToAllUsers(objectIds,listsNames)
+function sendSilentNotificationsToAllUsers(objectIds,listsNames, listsIds)
 {
     Parse.Cloud.useMasterKey();
     var query = new Parse.Query(Parse.Installation);
@@ -454,11 +455,12 @@ function sendSilentNotificationsToAllUsers(objectIds,listsNames)
         {
             alert: message,
             userLists: "delete",
-            listContent: "delete"
+            listContent: "delete",
+            listsIds: listsIds
         }});
 }
 
-function sendSilentNotificationsToRemovedFriends(friendsUserNamesInParseToRemove, listName)
+function sendSilentNotificationsToRemovedFriends(friendsUserNamesInParseToRemove, listName, listId)
 {
     Parse.Cloud.useMasterKey();
     var query = new Parse.Query(Parse.Installation);
@@ -472,6 +474,7 @@ function sendSilentNotificationsToRemovedFriends(friendsUserNamesInParseToRemove
         {
             alert: message,
             userLists: "unshare",
-            listContent: "unshare"
+            listContent: "unshare",
+            listId: listId
         }});
 }

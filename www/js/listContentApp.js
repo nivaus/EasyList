@@ -25,8 +25,12 @@ function registerSilentNotifications()
                 var userName = localStorage.getItem("userName");
                 if (pn.hasOwnProperty("listContent") === true)
                 {
-                    console.log(pn.listContent);
-                    if (pn.listContent === "unshare" || pn.listContent === "delete")
+                    console.log(pn.listsIds);
+                    if (pn.listContent === "unshare" && pn.listId == listId)
+                    {
+                        window.location = "userLists.html";
+                    }
+                    else if (pn.listContent === "delete" && _.indexOf(pn.listsIds, listId) !== -1)
                     {
                         window.location = "userLists.html";
                     }
