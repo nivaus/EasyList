@@ -95,6 +95,13 @@ listContentApp.controller('ShoppingListController', function ($scope) {
 
         $scope.changeEmptyListValue = function () {
             $scope.emptyList = isEmptyListContent();
+            if ($scope.emptyList) {
+                $("#editListButton").addClass("ui-state-disabled");
+                $(".editSaveButton").removeClass("ui-btn-active");
+            }
+            else{
+                $("#editListButton").removeClass("ui-state-disabled");
+            }
         };
 
         $scope.hideOrShowEmptyListNotification = function () {

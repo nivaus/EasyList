@@ -69,7 +69,8 @@
                class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close
             </a>
             <label for="productName">Product Name:</label>
-            <input name="productName" id="productName" data-type="search" placeholder="Search Product..." onkeyup="showProductsFilter()"
+            <input name="productName" id="productName" data-type="search" placeholder="Search Product..."
+                   onkeyup="showProductsFilter()"
                    ng-model="productName" ng-change="hideInvalidInputMessage()">
             <ul id="productsFilter" data-role="listview" data-filter="true" data-filter-reveal="true"
                 data-input="#productName">
@@ -79,11 +80,13 @@
             </ul>
 
             <label for="productCategory">Product Category:</label>
-            <input name="productCategory" id="productCategory" data-type="search" placeholder="Search Category..." onkeyup="showCategoriesFilter()"
+            <input name="productCategory" id="productCategory" data-type="search" placeholder="Search Category..."
+                   onkeyup="showCategoriesFilter()"
                    ng-model="productCategory" ng-change="hideInvalidInputMessage()">
             <ul id="categoriesFilter" data-role="listview" data-filter="true" data-filter-reveal="true"
                 data-input="#productCategory">
-                <li ng-repeat="category in productTemplates.categories" ng-click="autocompleteCategorySelected(category)">
+                <li ng-repeat="category in productTemplates.categories"
+                    ng-click="autocompleteCategorySelected(category)">
                     <a href="#"> {{category}} </a>
                 </li>
             </ul>
@@ -377,34 +380,46 @@
     <!--
     Footer
     -->
-    <div data-role="footer" data-position="fixed" data-theme="a" data-tap-toggle="false" ng-show=isListAdmin>
+    <div data-role="footer" data-position="fixed" data-theme="a" data-tap-toggle="false">
         <div data-role="navbar">
-            <ul>
+
+            <ul ng-show=list.inEditMode>
                 <li>
-                    <a id="{{list.inEditMode ? 'saveListButton' : 'editListButton'}}"
-                       data-icon="{{list.inEditMode ? 'check' : 'edit'}}"
+                    <a id='saveListButton'
+                       class="editSaveButton"
+                       data-icon="check"
                        ng-click="emptyList || list.executeEditOrSaveFunction()">
-                        {{list.inEditMode ? 'Save List' : 'Edit List'}}
+                        Save List
                     </a>
                 </li>
                 <li>
-                    <!-- If not in edit mode-->
+                    <a id="cancelEditListButton"
+                       data-icon="delete"
+                       ng-click="list.cancelEditListChanges()">
+                        Cancel
+                    </a>
+                </li>
+            </ul>
+
+            <!-- If not in edit mode-->
+            <ul ng-show=!list.inEditMode>
+                <li>
+                    <a id="editListButton"
+                       class="editSaveButton"
+                       data-icon="edit"
+                       ng-click="emptyList || list.executeEditOrSaveFunction()">
+                        Edit List
+                    </a>
+                </li>
+                <li>
                     <div ng-show=!list.inEditMode>
                         <a href="#notifyFriendsPopUp" data-icon="comment" data-rel="popup" data-position-to="window"
                            data-transition="pop">
                             Notify Friends</a>
                     </div>
-
-                    <!-- On Edit Mode-->
-                    <div ng-show=list.inEditMode>
-                        <a id="cancelEditListButton"
-                           data-icon="delete"
-                           ng-click="list.cancelEditListChanges()">
-                            Cancel
-                        </a>
-                    </div>
                 </li>
             </ul>
+
         </div>
     </div>
 </div>
