@@ -238,3 +238,25 @@ var updateProductOwnerInParse = function ($scope, productToUpdate) {
         }
     });
 };
+
+function getProductTemplates($scope) {
+    Parse.initialize(PARSE_APP_ID, PARSE_JS_ID);
+    var productTemplates = Parse.Object.extend("ProductTemplates");
+    var query = new Parse.Query(productTemplates);
+    //query.equalTo("listId", listId);
+    query.find().then(function (results) {
+        _.each(results, function (result) {
+            var productCategory = result.get("productCategory");
+            var productName = result.get("productName");
+            $scope.productTemplates.products.push({productCategory: productCategory, productName: productName});
+            $scope.productTemplates.categories = _.union($scope.productTemplates.categories, [productCategory]);
+            return result;
+        });
+
+    }).then(function () {
+        $scope.$apply();
+        console.log("ProductTemplates Loaded Successfully From Parse.");
+    }, function (error) {
+        console.log("Error Loading ProductTemplates From Parse.");
+    });
+}
