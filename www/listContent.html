@@ -143,11 +143,17 @@
                             </div>
 
                         </a>
+                        <!--<a class="productOptionsPopup"-->
+                           <!--href="{{ list.inEditMode ? '' : '#productOptionsPopup' }}"-->
+                           <!--data-rel="{{list.inEditMode ? '' : (product.productChecked ?  '' : 'popup')}}"-->
+                           <!--data-position-to="window" data-transition="pop" data-theme="{{list.getTheme(product)}}"-->
+                           <!--ng-click="list.updateSelectedProduct(product)">-->
+                        <!--</a>-->
                         <a class="productOptionsPopup"
-                           href="{{ list.inEditMode ? '#confirmProductDeletePopUp' : '#productOptionsPopup' }}"
-                           data-rel="{{list.inEditMode ? 'popup' : (product.productChecked ?  '' : 'popup')}}"
+                           href="{{ list.inEditMode ? '' : '#productOptionsPopup' }}"
+                           data-rel="{{list.inEditMode ? '' : (product.productChecked ?  '' : 'popup')}}"
                            data-position-to="window" data-transition="pop" data-theme="{{list.getTheme(product)}}"
-                           ng-click="list.updateSelectedProduct(product)">
+                           ng-click="list.productAction(product)">
                         </a>
                     </li>
                 </ul>
@@ -191,21 +197,21 @@
     <!--
     Confirm Product Delete
     -->
-    <div data-role="popup" id="confirmProductDeletePopUp" data-overlay-theme="b" data-theme="b" data-corners="true">
-        <a href="#" data-rel="back"
-           class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>
+    <!--<div data-role="popup" id="confirmProductDeletePopUp" data-overlay-theme="b" data-theme="b" data-corners="true">-->
+        <!--<a href="#" data-rel="back"-->
+           <!--class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>-->
 
-        <h3>Are you sure you want to delete the product {{list.selectedProduct.productName}} ?</h3>
-        <a href="#" data-rel="back"
-           class="ui-shadow ui-btn ui-corner-all ui-btn-b ui-icon-check ui-btn-icon-left ui-btn-inline ui-mini"
-           ng-click="list.removeSelectedProduct()">
-            Yes
-        </a>
-        <a href="#" data-rel="back"
-           class="ui-shadow ui-btn ui-corner-all ui-btn-b ui-icon-check ui-btn-icon-left ui-btn-inline ui-mini">
-            No
-        </a>
-    </div>
+        <!--<h3>Are you sure you want to delete the product {{list.selectedProduct.productName}} ?</h3>-->
+        <!--<a href="#" data-rel="back"-->
+           <!--class="ui-shadow ui-btn ui-corner-all ui-btn-b ui-icon-check ui-btn-icon-left ui-btn-inline ui-mini"-->
+           <!--ng-click="list.removeSelectedProduct()">-->
+            <!--Yes-->
+        <!--</a>-->
+        <!--<a href="#" data-rel="back"-->
+           <!--class="ui-shadow ui-btn ui-corner-all ui-btn-b ui-icon-check ui-btn-icon-left ui-btn-inline ui-mini">-->
+            <!--No-->
+        <!--</a>-->
+    <!--</div>-->
 
     <!--
      Notify Friends Popup

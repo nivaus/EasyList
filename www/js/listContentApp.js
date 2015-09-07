@@ -183,18 +183,25 @@ listContentApp.controller('ShoppingListController', function ($scope) {
             product.productChecked = !product.productChecked;
         };
 
-        this.updateSelectedProduct = function (product) {
-            this.selectedProduct = product;
+        this.productAction = function (product) {
+            updateSelectedProduct(product);
+            if (this.inEditMode) {
+                removeSelectedProduct();
+            }
         };
 
-        this.removeSelectedProduct = function () {
+        function updateSelectedProduct(product) {
+            this.selectedProduct = product;
+        }
+
+        function removeSelectedProduct() {
             var categoryName = this.selectedProduct.categoryName;
             if ($scope.listContent.hasOwnProperty(categoryName) === true) {
                 $scope.productsToRemove.push(this.selectedProduct);
                 removeProductFromList($scope.listContent, this.selectedProduct);
             }
             $scope.hideOrShowEmptyListNotification();
-        };
+        }
 
         function removeProductFromList(listContent, productToRemove) {
             var categoryName = productToRemove.categoryName;
@@ -250,11 +257,8 @@ listContentApp.controller('ShoppingListController', function ($scope) {
             $("#addProductButton").show();
             $("#menuButton").show();
             $scope.hideOrShowEmptyListNotification();
-            console.log("inEditMode : " + this.inEditMode);
             this.inEditMode = !this.inEditMode;
-            console.log("inEditMode : " + this.inEditMode);
             console.log("List Changes Canceled.");
-            $scope.$apply();
         };
 
         this.updateProductsQuantity = function () {
@@ -373,25 +377,6 @@ listContentApp.controller('ShoppingListController', function ($scope) {
         $scope.checkIfToShowProductOptions = function (product) {
             return ($scope.isListAdmin || $scope.isOwnerOfProduct(product));
         };
-
-//function sendNotifyPushMessage(channel, message) {
-//    var listPushChannel = CHANNEL_PREFIX + channel;
-//    var userPushChannel = CHANNEL_PREFIX + userName;
-//    console.log(listPushChannel);
-//    console.log(message);
-//
-//    var listIdQuery = new Parse.Query(Parse.Installation);
-//    var pushQuery = new Parse.Query(Parse.Installation);
-//    listIdQuery.equalTo('channels', listPushChannel);
-//    pushQuery.notEqualTo('channels', userPushChannel);
-//    pushQuery.matchesKeyInQuery("channels", "channels", listIdQuery);
-//    Parse.Push.send({
-//        where: pushQuery, // Set our Installation query
-//        data: {
-//            alert: fullName + ": " + message
-//        }
-//    });
-//}
 
         $scope.clearNotifyFriendsFields = function () {
             $scope.notifyText = "";
@@ -599,8 +584,7 @@ listContentApp.controller('ShoppingListController', function ($scope) {
             this.selectedProduct.ownerUsername = newProductOwnerUsernameInParse;
             this.selectedProduct.ownerFullName = newProductOwnerFullName;
             updateProductOwnerInParse($scope, this.selectedProduct);
-            if (newProductOwnerUsernameInParse !== userName)
-            {
+            if (newProductOwnerUsernameInParse !== userName) {
                 // TODO : Send push message
             }
             $("#changeProductOwnerPopUp").popup("close");
