@@ -36,7 +36,6 @@
     <allow-intent href="market:*" />
     <name>EasyList</name>
     <description>
-        An interactive application that make your shopping experience much easier!
     </description>
     <author email="dev@cordova.apache.org" href="http://cordova.io">
         Easy List Corporation
