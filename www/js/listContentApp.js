@@ -83,6 +83,8 @@ listContentApp.controller('ShoppingListController', function ($scope) {
         $scope.productsToRemove = [];
         $scope.emptyList = isEmptyListContent();
         $scope.invertedList = (localStorage.getItem("invertedList") === "true");
+
+
         getList($scope, listId);
         function isEmptyListContent() {
             return (_.keys($scope.listContent).length === 0);
@@ -90,6 +92,13 @@ listContentApp.controller('ShoppingListController', function ($scope) {
 
         $scope.changeEmptyListValue = function () {
             $scope.emptyList = isEmptyListContent();
+            if ($scope.emptyList) {
+                $("#editListButton").addClass("ui-state-disabled");
+                $(".editSaveButton").removeClass("ui-btn-active");
+            }
+            else{
+                $("#editListButton").removeClass("ui-state-disabled");
+            }
         };
 
         $scope.hideOrShowEmptyListNotification = function () {
@@ -186,7 +195,7 @@ listContentApp.controller('ShoppingListController', function ($scope) {
         this.productAction = function (product) {
             this.updateSelectedProduct(product);
             if (this.inEditMode) {
-                removeSelectedProduct();
+                removeSelectedProduct(product);
             }
         };
 
@@ -194,11 +203,11 @@ listContentApp.controller('ShoppingListController', function ($scope) {
             this.selectedProduct = product;
         };
 
-        function removeSelectedProduct() {
-            var categoryName = this.selectedProduct.categoryName;
+        function removeSelectedProduct(product) {
+            var categoryName = product.categoryName;
             if ($scope.listContent.hasOwnProperty(categoryName) === true) {
-                $scope.productsToRemove.push(this.selectedProduct);
-                removeProductFromList($scope.listContent, this.selectedProduct);
+                $scope.productsToRemove.push(product);
+                removeProductFromList($scope.listContent, product);
             }
             $scope.hideOrShowEmptyListNotification();
         }

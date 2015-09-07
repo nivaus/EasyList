@@ -305,32 +305,72 @@
     -->
     <div data-role="footer" data-position="fixed" data-theme="a" data-tap-toggle="false">
         <div data-role="navbar">
-            <ul>
+            <!--<ul>-->
+            <!--<li>-->
+            <!--<a id="{{list.inEditMode ? 'saveListButton' : 'editListButton'}}"-->
+            <!--class="editSaveButton"-->
+            <!--data-icon="{{list.inEditMode ? 'check' : 'edit'}}"-->
+            <!--ng-click="emptyList || list.executeEditOrSaveFunction()">-->
+            <!--{{list.inEditMode ? 'Save List' : 'Edit List'}}-->
+            <!--</a>-->
+            <!--</li>-->
+            <!--<li>-->
+            <!--&lt;!&ndash; If not in edit mode&ndash;&gt;-->
+            <!--<div ng-show=!list.inEditMode>-->
+            <!--<a href="#notifyFriendsPopUp" data-icon="comment" data-rel="popup" data-position-to="window"-->
+            <!--data-transition="pop">-->
+            <!--Notify Friends</a>-->
+            <!--</div>-->
+
+            <!--&lt;!&ndash; On Edit Mode&ndash;&gt;-->
+            <!--<div ng-show=list.inEditMode>-->
+            <!--<a id="cancelEditListButton"-->
+            <!--data-icon="delete"-->
+            <!--ng-click="list.cancelEditListChanges()">-->
+            <!--Cancel-->
+            <!--</a>-->
+            <!--</div>-->
+            <!--</li>-->
+            <!--</ul>-->
+
+            <!-- In edit mode-->
+            <ul ng-show=list.inEditMode>
                 <li>
-                    <a id="{{list.inEditMode ? 'saveListButton' : 'editListButton'}}"
-                       data-icon="{{list.inEditMode ? 'check' : 'edit'}}"
+                    <a id='saveListButton'
+                       class="editSaveButton"
+                       data-icon="check"
                        ng-click="emptyList || list.executeEditOrSaveFunction()">
-                        {{list.inEditMode ? 'Save List' : 'Edit List'}}
+                        Save List
                     </a>
                 </li>
                 <li>
-                    <!-- If not in edit mode-->
+                    <a id="cancelEditListButton"
+                       data-icon="delete"
+                       ng-click="list.cancelEditListChanges()">
+                        Cancel
+                    </a>
+                </li>
+            </ul>
+
+            <!-- If not in edit mode-->
+            <ul ng-show=!list.inEditMode>
+                <li>
+                    <a id="editListButton"
+                       class="editSaveButton"
+                       data-icon="edit"
+                       ng-click="emptyList || list.executeEditOrSaveFunction()">
+                        Edit List
+                    </a>
+                </li>
+                <li>
                     <div ng-show=!list.inEditMode>
                         <a href="#notifyFriendsPopUp" data-icon="comment" data-rel="popup" data-position-to="window"
                            data-transition="pop">
                             Notify Friends</a>
                     </div>
-
-                    <!-- On Edit Mode-->
-                    <div ng-show=list.inEditMode>
-                        <a id="cancelEditListButton"
-                           data-icon="delete"
-                           ng-click="list.cancelEditListChanges()">
-                            Cancel
-                        </a>
-                    </div>
                 </li>
             </ul>
+
         </div>
     </div>
 </div>
