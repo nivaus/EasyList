@@ -113,46 +113,27 @@
                 <ul data-role="listview" data-split-theme="b" data-inset="true"
                     ng-repeat="product in category.products">
 
-                    <!-- *************************************************************-->
+                    <!-- Not List Admin & Not Product Owner -->
                     <li ng-show=!checkIfToShowProductOptions(product)
                         class='{{product.productName}} done-{{product.productChecked}}'
                         data-icon="{{list.getIconInInvertedList(product)}}">
                         <a ng-click="!isOwnerOfProduct(product) || list.itemClicked(product)">
                             <img class="productImage" src="{{product.productImage}}" alt="{{product.productName}}">
 
-                            <!-- If not in edit mode-->
-                            <div ng-show=!list.inEditMode>
-                                <h2>
-                                    {{product.productName}}
-                                </h2>
+                            <h2>
+                                {{product.productName}}
+                            </h2>
 
-                                <p>Quantity: {{product.productQuantity}}</p>
+                            <p>Quantity: {{product.productQuantity}}</p>
 
-                                <p>Owner Name: {{product.ownerFullName === null ? "No Owner" :
-                                    product.ownerFullName}}</p>
-                            </div>
-                            <!-- On Edit Mode-->
-                            <div ng-show=list.inEditMode>
-                                <h2>
-                                    {{product.productName}}
-                                    <p ng-show=product.productChecked>Quantity : {{product.productQuantity}}</p>
-
-                                    <div ng-show=!product.productChecked class="quantity">
-                                        <label for="quantity{{product.objectId}}">Quantity:</label>
-
-                                        <div id="quantity{{product.objectId}}"></div>
-                                    </div>
-
-                                    <p>Owner Name: {{product.ownerFullName === null ? "No Owner" :
-                                        product.ownerFullName}}</p>
-                                </h2>
-                            </div>
+                            <p>Owner Name: {{product.ownerFullName === null ? "No Owner" :
+                                product.ownerFullName}}</p>
                         </a>
                         <!-- Not Product Owner -->
                         <a href="#" data-theme="b"></a>
                     </li>
-                    <!-- ***********************************************-->
-                    <!-- ***********************************************-->
+
+                    <!-- List Admin Or Product Owner -->
                     <li ng-show=checkIfToShowProductOptions(product)
                         class='{{product.productName}} done-{{product.productChecked}}'
                         data-icon="{{list.getIconInInvertedList(product)}}">
@@ -188,15 +169,14 @@
                             </div>
                         </a>
                         <!-- Product Owner -->
-
                         <a class="productOptionsPopup"
-                           href="{{ list.inEditMode ? '#confirmProductDeletePopUp' : '#productOptionsPopup' }}"
-                           data-rel="{{list.inEditMode ? 'popup' : (product.productChecked ?  '' : 'popup')}}"
+                           href="{{ list.inEditMode ? '' : '#productOptionsPopup' }}"
+                           data-rel="{{list.inEditMode ? '' : (product.productChecked ?  '' : 'popup')}}"
                            data-position-to="window" data-transition="pop" data-theme="{{list.getTheme(product)}}"
-                           ng-click="list.updateSelectedProduct(product)">
+                           ng-click="list.productAction(product)">
                         </a>
                     </li>
-                    <!-- ***********************************************-->
+
                 </ul>
             </li>
         </ul>
@@ -238,25 +218,6 @@
         <a href="#" data-rel="back"
            class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>
         <img class="popphoto" src="" style="max-height:512px;" alt="">
-    </div>
-
-    <!--
-    Confirm Product Delete
-    -->
-    <div data-role="popup" id="confirmProductDeletePopUp" data-overlay-theme="b" data-theme="b" data-corners="true">
-        <a href="#" data-rel="back"
-           class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>
-
-        <h3>Are you sure you want to delete the product {{list.selectedProduct.productName}} ?</h3>
-        <a href="#" data-rel="back"
-           class="ui-shadow ui-btn ui-corner-all ui-btn-b ui-icon-check ui-btn-icon-left ui-btn-inline ui-mini"
-           ng-click="list.removeSelectedProduct()">
-            Yes
-        </a>
-        <a href="#" data-rel="back"
-           class="ui-shadow ui-btn ui-corner-all ui-btn-b ui-icon-check ui-btn-icon-left ui-btn-inline ui-mini">
-            No
-        </a>
     </div>
 
     <!--
@@ -405,7 +366,7 @@
     <!--
     Footer
     -->
-    <div data-role="footer" data-position="fixed" data-theme="a" ng-show=isListAdmin>
+    <div data-role="footer" data-position="fixed" data-theme="a" data-tap-toggle="false" ng-show=isListAdmin>
         <div data-role="navbar">
             <ul>
                 <li>
