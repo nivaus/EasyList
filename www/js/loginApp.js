@@ -133,16 +133,3 @@ function subscribeLoggedInUserInParse(installationObjectId)
         }
     });
 }
-
-//function subscribeUsernameToParse (callback)
-//{
-//    var username = Parse.User.current().attributes.username;
-//    var subscription = "ch" + username;
-//    ParsePushPlugin.subscribe(subscription, function (success) {
-//            console.log("Successfully subscribed to channel " + subscription);
-//            callback();
-//        },
-//        function (fail) {
-//            console.log(fail);
-//        });
-//}

@@ -69,8 +69,7 @@
                class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close
             </a>
             <label for="productName">Product Name:</label>
-            <input name="productName" id="productName" data-type="search" placeholder="Search Product..."
-                   onkeyup="showProductsFilter()"
+            <input name="productName" id="productName" data-type="search" placeholder="Search Product..." onkeyup="showProductsFilter()"
                    ng-model="productName" ng-change="hideInvalidInputMessage()">
             <ul id="productsFilter" data-role="listview" data-filter="true" data-filter-reveal="true"
                 data-input="#productName">
@@ -80,13 +79,11 @@
             </ul>
 
             <label for="productCategory">Product Category:</label>
-            <input name="productCategory" id="productCategory" data-type="search" placeholder="Search Category..."
-                   onkeyup="showCategoriesFilter()"
+            <input name="productCategory" id="productCategory" data-type="search" placeholder="Search Category..." onkeyup="showCategoriesFilter()"
                    ng-model="productCategory" ng-change="hideInvalidInputMessage()">
             <ul id="categoriesFilter" data-role="listview" data-filter="true" data-filter-reveal="true"
                 data-input="#productCategory">
-                <li ng-repeat="category in productTemplates.categories"
-                    ng-click="autocompleteCategorySelected(category)">
+                <li ng-repeat="category in productTemplates.categories" ng-click="autocompleteCategorySelected(category)">
                     <a href="#"> {{category}} </a>
                 </li>
             </ul>
@@ -419,7 +416,6 @@
                     </div>
                 </li>
             </ul>
-
         </div>
     </div>
 </div>
