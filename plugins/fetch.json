@@ -35,5 +35,13 @@
             "APP_ID": "1060741983939011",
             "APP_NAME": "Easy List"
         }
+    },
+    "nl.x-services.plugins.socialsharing": {
+        "source": {
+            "type": "registry",
+            "id": "nl.x-services.plugins.socialsharing"
+        },
+        "is_top_level": true,
+        "variables": {}
     }
 }

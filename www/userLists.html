@@ -47,6 +47,11 @@
                     Edit List
                 </a>
             </li>
+            <li >
+                <a ng-click="inviteFriendToApp()">
+                    Invite Friends To Easy List
+                </a>
+            </li>
             <li>
                 <a onclick="logOut()">Logout</a>
             </li>
@@ -89,6 +94,22 @@
             <button type="submit" data-theme="b">Create List</button>
             <div id="invalidInputMessage" class="alert alert-danger" role="alert" hidden style="text-align: center">
                 <strong> List name cannot be empty ! </strong>
+            </div>
+
+            <br><br>
+
+            <a href="#invertedListDescription" data-rel="popup" data-transition="pop" data-theme="b"
+               class="ui-btn ui-btn-inline ui-icon-info ui-btn-icon-left ui-corner-all">Inverted List</a>
+
+            <a href="#popularListDescription" data-rel="popup" data-transition="pop" data-theme="b"
+               class="ui-btn ui-btn-inline ui-icon-info ui-btn-icon-left ui-corner-all">Popular List</a>
+
+            <div data-role="popup" id="invertedListDescription">
+                <p>Give you the abillity to build a list and selecting owner for each product.</p>
+            </div>
+
+            <div data-role="popup" id="popularListDescription">
+                <p>Automatically generate a new list with the most popular products</p>
             </div>
         </form>
     </div>

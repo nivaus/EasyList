@@ -662,6 +662,23 @@ listContentApp.controller('ShoppingListController', function ($scope) {
             $("#categoriesFilter").hide();
             $scope.productCategory = category;
         };
+
+        $scope.publishList = function()
+        {
+            var message = buildShareListMessage();
+            window.plugins.socialsharing.share(message);
+        };
+
+        function buildShareListMessage() {
+            var list = "Hi I want to share my groceries list with you:\n";
+            for (var category in $scope.listContent) {
+                //list = list + "Category: " + listContent[category].categoryName + "\n";
+                for (var product in $scope.listContent[category].products) {
+                    list = list + $scope.listContent[category].products[product].productName + " - Quantity: " + $scope.listContent[category].products[product].productQuantity + "\n";
+                }
+            }
+            return list;
+        }
     }
 )
 ;
