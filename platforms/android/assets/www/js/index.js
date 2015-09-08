@@ -32,7 +32,7 @@ var init = {
 
     // deviceready Event Handler
     onDeviceReady: function() {
-        navigator.splashscreen.show();
+        //navigator.splashscreen.show();
         init.receivedEvent('deviceready');
         init.receivedEvent('backbutton');
     },
@@ -45,7 +45,8 @@ var init = {
             window.location = "userLists.html";
         }
         else {
-            navigator.splashscreen.hide();
+            $("#loginButton").show();
+            //navigator.splashscreen.hide();
 
         }
     }

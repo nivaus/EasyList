@@ -11,7 +11,7 @@ document.addEventListener("deviceready", onDeviceReady, false);
 
 function onDeviceReady() {
     console.log("Device Ready");
-    navigator.splashscreen.hide();
+    //navigator.splashscreen.hide();
     document.addEventListener("backbutton", onBackKeyDown, false); //Listen to the User clicking on the back button
     //subscribe();
 }
@@ -24,6 +24,7 @@ var loginApp = angular.module('loginApp', []);
 
 function facebookLogin ()
 {
+    $("#loginButton").hide();
     facebookConnectPlugin.login(["user_about_me", "email", "user_friends"],
         function (result) {
             showLoadingWidget("Logging In...");
@@ -39,7 +40,8 @@ function facebookLogin ()
             //loginToParse(facebookAuthData, function(){console.log("LOGGED IN");});
         },
         function () {
-            alert("Error login with facebook.");
+            $("#loginButton").show();
+            console.log("Error login with facebook.");
         }
     );
 }

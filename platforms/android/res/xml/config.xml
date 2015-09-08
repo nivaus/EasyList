@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="io.EasyList" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="io.EasyList" version="1.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <preference name="loglevel" value="DEBUG" />
     <feature name="FacebookConnectPlugin">
         <param name="android-package" value="org.apache.cordova.facebook.ConnectPlugin" />
@@ -15,24 +15,11 @@
     <feature name="Camera">
         <param name="android-package" value="org.apache.cordova.camera.CameraLauncher" />
     </feature>
-    <feature name="SplashScreen">
-        <param name="android-package" value="org.apache.cordova.splashscreen.SplashScreen" />
-        <param name="onload" value="true" />
-    </feature>
     <feature name="Whitelist">
         <param name="android-package" value="org.apache.cordova.whitelist.WhitelistPlugin" />
         <param name="onload" value="true" />
     </feature>
     <icon src="www/img/logo.png" />
-    <splash density="land-hdpi" src="www/img/drawable-hdpi/background.9.png" />
-    <splash density="land-ldpi" src="www/img/drawable-ldpi/background.9.png" />
-    <splash density="land-mdpi" src="www/img/drawable-mdpi/background.9.png" />
-    <splash density="land-xhdpi" src="www/img/drawable-xhdpi/background.9.png" />
-    <splash density="port-hdpi" src="www/img/drawable-hdpi/background.9.png" />
-    <splash density="port-ldpi" src="www/img/drawable-ldpi/background.9.png" />
-    <splash density="port-mdpi" src="www/img/drawable-mdpi/background.9.png" />
-    <splash density="port-xhdpi" src="www/img/drawable-xhdpi/background.9.png" />
-    <preference name="splashScreenDelay" value="10000" />
     <allow-intent href="market:*" />
     <name>EasyList</name>
     <description>
