@@ -70,12 +70,21 @@
             <label for="listName">List Name:</label>
             <input type="text" name="listName" id="listName" data-clear-btn="true" placeholder="List Name..."
                    ng-model="listNameInput" ng-change="hideInvalidInputMessage()">
+
             <div class="ui-field-contain">
-                <label style="width: 57%" for="invertedListValue"><strong>Inverted List:</strong></label>
+
+                <label style="width: 57%" for="invertedListValue"><strong> Popular List :</strong></label>
                 <select name="invertedListValue" id="invertedListValue" data-mini="false" data-role="flipswitch">
                     <option value="false">Off</option>
                     <option value="true">On</option>
                 </select>
+                <!--<label style="width: 57%" for="invertedListValue"><strong> Inverted List:</strong></label>-->
+                <!--<a href="#invertedListDescription" data-rel="popup" data-transition="pop" data-theme="b"-->
+                   <!--class="ui-btn ui-icon-info ui-btn-inline ui-btn-icon-notext ui-corner-all">No text</a>-->
+                <!--<select name="invertedListValue" id="invertedListValue" data-mini="false" data-role="flipswitch">-->
+                    <!--<option value="false">Off</option>-->
+                    <!--<option value="true">On</option>-->
+                <!--</select>-->
             </div>
 
             <div class="ui-field-contain">
@@ -89,6 +98,22 @@
             <button type="submit" data-theme="b">Create List</button>
             <div id="invalidInputMessage" class="alert alert-danger" role="alert" hidden style="text-align: center">
                 <strong> List name cannot be empty ! </strong>
+            </div>
+
+            <br><br>
+
+            <a href="#invertedListDescription" data-rel="popup" data-transition="pop" data-theme="b"
+               class="ui-btn ui-btn-inline ui-icon-info ui-btn-icon-left ui-corner-all">Inverted List</a>
+
+            <a href="#popularListDescription" data-rel="popup" data-transition="pop" data-theme="b"
+               class="ui-btn ui-btn-inline ui-icon-info ui-btn-icon-left ui-corner-all">Popular List</a>
+
+            <div data-role="popup" id="invertedListDescription">
+                <p>Give you the abillity to build a list and selecting owner for each product.</p>
+            </div>
+
+            <div data-role="popup" id="popularListDescription">
+                <p>Automatically generate a new list with the most popular products</p>
             </div>
         </form>
     </div>
@@ -147,7 +172,8 @@
                 </li>
 
                 <!-- List -->
-                <li data-icon="{{(list.adminUserReference.attributes.username===username) ? 'delete' : 'carat-r'}}" ng-repeat="list in date.lists">
+                <li data-icon="{{(list.adminUserReference.attributes.username===username) ? 'delete' : 'carat-r'}}"
+                    ng-repeat="list in date.lists">
                     <a ng-click="listAction(list)">
                         <img src="{{list.listImage}}">
 
