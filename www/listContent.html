@@ -49,6 +49,9 @@
             <li>
                 <a ng-click="shareListOptions()">{{isListAdmin ? 'Share List' : 'Show Shared Friends'}}</a>
             </li>
+            <li ng-show="!isListAdmin">
+                <a ng-click="leaveSharedList()">Leave Shared List</a>
+            </li>
             <li>
                 <a ng-click="publishList()">Publish List</a>
             </li>

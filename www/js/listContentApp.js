@@ -28,10 +28,12 @@ function registerSilentNotifications()
                     console.log(pn.listsIds);
                     if (pn.listContent === "unshare" && pn.listId == listId)
                     {
+                        clearSavedLocalStorageOfList();
                         window.location = "userLists.html";
                     }
                     else if (pn.listContent === "delete" && _.indexOf(pn.listsIds, listId) !== -1)
                     {
+                        clearSavedLocalStorageOfList();
                         window.location = "userLists.html";
                     }
                     else if (pn.senderId !== userName && pn.listId === listId)
@@ -160,16 +162,20 @@ listContentApp.controller('ShoppingListController', function ($scope) {
                 $("#invalidInputMessage").text("Product name cannot be empty!");
                 $("#invalidInputMessage").show();
             }
-            else if (productCategory === "") {
-                $("#invalidInputMessage").text("Product category cannot be empty!");
-                $("#invalidInputMessage").show();
-            }
+            //else if (productCategory === "") {
+            //    $("#invalidInputMessage").text("Product category cannot be empty!");
+            //    $("#invalidInputMessage").show();
+            //}
             else if (productQuantity < 0 || productQuantity === null) {
                 $("#invalidInputMessage").text("Product quantity cannot be empty!");
                 $("#invalidInputMessage").show();
             }
             else {
                 showLoadingWidget("Saving product...");
+                if (productCategory === "")
+                {
+                    productCategory = "Uncategorized";
+                }
                 productQuantity = parseInt(productQuantity);
 
                 if ($scope.listContent.hasOwnProperty(productCategory) === true) //if a category is already created
@@ -667,6 +673,20 @@ listContentApp.controller('ShoppingListController', function ($scope) {
         {
             var message = buildShareListMessage();
             window.plugins.socialsharing.share(message);
+        };
+
+        //TODO complete flow
+        $scope.leaveSharedList= function()
+        {
+            Parse.Cloud.run('unshareCurrentUserFromListId', {listId: listId, listName: $scope.listName}, {
+                success: function (result) {
+                    clearSavedLocalStorageOfList();
+                    window.location = "userLists.html";
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
         };
 
         function buildShareListMessage() {
