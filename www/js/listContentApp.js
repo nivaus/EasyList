@@ -102,7 +102,6 @@ listContentApp.controller('ShoppingListController', function ($scope) {
         var listAdminUserName = localStorage.getItem("listAdminUserName");
 
         // Constants
-        var CHANNEL_PREFIX = "ch";
         var DEFAULT_PRODUCT_IMAGE = "http://files.parsetfss.com/78e798b2-27ce-4608-a903-5f5baf8a0899/tfss-f9c4341c-de01-4d07-9419-3cbc0ef120f0-shopping-cart.png";
         var PHOTO_LIBRARY = 0;
         var PHOTO_CAMERA = 1;

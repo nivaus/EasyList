@@ -140,27 +140,6 @@ var updateProductQuantityInParse = function ($scope, productToUpdate, newProduct
     });
 };
 
-var deleteProductFromParse = function ($scope, productToDelete) {
-    Parse.initialize(PARSE_APP_ID, PARSE_JS_ID);
-    var ListContent = Parse.Object.extend("ListContent");
-    var query = new Parse.Query(ListContent);
-    query.get(productToDelete.objectId, {
-        success: function (product) {
-            // Deleting the product from Parse
-            product.destroy({}).then(function () {
-                // Deleting the product from listContent
-                removeProductFromList($scope.listContent, productToDelete);
-
-                $scope.$apply();
-                console.log('Product with objectId ' + product.id + ' deleted successfully.');
-            });
-        },
-        error: function (product, error) {
-            console.log('Failed to delete object, with error code: ' + error.message);
-        }
-    });
-};
-
 var changeProductPhotoInParse = function ($scope, productToUpdate, imageURI) {
     Parse.initialize(PARSE_APP_ID, PARSE_JS_ID);
 

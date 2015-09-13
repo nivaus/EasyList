@@ -47,7 +47,7 @@
                     Edit List
                 </a>
             </li>
-            <li >
+            <li>
                 <a ng-click="inviteFriendToApp()">
                     Invite Friends To Easy List
                 </a>
@@ -75,6 +75,7 @@
             <label for="listName">List Name:</label>
             <input type="text" name="listName" id="listName" data-clear-btn="true" placeholder="List Name..."
                    ng-model="listNameInput" ng-change="hideInvalidInputMessage()">
+
             <div class="ui-field-contain">
                 <label style="width: 57%" for="invertedListValue"><strong>Inverted List:</strong></label>
                 <select name="invertedListValue" id="invertedListValue" data-mini="false" data-role="flipswitch">
@@ -168,7 +169,8 @@
                 </li>
 
                 <!-- List -->
-                <li data-icon="{{(list.adminUserReference.attributes.username===username) ? 'delete' : 'carat-r'}}" ng-repeat="list in date.lists">
+                <li data-icon="{{(list.adminUserReference.attributes.username===username) ? 'delete' : 'carat-r'}}"
+                    ng-repeat="list in date.lists">
                     <a ng-click="listAction(list)">
                         <img src="{{list.listImage}}">
 
@@ -207,9 +209,6 @@
             </ul>
         </div>
     </div>
-
-
-</div>
 
 
 </div>
