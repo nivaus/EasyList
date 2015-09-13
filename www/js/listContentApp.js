@@ -162,10 +162,6 @@ listContentApp.controller('ShoppingListController', function ($scope) {
                 $("#invalidInputMessage").text("Product name cannot be empty!");
                 $("#invalidInputMessage").show();
             }
-            //else if (productCategory === "") {
-            //    $("#invalidInputMessage").text("Product category cannot be empty!");
-            //    $("#invalidInputMessage").show();
-            //}
             else if (productQuantity < 0 || productQuantity === null) {
                 $("#invalidInputMessage").text("Product quantity cannot be empty!");
                 $("#invalidInputMessage").show();
@@ -428,7 +424,6 @@ listContentApp.controller('ShoppingListController', function ($scope) {
             if ($scope.notifyText === "") {
                 $scope.notifyText = "I'm on my way to the supermarket. Last chance for changes!";
             }
-            //sendNotifyPushMessage(listId, $scope.notifyText);
             Parse.Cloud.run('sendNotifyPushMessage', {listId: listId, message: $scope.notifyText});
             $("#notifyFriendsPopUp").popup("close");
             $scope.clearNotifyFriendsFields();
@@ -577,7 +572,6 @@ listContentApp.controller('ShoppingListController', function ($scope) {
                 $scope.sharedFacebookFriends.splice(index, 1);
             }
             $scope.notSharedFacebookFriends.push(myFacebookFriend);
-            //$scope.$apply();
         };
 
         $scope.toggleUnSharedFriend = function (myFacebookFriend) {
@@ -586,7 +580,6 @@ listContentApp.controller('ShoppingListController', function ($scope) {
                 $scope.notSharedFacebookFriends.splice(index, 1);
             }
             $scope.sharedFacebookFriends.push(myFacebookFriend);
-            //$scope.$apply();
         };
 
         $scope.cancelShareListChanges = function () {
@@ -645,7 +638,7 @@ listContentApp.controller('ShoppingListController', function ($scope) {
             this.selectedProduct.ownerFullName = newProductOwnerFullName;
             updateProductOwnerInParse($scope, this.selectedProduct);
             if (newProductOwnerUsernameInParse !== userName) {
-                // TODO : Send push message
+                sendUpdateSilentNotification(listId);
             }
             $("#changeProductOwnerPopUp").popup("close");
         };
@@ -675,7 +668,6 @@ listContentApp.controller('ShoppingListController', function ($scope) {
             window.plugins.socialsharing.share(message);
         };
 
-        //TODO complete flow
         $scope.leaveSharedList= function()
         {
             Parse.Cloud.run('unshareCurrentUserFromListId', {listId: listId, listName: $scope.listName}, {
